@@ -65,6 +65,25 @@ class CollectorClient:
     def end_session(self, session_id: str, reason: str) -> None:
         self._request("POST", f"/v1/sessions/{session_id}/end", (200,), json={"reason": reason})
 
+    def session_status(self, session_id: str) -> str:
+        """``active``, ``step_up_required`` or ``terminated`` (section 11)."""
+        r = self._request("GET", f"/v1/sessions/{session_id}/status", (200, 404))
+        return "terminated" if r.status_code == 404 else r.json()["status"]
+
+    def check_action(self, session_id: str, action_code: str, sensitivity: str) -> dict:
+        """The policy decision for a pending action; ``session_ended`` when AuthWho ended the session."""
+        r = self._request("POST", f"/v1/sessions/{session_id}/actions", (200, 409),
+                          json={"action_code": action_code, "sensitivity": sensitivity})
+        if r.status_code == 409:
+            return {"outcome": "terminate", "action_allowed": False}
+        return r.json()
+
+    def report_step_up(self, session_id: str, passed: bool) -> dict:
+        r = self._request("POST", f"/v1/sessions/{session_id}/step-up-result", (200, 409), json={"passed": passed})
+        if r.status_code == 409:
+            return {"outcome": "terminate", "status": "terminated"}
+        return r.json()
+
 
 def _error_code(response: httpx.Response) -> str | None:
     try:

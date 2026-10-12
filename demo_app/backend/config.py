@@ -7,11 +7,15 @@ Variables (see ``docs/interfaces.md`` section 3):
 - ``DEMO_DB_PATH``: SQLite file for demo users, default ``data/demo/demo.sqlite``.
 - ``DEMO_WITHDRAWAL_RETRY_SECONDS``: interval of the background retry of pending
   consent withdrawals, default 300.
+- ``DEMO_TOTP_KEY``: 32-byte key, base64, encrypting stored TOTP secrets. Without
+  it TOTP enrollment is unavailable and step-up asks for the password.
 
 Secrets are never given defaults in source. Load them from ``.env``, for
 example with ``uvicorn demo_app.backend.app:app --port 8100 --env-file .env``.
 """
 
+import base64
+import binascii
 import os
 from dataclasses import dataclass
 from pathlib import Path
@@ -27,6 +31,7 @@ class Settings:
     app_api_key: str
     db_path: Path
     withdrawal_retry_seconds: float = DEFAULT_WITHDRAWAL_RETRY_SECONDS
+    totp_key: bytes | None = None
 
     @classmethod
     def from_env(cls) -> "Settings":
@@ -35,6 +40,7 @@ class Settings:
             app_api_key=os.environ.get("AUTHWHO_APP_API_KEY", ""),
             db_path=Path(os.environ.get("DEMO_DB_PATH", DEFAULT_DB_PATH)),
             withdrawal_retry_seconds=_positive_seconds("DEMO_WITHDRAWAL_RETRY_SECONDS"),
+            totp_key=_optional_key("DEMO_TOTP_KEY"),
         )
 
 
@@ -49,3 +55,16 @@ def _positive_seconds(name: str) -> float:
     if not value > 0:
         raise ValueError(f"{name} must be greater than zero")
     return value
+
+
+def _optional_key(name: str) -> bytes | None:
+    raw = os.environ.get(name)
+    if not raw:
+        return None
+    try:
+        key = base64.b64decode(raw, validate=True)
+    except (binascii.Error, ValueError):
+        raise ValueError(f"{name} must be base64") from None
+    if len(key) != 32:
+        raise ValueError(f"{name} must decode to 32 bytes")
+    return key

@@ -167,56 +167,72 @@ jobs:
       - name: Run Vitest in every workspace
         run: npm test
 
-  # Placeholder for the Playwright for Python end-to-end job (phase P4).
-  # Uncomment and complete once tests/e2e contains tests and the services can
-  # be started with Docker Compose. Browsers are Chromium and Firefox only.
-  #
-  # e2e:
-  #   name: Playwright end-to-end tests
-  #   runs-on: ubuntu-latest
-  #   timeout-minutes: 30
-  #   needs: [python-unit, node]
-  #   steps:
-  #     - name: Check out repository
-  #       uses: actions/checkout@v6
-  #
-  #     - name: Set up Python 3.14
-  #       uses: actions/setup-python@v6
-  #       with:
-  #         python-version: "3.14"
-  #         cache: pip
-  #         cache-dependency-path: pyproject.toml
-  #
-  #     - name: Set up Node 24
-  #       uses: actions/setup-node@v6
-  #       with:
-  #         node-version: "24"
-  #         cache: npm
-  #         cache-dependency-path: package-lock.json
-  #
-  #     - name: Install dependencies and browsers
-  #       run: |
-  #         python -m pip install --upgrade pip
-  #         python -m pip install -e ".[dev,e2e]"
-  #         npm ci
-  #         python -m playwright install --with-deps chromium firefox
-  #
-  #     - name: Start services with Docker Compose (dummy .env values)
-  #       run: |
-  #         cp .env.example .env
-  #         docker compose up -d --wait
-  #
-  #     - name: Run end-to-end tests
-  #       shell: bash
-  #       run: |
-  #         status=0
-  #         python -m pytest tests/e2e -m e2e --browser chromium --browser firefox || status=$?
-  #         if [ "$status" -eq 5 ]; then
-  #           echo "::notice title=pytest::No end-to-end tests collected yet; treating as success."
-  #           exit 0
-  #         fi
-  #         exit "$status"
-  #
-  #     - name: Stop services
-  #       if: always()
-  #       run: docker compose down -v
+  e2e:
+    name: Playwright end-to-end tests (Chromium)
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    needs: [python-unit, node]
+    services:
+      postgres:
+        image: postgres:16-alpine
+        env:
+          POSTGRES_USER: authwho
+          POSTGRES_PASSWORD: dummy-change-me
+          POSTGRES_DB: authwho
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd "pg_isready -U authwho -d authwho"
+          --health-interval 5s
+          --health-timeout 5s
+          --health-retries 12
+    env:
+      # Same dummy values as the integration job. tests/e2e/conftest.py starts the
+      # AuthWho API, worker, demo backend and demo frontend on test ports itself.
+      AUTHWHO_DATABASE_URL: postgresql://authwho:dummy-change-me@127.0.0.1:5432/authwho
+      AUTHWHO_REDIS_URL: redis://127.0.0.1:6379/0
+      AUTHWHO_DATA_KEY: ZHVtbXktYXV0aHdoby1kYXRhLWtleS0zMi1ieXRlcyE=
+      AUTHWHO_APP_API_KEY: dummy-app-api-key
+      AUTHWHO_ADMIN_TOKEN: dummy-admin-token
+      DEMO_SECRET_KEY: dummy-demo-secret-key
+      DEMO_TOTP_KEY: ZHVtbXktZGVtby10b3RwLWtleS0zMi1ieXRlcy1vayE=
+      RESEARCH_EXPORT_KEY: ZHVtbXktcmVzZWFyY2gtZXhwb3J0LWtleS0zMmJ5dGU=
+    steps:
+      - name: Start Redis without persistence
+        shell: bash
+        run: |
+          docker run -d --name redis -p 127.0.0.1:6379:6379 redis:7-alpine redis-server --save "" --appendonly no
+          for attempt in $(seq 1 30); do
+            if [ "$(docker exec redis redis-cli ping 2>/dev/null)" = "PONG" ]; then exit 0; fi
+            sleep 1
+          done
+          docker logs redis
+          exit 1
+
+      - name: Check out repository
+        uses: actions/checkout@v6
+
+      - name: Set up Python 3.14
+        uses: actions/setup-python@v6
+        with:
+          python-version: "3.14"
+          cache: pip
+          cache-dependency-path: pyproject.toml
+
+      - name: Set up Node 24
+        uses: actions/setup-node@v6
+        with:
+          node-version: "24"
+          cache: npm
+          cache-dependency-path: package-lock.json
+
+      - name: Install dependencies and Chromium
+        run: |
+          python -m pip install --upgrade pip
+          python -m pip install -e ".[dev,e2e]"
+          npm ci
+          npm run build -w sdk
+          python -m playwright install --with-deps chromium
+
+      - name: Run end-to-end tests
+        run: python -m pytest tests/e2e -m e2e

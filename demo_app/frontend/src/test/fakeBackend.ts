@@ -26,7 +26,17 @@ export interface FakeBackendOptions {
   streamNoConsent?: boolean;
   /** Per-route status overrides, keyed "METHOD /api/path". */
   failures?: Record<string, { status: number; body?: unknown }>;
+  /** AuthWho session status reported by GET /api/session. */
+  sessionStatus?: "active" | "step_up_required";
+  /** Step-up method: "password" unless TOTP is enabled. */
+  totpEnabled?: boolean;
+  withdrawalPending?: boolean;
+  /** When set, high-risk actions answer 403 step_up_required until a step-up passes. */
+  requireStepUp?: boolean;
 }
+
+export const PASSWORD = "correct horse 1";
+export const TOTP_SECRET = "JBSWY3DPEHPK3PXP";
 
 export interface StreamBody {
   endpoint: string;
@@ -66,7 +76,14 @@ export function createFakeBackend(options: FakeBackendOptions = {}) {
     loggedIn: options.loggedIn ?? false,
     username: options.username ?? "asha",
     consent: options.consent === undefined ? null : options.consent,
+    sessionStatus: options.sessionStatus ?? "active",
+    totpEnabled: options.totpEnabled ?? false,
+    totpPending: false,
+    requireStepUp: options.requireStepUp ?? false,
+    stepUpFailures: 0,
   };
+  const stepUpMethod = () => (state.totpEnabled ? "totp" : "password");
+  const stepUpNeeded = () => json(403, { error: "step_up_required", method: stepUpMethod() });
   const calls: RecordedCall[] = [];
 
   const fetchMock = vi.fn(async (input: RequestInfo | URL, init: RequestInit = {}) => {
@@ -99,7 +116,38 @@ export function createFakeBackend(options: FakeBackendOptions = {}) {
 
     switch (`${method} ${path}`) {
       case "GET /api/me":
-        return json(200, { username: state.username, consent: state.consent });
+        return json(200, {
+          username: state.username,
+          consent: state.consent,
+          withdrawal_pending: options.withdrawalPending ?? false,
+          totp_enabled: state.totpEnabled,
+        });
+      case "GET /api/session":
+        return json(200, { status: state.sessionStatus, method: stepUpMethod() });
+      case "POST /api/step-up": {
+        if (state.sessionStatus !== "step_up_required") return json(409, { error: "no_step_up_pending" });
+        const ok = state.totpEnabled ? body.code === "123456" : body.password === PASSWORD;
+        if (ok) {
+          state.sessionStatus = "active";
+          state.requireStepUp = false;
+          state.stepUpFailures = 0;
+          return json(200, { status: "active" });
+        }
+        state.stepUpFailures += 1;
+        if (state.stepUpFailures >= 3) {
+          state.loggedIn = false;
+          return json(401, { error: "session_ended" });
+        }
+        return json(400, { error: "step_up_failed", attempts_left: 3 - state.stepUpFailures });
+      }
+      case "POST /api/totp/setup":
+        if (state.totpEnabled) return json(409, { error: "totp_already_enabled" });
+        state.totpPending = true;
+        return json(200, { secret: TOTP_SECRET, otpauth_uri: `otpauth://totp/AuthWho%20demo:${state.username}?secret=${TOTP_SECRET}` });
+      case "POST /api/totp/confirm":
+        if (!state.totpPending || body.code !== "123456") return json(400, { error: "invalid_code" });
+        state.totpEnabled = true;
+        return json(200, { totp_enabled: true });
       case "POST /api/consent":
         state.consent = {
           version: body.version,
@@ -128,10 +176,14 @@ export function createFakeBackend(options: FakeBackendOptions = {}) {
         return json(200, stream);
       }
       case "POST /api/notes":
+        if (state.sessionStatus === "step_up_required") return stepUpNeeded();
         return json(204);
       case "POST /api/payees":
-        return json(200, { ok: true });
       case "POST /api/reports/export":
+        if (state.requireStepUp || state.sessionStatus === "step_up_required") {
+          state.sessionStatus = "step_up_required";
+          return stepUpNeeded();
+        }
         return json(200, { ok: true });
     }
     return json(404, { error: "not_found" });

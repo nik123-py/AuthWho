@@ -21,6 +21,7 @@ from demo_app.backend.config import Settings
 COLLECTOR_URL = "http://collector.test:8000"
 APP_KEY = "test-app-key-not-a-real-secret"
 PASSWORD = "correct horse battery staple"
+TOTP_KEY = bytes(range(32))  # test-only key
 
 
 @dataclass
@@ -46,6 +47,10 @@ class FakeCollector:
     # Per-user faults for DELETE /v1/users/{id}: answer 500, or raise a non-HTTP error.
     failing_user_ids: set[str] = field(default_factory=set)
     crashing_user_ids: set[str] = field(default_factory=set)
+    # Session control (section 11): status per session and the next action outcome.
+    session_status: dict[str, str] = field(default_factory=dict)
+    action_outcome: str = "continue"
+    step_up_results: list[bool] = field(default_factory=list)
 
     def calls(self, method: str, pattern: str) -> list[RecordedRequest]:
         regex = re.compile(pattern)
@@ -96,8 +101,31 @@ class FakeCollector:
                     "pointer_device": "touchpad",
                 },
             )
-        if re.fullmatch(r"/v1/sessions/([0-9a-f-]+)/end", path):
+        if m := re.fullmatch(r"/v1/sessions/([0-9a-f-]+)/end", path):
+            self.session_status[m.group(1)] = "terminated"
             return httpx.Response(200, json={"status": "terminated"})
+        if m := re.fullmatch(r"/v1/sessions/([0-9a-f-]+)/status", path):
+            return httpx.Response(200, json={"status": self.session_status.get(m.group(1), "active"),
+                                             "decision_id": None})
+        if m := re.fullmatch(r"/v1/sessions/([0-9a-f-]+)/actions", path):
+            sid = m.group(1)
+            if self.session_status.get(sid) == "terminated":
+                return httpx.Response(409, json={"error": "session_ended"})
+            outcome = self.action_outcome
+            if outcome == "step_up":
+                self.session_status[sid] = "step_up_required"
+            if outcome == "terminate":
+                self.session_status[sid] = "terminated"
+            return httpx.Response(200, json={"decision_id": str(uuid.uuid4()), "outcome": outcome,
+                                             "action_allowed": outcome in ("continue", "monitor"),
+                                             "explanation_for_user": "x"})
+        if m := re.fullmatch(r"/v1/sessions/([0-9a-f-]+)/step-up-result", path):
+            sid = m.group(1)
+            self.step_up_results.append(body["passed"])
+            self.session_status[sid] = "active" if body["passed"] else "terminated"
+            return httpx.Response(200, json={"decision_id": str(uuid.uuid4()),
+                                             "outcome": "continue" if body["passed"] else "terminate",
+                                             "status": self.session_status[sid]})
         return httpx.Response(404, json={"error": "not_found"})
 
 
@@ -119,6 +147,7 @@ def build_app(collector, db_path, retry_seconds: float = 300.0):
         app_api_key=APP_KEY,
         db_path=db_path,
         withdrawal_retry_seconds=retry_seconds,
+        totp_key=TOTP_KEY,
     )
     http = httpx.Client(transport=httpx.MockTransport(collector.handle))
     return create_app(settings=settings, collector_http=http), http

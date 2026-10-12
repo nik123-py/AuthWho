@@ -12,9 +12,11 @@ import { NotFoundPage } from "./pages/NotFoundPage";
 import { PayeesPage } from "./pages/PayeesPage";
 import { RegisterPage } from "./pages/RegisterPage";
 import { ReportsPage } from "./pages/ReportsPage";
+import { SessionEndedPage } from "./pages/SessionEndedPage";
 import { SettingsPage } from "./pages/SettingsPage";
 import { WritePage } from "./pages/WritePage";
 import { SessionProvider, useSession } from "./session/SessionProvider";
+import { StepUpGuard } from "./session/StepUpGuard";
 
 const consented = (page: ReactNode) => <RequireConsent>{page}</RequireConsent>;
 
@@ -34,6 +36,7 @@ function AppRoutes() {
         <Route path="/login" element={<LoginPage />} />
         <Route path="/register" element={<RegisterPage />} />
         <Route path="/what-we-collect" element={<CollectPage />} />
+        <Route path="/session-ended" element={<SessionEndedPage />} />
         <Route
           path="/consent"
           element={
@@ -50,6 +53,7 @@ function AppRoutes() {
         <Route path="/settings" element={consented(<SettingsPage />)} />
         <Route path="*" element={<NotFoundPage />} />
       </Routes>
+      <StepUpGuard />
     </Layout>
   );
 }

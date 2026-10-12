@@ -18,7 +18,20 @@ export interface Consent {
 export interface Me {
   username: string;
   consent: Consent | null;
+  withdrawal_pending?: boolean;
+  totp_enabled?: boolean;
 }
+
+export type StepUpMethod = "totp" | "password";
+
+export interface SessionState {
+  status: "active" | "step_up_required";
+  method: StepUpMethod;
+}
+
+/** Window events the app raises when a response says a step-up is needed or the session ended. */
+export const STEP_UP_EVENT = "authwho:step-up";
+export const SESSION_ENDED_EVENT = "authwho:session-ended";
 
 export interface LoginResult {
   username: string;
@@ -87,8 +100,23 @@ async function request<T>(method: string, path: string, body?: unknown): Promise
   const response = await fetch(path, init);
   const text = response.status === 204 ? "" : await response.text();
   const parsed: unknown = text ? safeJson(text) : undefined;
-  if (!response.ok) throw new ApiError(response.status, parsed);
+  if (!response.ok) {
+    const error = new ApiError(response.status, parsed);
+    announce(error);
+    throw error;
+  }
   return parsed as T;
+}
+
+/** Tells the step-up guard about responses that need it, whichever page made the request. */
+function announce(error: ApiError) {
+  if (typeof window === "undefined") return;
+  if (error.code === "step_up_required") {
+    const method = (error.body as { method?: StepUpMethod } | undefined)?.method ?? "password";
+    window.dispatchEvent(new CustomEvent(STEP_UP_EVENT, { detail: { method } }));
+  } else if (error.code === "session_ended") {
+    window.dispatchEvent(new CustomEvent(SESSION_ENDED_EVENT));
+  }
 }
 
 function safeJson(text: string): unknown {
@@ -133,4 +161,13 @@ export const api = {
     request<{ ok: boolean }>("POST", "/api/payees", { name, account }),
 
   exportReports: () => request<{ ok: boolean }>("POST", "/api/reports/export"),
+
+  session: () => request<SessionState>("GET", "/api/session"),
+
+  stepUp: (answer: { code: string } | { password: string }) =>
+    request<{ status: "active" }>("POST", "/api/step-up", answer),
+
+  totpSetup: () => request<{ secret: string; otpauth_uri: string }>("POST", "/api/totp/setup"),
+
+  totpConfirm: (code: string) => request<{ totp_enabled: boolean }>("POST", "/api/totp/confirm", { code }),
 };

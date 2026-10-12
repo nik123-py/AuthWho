@@ -404,8 +404,14 @@ The demo frontend calls these under the relative path `/api`; its Vite dev serve
 | `POST /api/authwho/stream` | | `200 {"endpoint", "session_id", "stream_id", "stream_key", "channels", "pointer_device"}`; `409 {"error": "no_consent"}` |
 | `GET /api/registry` | | `200 {"pages": {"home": 1, "write": 2, "form": 3, "payees": 4, "reports": 5, "collect": 6, "settings": 7}, "actions": {"add_payee": 1, "export_report": 2}}` |
 | `POST /api/notes` | `{"text"}` | `204`. The text is discarded, never stored or logged; the page exists only to produce free-text typing |
-| `POST /api/payees` | `{"name", "account"}` | `200 {"ok": true}` (high-risk; policy check added in P4) |
-| `POST /api/reports/export` | | `200 {"ok": true}` (high-risk; policy check added in P4) |
+| `POST /api/payees` | `{"name", "account"}` | `200 {"ok": true}`; high-risk, checked with AuthWho first (see below) |
+| `POST /api/reports/export` | | `200 {"ok": true}`; high-risk, checked with AuthWho first |
+| `GET /api/session` | | `200 {"status": "active" \| "step_up_required", "method": "totp" \| "password"}`; the frontend polls it to show the step-up prompt |
+| `POST /api/totp/setup` | | `200 {"secret", "otpauth_uri"}` with `Cache-Control: no-store`; `409 totp_already_enabled`; `503 totp_unavailable` without `DEMO_TOTP_KEY` |
+| `POST /api/totp/confirm` | `{"code"}` | `200 {"totp_enabled": true}`; `400 invalid_code` |
+| `POST /api/step-up` | `{"code"}` or `{"password"}` | `200 {"status": "active"}`; `400 {"error": "step_up_failed", "attempts_left": n}`; after three wrong answers `401 session_ended`; `409 no_step_up_pending` |
+
+Continuous authentication (P4): every request from a login with an AuthWho session checks `GET /v1/sessions/{id}/status`. A terminated session logs the user out with `401 {"error": "session_ended"}`. While a step-up is required, notes and high-risk actions answer `403 {"error": "step_up_required", "method": "totp" | "password"}`; high-risk actions also call `POST /v1/sessions/{id}/actions` and answer the same way when the policy asks for step-up. The step-up uses a TOTP code once the user has set one up (secret encrypted with `DEMO_TOTP_KEY`), and the account password otherwise; three wrong answers report a failed check to AuthWho, which ends the session. When AuthWho is unreachable, normal session rules apply. `GET /api/me` also returns `"totp_enabled": bool`.
 
 Errors are always `{"error": "<code>"}`, never echoing submitted input: `username_taken` (409), `invalid_credentials` (401), `not_logged_in` (401, every endpoint except register, login and registry), `authwho_unavailable` (502), `invalid_request` (422, with `"fields": [...]` naming the invalid fields only). Passwords must be 8 to 1024 characters; usernames are case-insensitive. `POST /api/consent` returns the stored consent object. A consent withdrawal detaches the current AuthWho session, so consenting again creates a new one within the same login. The stream response carries `Cache-Control: no-store`.
 
@@ -414,6 +420,7 @@ Errors are always `{"error": "<code>"}`, never echoing submitted input: `usernam
 | Date | Version | Change |
 |---|---|---|
 | 2026-10-09 | 1 | First version |
+| 2026-10-13 | 1.4 | Decisions and policies tables (migration 0100); session control API live in the AuthWho API; demo app TOTP, step-up and session-end endpoints (section 15) |
 | 2026-10-12 | 1.3 | Pointer (`pf-1`, 22 features) and interaction (`if-1`, 17 features) windows in the worker; `profiles` and `trust_points` tables (migration 0005) with `device_key`; per-user score calibration; trust constants; `AUTHWHO_ENROLL_WINDOWS` |
 | 2026-10-09 | 1.1 | Added user consent endpoints (section 4), `sessions` table and research consumer (section 12), SDK public API (section 14), demo app API (section 15) |
 | 2026-10-12 | 1.2 | `windows` table gains `stream_id`; `features_enc` uses `window_id` as associated data; `kf-1` fixed at 35 features. Withdrawal deletes the `users` row before the user's data rows, and writers lock the user row before inserting |

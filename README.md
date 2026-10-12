@@ -4,7 +4,7 @@ AuthWho is a continuous behavioural biometric authentication engine for desktop 
 
 This is a personal student project. The design is in `AuthWho_Project_Proposal.tex`; the build plan is in `PLAN.md` and progress is tracked in `PROGRESS.md`.
 
-Status: phase P0 (SDK, event schema, consent form, demo web app) is in progress.
+Status: phases P0 to P4 are complete (capture, features, models, continuous trust, policy and step-up). P5 (dashboard) and P6 (evaluation report) are next.
 
 ## What is and is not collected
 
@@ -71,7 +71,12 @@ docker compose up -d --wait
 
 # 4. Demo app frontend on port 5173
 npm run dev -w demo_app/frontend
+
+# 5. Worker: features, enrollment, scoring, trust and policy
+.venv/Scripts/python -m server.worker --env-file .env
 ```
+
+After enrollment (20 windows per channel by default; set `AUTHWHO_ENROLL_WINDOWS=5` for a quick demo), every window is scored and the session's trust is updated. When typing or mouse movement no longer matches, a high-risk action (adding a payee or exporting a report) asks "Confirm it is you": the authenticator code if one is set up in Settings, otherwise the password. Three wrong answers end the session.
 
 Then open http://localhost:5173, register, read and accept the consent form, and type, click and scroll on the Write and Form pages for a minute. To see exactly what was captured, find the session ID and dump it:
 
@@ -91,7 +96,7 @@ Every event shows only its type, time, category or coordinates. Raw events disap
 npm test                                    # Vitest in every workspace
 ```
 
-Integration tests need `docker compose up -d` first. End-to-end Playwright tests arrive in phase P4.
+Integration tests need `docker compose up -d` first. End-to-end tests run in a real browser; see `tests/e2e/README.md`.
 
 ## Repository layout
 

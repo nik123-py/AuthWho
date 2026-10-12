@@ -7,6 +7,15 @@ Run locally with::
 The demo app never disables, locks or deletes an account. Usernames and
 passwords stay in this service; AuthWho only sees the pseudonymous
 ``authwho_user_id``.
+
+Continuous authentication (P4): every request from a login with an AuthWho
+session first checks the session status. A session AuthWho has ended logs the
+user out (``session_ended``); while a step-up is required, notes and
+high-risk actions answer ``step_up_required``. High-risk actions ask AuthWho's
+policy first. The step-up is a TOTP code when the user has set one up, and the
+account password otherwise; three wrong answers in a row count as a failed
+check, which ends the session. If AuthWho cannot be reached, normal session
+rules apply and nothing is blocked.
 """
 
 import asyncio
@@ -24,12 +33,14 @@ from pydantic import BaseModel, StringConstraints
 from .authwho_client import CollectorClient, CollectorNoConsent, CollectorUnavailable
 from .config import Settings
 from .passwords import burn_time, hash_password, verify_password
-from .registry import registry_payload
+from . import totp
+from .registry import ACTIONS, registry_payload
 from .withdrawals import complete_withdrawal, run_retry_loop
 from .store import CHANNELS, Consent, LoginSession, Store, User, UsernameTaken, now_iso
 
 APP_ID = "demo"
 COOKIE_NAME = "demo_session"
+MAX_STEP_UP_FAILURES = 3
 
 logger = logging.getLogger(__name__)
 
@@ -56,6 +67,15 @@ class Channels(BaseModel):
     keystroke: bool
     pointer: bool
     interaction: bool
+
+
+class TotpCode(BaseModel):
+    code: Annotated[str, StringConstraints(strip_whitespace=True, min_length=1, max_length=12)]
+
+
+class StepUp(BaseModel):
+    code: Annotated[str, StringConstraints(strip_whitespace=True, max_length=12)] | None = None
+    password: Annotated[str, StringConstraints(max_length=1024)] | None = None
 
 
 class ConsentBody(BaseModel):
@@ -88,6 +108,15 @@ def _field_name(loc) -> str:
 
 class NotLoggedIn(Exception):
     pass
+
+
+class SessionEnded(Exception):
+    pass
+
+
+class StepUpRequired(Exception):
+    def __init__(self, method: str):
+        self.method = method
 
 
 def create_app(settings: Settings | None = None, collector_http: httpx.Client | None = None) -> FastAPI:
@@ -126,6 +155,16 @@ def create_app(settings: Settings | None = None, collector_http: httpx.Client | 
     def _not_logged_in(request: Request, exc: NotLoggedIn) -> JSONResponse:
         return _error(401, "not_logged_in")
 
+    @app.exception_handler(SessionEnded)
+    def _session_ended(request: Request, exc: SessionEnded) -> JSONResponse:
+        response = _error(401, "session_ended")
+        response.delete_cookie(COOKIE_NAME, path="/", httponly=True, samesite="lax")
+        return response
+
+    @app.exception_handler(StepUpRequired)
+    def _step_up_required(request: Request, exc: StepUpRequired) -> JSONResponse:
+        return JSONResponse(status_code=403, content={"error": "step_up_required", "method": exc.method})
+
     def current_login(request: Request) -> LoginSession:
         token = request.cookies.get(COOKIE_NAME)
         login_session = store.get_login_session(token) if token else None
@@ -134,6 +173,52 @@ def create_app(settings: Settings | None = None, collector_http: httpx.Client | 
         return login_session
 
     CurrentLogin = Annotated[LoginSession, Depends(current_login)]
+
+    def step_up_method(user: User) -> str:
+        return "totp" if settings.totp_key is not None and user.totp_enabled else "password"
+
+    def end_login(login_session: LoginSession) -> None:
+        store.delete_login_session(login_session.token_hash)
+        raise SessionEnded
+
+    def session_status(login_session: LoginSession) -> str:
+        """AuthWho's status for this login; ``active`` without capture or when AuthWho is unreachable."""
+        if login_session.authwho_session_id is None:
+            return "active"
+        try:
+            return collector.session_status(login_session.authwho_session_id)
+        except CollectorUnavailable:
+            logger.warning("AuthWho unreachable for a status check; normal session rules apply")
+            return "active"
+
+    def checked_login(request: Request) -> LoginSession:
+        login_session = current_login(request)
+        status = session_status(login_session)
+        if status == "terminated":
+            end_login(login_session)
+        request.state.authwho_status = status
+        return login_session
+
+    CheckedLogin = Annotated[LoginSession, Depends(checked_login)]
+
+    def no_pending_step_up(request: Request, login_session: LoginSession) -> None:
+        if getattr(request.state, "authwho_status", "active") == "step_up_required":
+            raise StepUpRequired(step_up_method(login_session.user))
+
+    def allow_action(request: Request, login_session: LoginSession, action: str) -> None:
+        """Ask AuthWho's policy before a high-risk action (section 11)."""
+        no_pending_step_up(request, login_session)
+        if login_session.authwho_session_id is None:
+            return  # no behavioural capture: normal session rules
+        try:
+            decision = collector.check_action(login_session.authwho_session_id, action, ACTIONS[action].sensitivity)
+        except CollectorUnavailable:
+            logger.warning("AuthWho unreachable for an action check; normal session rules apply")
+            return
+        if decision["outcome"] == "terminate":
+            end_login(login_session)
+        if not decision["action_allowed"]:
+            raise StepUpRequired(step_up_method(login_session.user))
 
     def withdrawal_still_pending(user: User) -> bool:
         """Retry an unconfirmed withdrawal; True while AuthWho has still not confirmed it."""
@@ -176,16 +261,17 @@ def create_app(settings: Settings | None = None, collector_http: httpx.Client | 
         response.delete_cookie(COOKIE_NAME, path="/", httponly=True, samesite="lax")
 
     @app.get("/api/me")
-    def me(login_session: CurrentLogin):
+    def me(login_session: CheckedLogin):
         user = login_session.user
         return {
             "username": user.username,
             "consent": _consent_json(user.consent),
             "withdrawal_pending": withdrawal_still_pending(user),
+            "totp_enabled": user.totp_enabled,
         }
 
     @app.post("/api/consent")
-    def give_consent(body: ConsentBody, login_session: CurrentLogin):
+    def give_consent(body: ConsentBody, login_session: CheckedLogin):
         user = login_session.user
         # A stale AuthWho row from an unfinished withdrawal must be deleted
         # before new consent is recorded, never reused.
@@ -220,7 +306,7 @@ def create_app(settings: Settings | None = None, collector_http: httpx.Client | 
         return _consent_json(consent)
 
     @app.delete("/api/consent", status_code=204)
-    def withdraw_consent(login_session: CurrentLogin):
+    def withdraw_consent(login_session: CheckedLogin):
         user = login_session.user
         # Capture stops locally at once and the pending flag is stored durably,
         # so the AuthWho deletion is retried later if it cannot finish now.
@@ -230,7 +316,7 @@ def create_app(settings: Settings | None = None, collector_http: httpx.Client | 
         return Response(status_code=204)
 
     @app.post("/api/authwho/stream")
-    def authwho_stream(login_session: CurrentLogin):
+    def authwho_stream(login_session: CheckedLogin):
         user = login_session.user
         if user.consent is None:
             return _error(409, "no_consent")
@@ -261,19 +347,76 @@ def create_app(settings: Settings | None = None, collector_http: httpx.Client | 
         return registry_payload()
 
     @app.post("/api/notes", status_code=204)
-    def notes(body: Note, login_session: CurrentLogin):
+    def notes(body: Note, request: Request, login_session: CheckedLogin):
+        no_pending_step_up(request, login_session)
         # The text is discarded on purpose: the page exists only to produce typing.
         return Response(status_code=204)
 
     @app.post("/api/payees")
-    def add_payee(body: Payee, login_session: CurrentLogin):
-        # High-risk action. The policy check through AuthWho is added in P4.
+    def add_payee(body: Payee, request: Request, login_session: CheckedLogin):
+        allow_action(request, login_session, "add_payee")
         return {"ok": True}
 
     @app.post("/api/reports/export")
-    def export_report(login_session: CurrentLogin):
-        # High-risk action. The policy check through AuthWho is added in P4.
+    def export_report(request: Request, login_session: CheckedLogin):
+        allow_action(request, login_session, "export_report")
         return {"ok": True}
+
+    @app.get("/api/session")
+    def session_state(request: Request, login_session: CheckedLogin):
+        return {"status": request.state.authwho_status, "method": step_up_method(login_session.user)}
+
+    @app.post("/api/totp/setup")
+    def totp_setup(login_session: CheckedLogin):
+        user = login_session.user
+        if settings.totp_key is None:
+            return _error(503, "totp_unavailable")
+        if user.totp_enabled:
+            return _error(409, "totp_already_enabled")
+        secret = totp.new_secret()
+        store.set_totp_secret(user.id, totp.encrypt_secret(secret, settings.totp_key, user.authwho_user_id))
+        payload = {"secret": secret, "otpauth_uri": totp.provisioning_uri(secret, user.username)}
+        return JSONResponse(payload, headers={"Cache-Control": "no-store"})
+
+    @app.post("/api/totp/confirm")
+    def totp_confirm(body: TotpCode, login_session: CheckedLogin):
+        user = login_session.user
+        if settings.totp_key is None or user.totp_secret_enc is None:
+            return _error(409, "no_totp_setup")
+        secret = totp.decrypt_secret(user.totp_secret_enc, settings.totp_key, user.authwho_user_id)
+        if not totp.verify(secret, body.code):
+            return _error(400, "invalid_code")
+        store.enable_totp(user.id)
+        return {"totp_enabled": True}
+
+    @app.post("/api/step-up")
+    def step_up(body: StepUp, request: Request, login_session: CheckedLogin):
+        user = login_session.user
+        if request.state.authwho_status != "step_up_required" or login_session.authwho_session_id is None:
+            return _error(409, "no_step_up_pending")
+        if step_up_method(user) == "totp":
+            secret = totp.decrypt_secret(user.totp_secret_enc, settings.totp_key, user.authwho_user_id)
+            passed = totp.verify(secret, body.code or "")
+        else:
+            passed = body.password is not None and verify_password(body.password, user.password_hash,
+                                                                   user.password_salt)
+        sid = login_session.authwho_session_id
+        if passed:
+            store.reset_step_up_failures(login_session.token_hash)
+            try:
+                collector.report_step_up(sid, True)
+            except CollectorUnavailable:
+                return _error(502, "authwho_unavailable")
+            return {"status": "active"}
+        failures = store.add_step_up_failure(login_session.token_hash)
+        if failures < MAX_STEP_UP_FAILURES:
+            return JSONResponse(status_code=400, content={"error": "step_up_failed",
+                                                          "attempts_left": MAX_STEP_UP_FAILURES - failures})
+        try:
+            collector.report_step_up(sid, False)
+        except CollectorUnavailable:
+            logger.warning("AuthWho unreachable when reporting a failed step-up; ending the login anyway")
+        end_login(login_session)
 
     return app
 

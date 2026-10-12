@@ -7,6 +7,11 @@ const MESSAGES: Record<string, string> = {
   not_logged_in: "You are signed out, so this was not saved. Sign in again to continue.",
   authwho_unavailable:
     "The identity check service is not responding, so this was not completed. Try again in a moment.",
+  step_up_required: "Confirm it is you, then try again.",
+  session_ended: "For your security this session has ended. Sign in again.",
+  invalid_code: "That code is not right. Check your authenticator app and try again.",
+  totp_already_enabled: "An authenticator app is already set up.",
+  totp_unavailable: "Authenticator apps are not available on this server.",
 };
 
 /** Labels for the consent body fields, shared by the consent and settings forms. */
