@@ -20,6 +20,10 @@ import redis
 
 from server.common.config import ConfigError, load_env_file, load_settings
 from server.common.redis_keys import EVENTS_STREAM
+from server.collector.repository import PostgresRepository
+from server.policy.monitor import PolicyMonitor
+from server.policy.repository import PgPolicyRepository
+from server.session.control import SessionControl
 from server.worker.pipeline import FeaturePipeline
 from server.worker.scoring import ENROLL_WINDOWS, TrustScorer
 from server.worker.scoring_store import PgScoringStore, RedisTrustPublisher
@@ -88,8 +92,10 @@ def main(argv: list[str] | None = None) -> int:
     if enroll < 5:
         print("configuration error: AUTHWHO_ENROLL_WINDOWS must be at least 5", file=sys.stderr)
         return 2
-    scorer = TrustScorer(PgScoringStore(settings.require("database_url"), key), RedisTrustPublisher(client),
-                         enroll_windows=enroll)
+    db_url = settings.require("database_url")
+    control = SessionControl(client, PostgresRepository(db_url))
+    scorer = TrustScorer(PgScoringStore(db_url, key), RedisTrustPublisher(client), enroll_windows=enroll,
+                         monitor=PolicyMonitor(PgPolicyRepository(db_url), control), control=control)
     pipeline = FeaturePipeline(store, key, on_window=scorer.on_window)
     try:
         while True:

@@ -30,6 +30,7 @@ from server.common.redis_keys import EVENTS_STREAM, raw_event_min_id
 SESSION_RETENTION = timedelta(days=90)
 WINDOW_RETENTION = timedelta(days=30)
 TRUST_POINT_RETENTION = timedelta(days=30)  # ruling R7
+DECISION_RETENTION = timedelta(days=90)
 
 DbRule = Callable[..., int]
 
@@ -59,13 +60,24 @@ def delete_expired_trust_points(conn: psycopg.Connection, now: datetime | None =
     return cur.rowcount
 
 
+def delete_expired_decisions(conn: psycopg.Connection, now: datetime | None = None) -> int:
+    """The only permitted delete on the append-only decisions table."""
+    conn.execute("SELECT set_config('authwho.retention', 'on', true)")
+    cur = conn.execute(
+        "DELETE FROM decisions WHERE created_at < %s", (_now(now) - DECISION_RETENTION,)
+    )
+    conn.execute("SELECT set_config('authwho.retention', 'off', true)")
+    return cur.rowcount
+
+
 def trim_raw_events(client: redis.Redis, now_ms: int | None = None) -> int:
     """Remove raw event batches older than 24 hours, even if no new batch arrives."""
     now_ms = int(time.time() * 1000) if now_ms is None else now_ms
     return int(client.xtrim(EVENTS_STREAM, minid=raw_event_min_id(now_ms), approximate=False))
 
 
-DB_RULES: list[DbRule] = [delete_expired_sessions, delete_expired_windows, delete_expired_trust_points]
+DB_RULES: list[DbRule] = [delete_expired_sessions, delete_expired_windows, delete_expired_trust_points,
+                          delete_expired_decisions]
 
 
 def run_rule(conn: psycopg.Connection, rule: DbRule, now: datetime | None = None) -> int:
