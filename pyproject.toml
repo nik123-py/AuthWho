@@ -1,0 +1,48 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "authwho"
+version = "0.1.0"
+description = "Continuous behavioural biometric authentication engine for web sessions"
+requires-python = ">=3.11"
+dependencies = [
+    "fastapi",
+    "uvicorn[standard]",
+    "pydantic",
+    "redis",
+    "psycopg[binary]",
+    "numpy",
+    "pandas",
+    "scikit-learn",
+    "pyotp",
+    "cryptography",
+    "httpx",
+]
+
+[project.optional-dependencies]
+dev = [
+    "pytest",
+]
+e2e = [
+    "playwright",
+    "pytest-playwright",
+]
+
+[tool.setuptools.packages.find]
+include = ["server*", "ml*", "demo_app*"]
+
+[tool.pytest.ini_options]
+pythonpath = ["."]
+testpaths = ["server", "ml", "demo_app", "experiments"]
+addopts = "-ra"
+filterwarnings = [
+    # Starlette suggests the httpx2 package for TestClient; httpx works and httpx2 is not an approved dependency.
+    "ignore:.*httpx2.*",
+]
+markers = [
+    "integration: needs PostgreSQL and Redis from docker compose",
+    "e2e: Playwright end-to-end test (tests/e2e only)",
+    "slow: long-running dataset or model test",
+]

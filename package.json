@@ -1,0 +1,14 @@
+{
+  "name": "authwho",
+  "private": true,
+  "version": "0.1.0",
+  "workspaces": [
+    "sdk",
+    "dashboard",
+    "demo_app/frontend"
+  ],
+  "scripts": {
+    "test": "npm run test --workspaces --if-present",
+    "build": "npm run build --workspaces --if-present"
+  }
+}

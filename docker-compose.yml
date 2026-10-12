@@ -1,0 +1,42 @@
+# AuthWho local infrastructure (Docker Desktop, single laptop).
+#
+# Docker Compose reads .env (gitignored) only to substitute the three
+# POSTGRES_* values below. No container receives the whole .env file, so
+# application secrets never enter the database or Redis containers. Copy
+# .env.example to .env and replace the dummy values before the first start.
+# Ports are bound to 127.0.0.1 so nothing is reachable from other machines.
+
+services:
+  postgres:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER:?set POSTGRES_USER in .env}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:?set POSTGRES_PASSWORD in .env}
+      POSTGRES_DB: ${POSTGRES_DB:?set POSTGRES_DB in .env}
+    ports:
+      - "127.0.0.1:5432:5432"
+    volumes:
+      - authwho-pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U \"$${POSTGRES_USER}\" -d \"$${POSTGRES_DB}\""]
+      interval: 5s
+      timeout: 5s
+      retries: 12
+    restart: unless-stopped
+
+  redis:
+    # Raw event batches live only in Redis memory. Persistence is switched off
+    # (no RDB snapshots, no append-only file) so raw events never reach disk.
+    image: redis:7-alpine
+    command: ["redis-server", "--save", "", "--appendonly", "no"]
+    ports:
+      - "127.0.0.1:6379:6379"
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 5s
+      timeout: 5s
+      retries: 12
+    restart: unless-stopped
+
+volumes:
+  authwho-pgdata:
