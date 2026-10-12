@@ -42,6 +42,12 @@ export function Layout({ children, onSignOut }: LayoutProps) {
       >
         Skip to main content
       </a>
+      {session.status === "signed_in" && session.withdrawalPending ? (
+        <div className="border-b border-line bg-canvas px-8 py-3 text-sm text-ink" role="status">
+          We are still deleting your behavioural data from AuthWho after your consent withdrawal. This finishes
+          automatically; nothing is being captured.
+        </div>
+      ) : null}
       <header className="border-b border-line bg-paper">
         <div className="mx-auto flex max-w-5xl items-center gap-8 px-8 py-4">
           <Link to="/" className="text-base font-semibold text-ink">

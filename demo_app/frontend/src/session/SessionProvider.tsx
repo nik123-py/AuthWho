@@ -11,6 +11,9 @@ export type Session =
       consent: Consent | null;
       /** True after the user withdrew consent in this page load, so the consent page can confirm it. */
       consentWithdrawn?: boolean;
+      /** True while AuthWho has not yet confirmed the deletion after a withdrawal. */
+      withdrawalPending?: boolean;
+      totpEnabled?: boolean;
     };
 
 interface SessionContextValue {
@@ -23,6 +26,8 @@ interface SessionContextValue {
   setConsent: (consent: Consent) => void;
   /** Marks consent as absent after a withdrawal or a 409 no_consent answer. */
   clearConsent: (reason: "withdrawn" | "missing") => void;
+  /** AuthWho ended the session: the backend already signed the user out. */
+  markEnded: () => void;
 }
 
 const SessionContext = createContext<SessionContextValue | null>(null);
@@ -34,7 +39,15 @@ export function SessionProvider({ children }: { children: ReactNode }) {
     try {
       const me = await api.me();
       setSession(
-        me ? { status: "signed_in", username: me.username, consent: me.consent } : { status: "signed_out" },
+        me
+          ? {
+              status: "signed_in",
+              username: me.username,
+              consent: me.consent,
+              withdrawalPending: me.withdrawal_pending ?? false,
+              totpEnabled: me.totp_enabled ?? false,
+            }
+          : { status: "signed_out" },
       );
     } catch {
       setSession({ status: "signed_out" });
@@ -80,9 +93,11 @@ export function SessionProvider({ children }: { children: ReactNode }) {
     );
   }, []);
 
+  const markEnded = useCallback(() => setSession({ status: "signed_out" }), []);
+
   const value = useMemo(
-    () => ({ session, refresh, signIn, signOut, setConsent, clearConsent }),
-    [session, refresh, signIn, signOut, setConsent, clearConsent],
+    () => ({ session, refresh, signIn, signOut, setConsent, clearConsent, markEnded }),
+    [session, refresh, signIn, signOut, setConsent, clearConsent, markEnded],
   );
   return <SessionContext.Provider value={value}>{children}</SessionContext.Provider>;
 }

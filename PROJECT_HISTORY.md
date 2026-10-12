@@ -65,11 +65,18 @@ Earlier notes on the Aalto archive, kept for reference:
 - Live test with the built SDK through API, demo backend and worker (enrollment 5): genuine typist trust 100; a different typist on a new login fell 91.8, 83.5, ... 34.2 over 8 windows.
 - Verified: 472 Python and 217 Vitest tests passing.
 
+### 2026-10-12 to 2026-10-13: P4 (policy, step-up, termination, bot and replay checks)
+- `server/policy/`: `engine.py` (levels, outcomes, explanations), `bots.py`, `decisions.py`, `repository.py`, `monitor.py`, migration `0100` (append-only `decisions` with trigger, `policies` seeded for the demo). Retention deletes decisions after 90 days through the only permitted path.
+- `server/session/`: `control.py` (Redis status, step-up required, verified, terminate through the collector path) and `router.py` (status, actions, step-up-result), mounted in `server/api/app.py`.
+- Worker: bot and replay flags per window, policy monitor on each trust update (decision on each level change), trust reset after a passed step-up.
+- Demo backend: TOTP setup and confirm (secret encrypted with `DEMO_TOTP_KEY`), `/api/session`, `/api/step-up` (TOTP or password, three tries), policy check on add payee and export, AuthWho status on every request. Demo frontend: `StepUpGuard` dialog, session-ended page, authenticator setup, withdrawal notice.
+- `tests/e2e/`: Playwright for Python against the whole stack on test ports; 5 scenarios pass in about 3 minutes. CI `e2e` job.
+- Verified: Python suite, 104 + 121 Vitest tests, frontend typecheck and build, 5 end-to-end tests.
+
 ## Next steps
 
-1. P4: policy engine (levels and defaults in `docs/interfaces.md` section 11), append-only `decisions` table, session control API (`status`, `actions`, `step-up-result`), bot and replay heuristics, TOTP step-up in the demo backend, demo frontend step-up and termination screens.
-2. P5: admin API and WebSocket, dashboard, live demo mode, app containers in Compose.
-3. P6: evaluation report.
+1. P5: admin API and WebSocket (sessions, timeline, decisions, incident report, policy editor), React dashboard with live trust chart, channel breakdown and explanations, live demo mode and a 10-run reliability check, app containers in Compose, login token expiry and Secure cookie.
+2. P6: population-statistics synthetic attack generator (moved from P4-6), scoring latency measurement, `docs/evaluation_report.md` with every Section 13 metric and confidence intervals, final README and privacy review.
 
 ## Open items carried forward
 - P0-5 follow-up for P5: login token expiry and Secure cookie.

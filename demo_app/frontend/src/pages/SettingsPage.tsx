@@ -1,3 +1,4 @@
+import { AuthenticatorSetup } from "../components/AuthenticatorSetup";
 import { useRef, useState } from "react";
 import type { FormEvent } from "react";
 import { api, CONSENT_VERSION, type Channels, type Consent, type DeclaredDevice } from "../api/client";
@@ -22,6 +23,7 @@ export function SettingsPage() {
         <p>Change which signals AuthWho may use, tell it which pointing device you use, or withdraw consent.</p>
       </PageHeader>
       <ChoicesForm consent={session.consent} />
+      <AuthenticatorSetup />
       <WithdrawSection />
     </div>
   );

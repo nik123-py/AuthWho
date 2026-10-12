@@ -27,13 +27,13 @@ Status values: todo, in progress, review, done, blocked. "Tests passing" is reco
 | P3-1 | P3 | orchestrator | done | yes | `ml/trust.py` penalty-reward fusion with insufficient-signal state; chimeric users: fused EER 0.089 vs keystroke 0.144, pointer 0.197. Volunteer-data criterion not measurable yet |
 | P3-2 | P3 | orchestrator | done | yes | Worker scoring stage, trust points, `aw:trust` publish, staleness tick. Live SDK test: genuine trust 100, takeover below 50 after 7 windows |
 | P3-3 | P3 | orchestrator | done | n/a | Privacy self-review PASS |
-| P4-1 | P4 | policy-engineer | todo | no | Policy engine, decisions, session control API |
-| P4-2 | P4 | policy-engineer | todo | no | Bot and replay heuristics |
-| P4-3 | P4 | policy-engineer | todo | no | Demo backend TOTP and high-risk actions |
-| P4-4 | P4 | frontend-engineer | todo | no | Demo frontend step-up and termination; also show a notice when `withdrawal_pending` is true |
-| P4-5 | P4 | qa-engineer | todo | no | Playwright scenarios 1 to 4 |
-| P4-6 | P4 | ml-engineer | todo | no | Synthetic attack generator |
-| P4-7 | P4 | privacy-reviewer | todo | n/a | |
+| P4-1 | P4 | orchestrator | done | yes | Policy engine (5 levels, R6), decisions table append-only by trigger with 90-day retention, policies table, session control API, background policy monitor in the worker |
+| P4-2 | P4 | orchestrator | done | yes | Bot and replay checks; no false flags on 7,078 Aalto and 776 SapiMouse windows; speed flag medium only (1.3% of Balabit windows) |
+| P4-3 | P4 | orchestrator | done | yes | Demo backend: TOTP (pyotp, encrypted secret) or password step-up, three tries, policy check on high-risk actions, status check on every request |
+| P4-4 | P4 | orchestrator | done | yes | Demo frontend: step-up dialog (event and 5 s status poll), session-ended page, authenticator setup, withdrawal-pending notice; 104 Vitest tests |
+| P4-5 | P4 | orchestrator | done | yes | Playwright (Chromium) against the full stack: 5 scenarios pass in about 3 minutes; CI `e2e` job added |
+| P4-6 | P4 | orchestrator | todo | no | Population-statistics synthetic attack generator moved to P6 (needed for the robustness metric) |
+| P4-7 | P4 | orchestrator | done | n/a | Privacy self-review PASS: no scores shown to the operator, TOTP secret encrypted, logs hold no passwords, codes or scores |
 | P5-1 | P5 | backend-engineer | todo | no | Admin API, WebSocket, app containers |
 | P5-2 | P5 | frontend-engineer | todo | no | Dashboard |
 | P5-3 | P5 | frontend-engineer | todo | no | Live demo mode |

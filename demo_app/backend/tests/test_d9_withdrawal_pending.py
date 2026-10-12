@@ -36,6 +36,7 @@ def test_me_reports_no_pending_withdrawal_for_new_user(logged_in):
         "username": "alice",
         "consent": None,
         "withdrawal_pending": False,
+        "totp_enabled": False,
     }
 
 

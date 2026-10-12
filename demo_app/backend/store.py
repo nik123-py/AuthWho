@@ -36,7 +36,10 @@ CREATE TABLE IF NOT EXISTS users (
     channel_interaction INTEGER,
     pointer_device TEXT,
     -- 1 while a consent withdrawal has not yet been confirmed by AuthWho.
-    withdrawal_pending INTEGER NOT NULL DEFAULT 0
+    withdrawal_pending INTEGER NOT NULL DEFAULT 0,
+    -- TOTP secret, AES-256-GCM encrypted (demo_app/backend/totp.py); 1 once confirmed.
+    totp_secret_enc BLOB,
+    totp_enabled INTEGER NOT NULL DEFAULT 0
 );
 
 -- Login sessions. Only a SHA-256 digest of the opaque cookie token is kept,
@@ -45,14 +48,17 @@ CREATE TABLE IF NOT EXISTS login_sessions (
     token_hash TEXT PRIMARY KEY,
     user_id INTEGER NOT NULL REFERENCES users(id) ON DELETE CASCADE,
     authwho_session_id TEXT,
-    created_at TEXT NOT NULL
+    created_at TEXT NOT NULL,
+    -- Wrong answers to the current step-up; three end the session.
+    step_up_failures INTEGER NOT NULL DEFAULT 0
 );
 """
 
 _USER_COLUMNS = (
     "u.id, u.username, u.password_hash, u.password_salt, u.authwho_user_id, u.role,"
     " u.consent_version, u.consent_at, u.research_consent, u.channel_keystroke,"
-    " u.channel_pointer, u.channel_interaction, u.pointer_device, u.withdrawal_pending"
+    " u.channel_pointer, u.channel_interaction, u.pointer_device, u.withdrawal_pending,"
+    " u.totp_secret_enc, u.totp_enabled"
 )
 
 
@@ -79,6 +85,8 @@ class User:
     role: str
     consent: Consent | None
     withdrawal_pending: bool
+    totp_secret_enc: bytes | None = None
+    totp_enabled: bool = False
 
 
 @dataclass(frozen=True)
@@ -115,6 +123,8 @@ def _user_from_row(row: sqlite3.Row) -> User:
         role=row["role"],
         consent=consent,
         withdrawal_pending=bool(row["withdrawal_pending"]),
+        totp_secret_enc=row["totp_secret_enc"],
+        totp_enabled=bool(row["totp_enabled"]),
     )
 
 
@@ -125,7 +135,13 @@ def _upgrade(conn: sqlite3.Connection) -> None:
         conn.execute(
             "ALTER TABLE users ADD COLUMN withdrawal_pending INTEGER NOT NULL DEFAULT 0"
         )
-        conn.commit()
+    if "totp_secret_enc" not in columns:
+        conn.execute("ALTER TABLE users ADD COLUMN totp_secret_enc BLOB")
+        conn.execute("ALTER TABLE users ADD COLUMN totp_enabled INTEGER NOT NULL DEFAULT 0")
+    session_columns = {row[1] for row in conn.execute("PRAGMA table_info(login_sessions)")}
+    if "step_up_failures" not in session_columns:
+        conn.execute("ALTER TABLE login_sessions ADD COLUMN step_up_failures INTEGER NOT NULL DEFAULT 0")
+    conn.commit()
 
 
 class Store:
@@ -259,3 +275,25 @@ class Store:
     def delete_login_session(self, token_hash: str) -> None:
         with closing(self._connect()) as conn, conn:
             conn.execute("DELETE FROM login_sessions WHERE token_hash = ?", (token_hash,))
+
+    # TOTP and step-up
+
+    def set_totp_secret(self, user_id: int, secret_enc: bytes) -> None:
+        with closing(self._connect()) as conn, conn:
+            conn.execute("UPDATE users SET totp_secret_enc = ?, totp_enabled = 0 WHERE id = ?", (secret_enc, user_id))
+
+    def enable_totp(self, user_id: int) -> None:
+        with closing(self._connect()) as conn, conn:
+            conn.execute("UPDATE users SET totp_enabled = 1 WHERE id = ? AND totp_secret_enc IS NOT NULL", (user_id,))
+
+    def add_step_up_failure(self, token_hash: str) -> int:
+        with closing(self._connect()) as conn, conn:
+            conn.execute("UPDATE login_sessions SET step_up_failures = step_up_failures + 1 WHERE token_hash = ?",
+                         (token_hash,))
+            row = conn.execute("SELECT step_up_failures FROM login_sessions WHERE token_hash = ?",
+                               (token_hash,)).fetchone()
+        return int(row[0]) if row else 0
+
+    def reset_step_up_failures(self, token_hash: str) -> None:
+        with closing(self._connect()) as conn, conn:
+            conn.execute("UPDATE login_sessions SET step_up_failures = 0 WHERE token_hash = ?", (token_hash,))

@@ -1,31 +1,26 @@
 # End-to-end tests
 
-This folder will hold the Playwright for Python end-to-end tests for AuthWho. They arrive in phase P4; until then it contains only this file.
+Playwright for Python tests that drive the demo app in a real Chromium browser against the whole AuthWho stack. All behaviour is scripted; no volunteer data and no real credentials are used.
 
-## Scenarios planned
+## Scenarios
 
-1. The SDK captures events in a real browser, and no captured event or batch contains a typed character.
-2. The collector accepts a correctly signed batch and rejects a replayed, reordered or tampered one.
-3. A simulated takeover drives the trust score down and triggers the TOTP step-up; a failed step-up ends the session.
-4. An idle or scroll-only session reports insufficient signal, not a low score.
-5. The dashboard shows each decision with its plain-language explanation.
+1. The SDK captures events in a real browser, and no captured event contains a typed character or the password.
+2. The collector accepts a correctly signed batch and rejects a replayed (409) or tampered (401) one.
+3. A simulated takeover: the user enrolls by typing in one rhythm, then a much slower typist continues. Trust falls below 75, adding a payee asks "Confirm it is you", and
+   - the genuine password passes the check and the action succeeds;
+   - three wrong answers end the session and record a critical decision.
+4. A session with scrolling only is judged "insufficient signal": the action is allowed and no trust value is recorded.
 
-All behaviour in these tests is synthetic or scripted. No volunteer data and no real credentials are ever committed or used.
+## Running them
 
-## How they will be run
-
-Tests are plain pytest tests using the `pytest-playwright` plugin and carry the `e2e` marker. Services start through Docker Compose and pytest fixtures; there is no separate server helper script.
-
-From the repository root on Windows:
+From the repository root on Windows, with Docker Desktop running:
 
 ```bash
-.venv/Scripts/python -m pip install -e ".[dev,e2e]"
-.venv/Scripts/python -m playwright install chromium firefox
 docker compose up -d --wait
-.venv/Scripts/python -m pytest tests/e2e -m e2e --browser chromium --browser firefox
-docker compose down -v
+.venv/Scripts/python -m pip install -e ".[dev,e2e]"
+.venv/Scripts/python -m playwright install chromium
+npm run build -w sdk
+.venv/Scripts/python -m pytest tests/e2e -m e2e
 ```
 
-`tests/e2e` is not in the default pytest `testpaths`, so the path must be given explicitly. Only desktop browsers are targeted: Chromium and Firefox, plus Edge (`--browser-channel msedge`) where it is installed.
-
-In CI the GitHub Actions workflow `.github/workflows/ci.yml` gains an `e2e` job in P4; a commented placeholder for it is already in the workflow.
+`tests/e2e/conftest.py` starts the AuthWho API (port 18000), the worker (enrollment after 5 windows), the demo backend (18100, temporary SQLite file) and the demo frontend (15173), and stops exactly those processes afterwards. The suite takes about three minutes. CI runs it in the `e2e` job.

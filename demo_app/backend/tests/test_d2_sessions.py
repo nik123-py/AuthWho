@@ -50,7 +50,8 @@ def test_raw_session_token_is_not_stored_in_database(client, db_path):
 def test_me_returns_username_and_null_consent_when_logged_in(logged_in):
     response = logged_in.get("/api/me")
     assert response.status_code == 200
-    assert response.json() == {"username": "alice", "consent": None, "withdrawal_pending": False}
+    assert response.json() == {"username": "alice", "consent": None, "withdrawal_pending": False,
+                               "totp_enabled": False}
 
 
 def test_logout_returns_204_and_invalidates_token(logged_in):
