@@ -155,3 +155,62 @@ def test_sessions_are_independent(parts):
         scorer.on_window(CTX, rec("u1", "s1"), x.tolist())
     a = scorer.on_window(CTX, rec("u1", "s2"), X[0].tolist())
     assert a["session_id"] == "s2" and a["seq"] == 1
+
+
+class FakeMonitor:
+    def __init__(self):
+        self.updates = []
+
+    def on_update(self, u):
+        self.updates.append(u)
+
+
+class FakeControl:
+    def __init__(self):
+        self.verified = {}
+
+    def verified_at(self, sid):
+        return self.verified.get(sid)
+
+
+def _scripted_window():
+    from server.features.keystroke import extract_keystroke
+    from server.features.types import KeyPress
+    presses = [KeyPress(1, 150.0 * k, 150.0 * k + 80.0) for k in range(50)]
+    return extract_keystroke(presses).values
+
+
+def test_bot_flags_reach_the_update_and_the_monitor():
+    store, pub, clock = FakeStore(), FakePublisher(), Clock()
+    mon = FakeMonitor()
+    scorer = TrustScorer(store, pub, enroll_windows=8, clock=clock, monitor=mon)
+    u = scorer.on_window(CTX, rec("u1", "s1"), _scripted_window())
+    assert u["bot_flags"][0]["kind"] == "timing_regularity"
+    assert mon.updates == [u]
+
+
+def test_replayed_window_is_flagged():
+    store, pub, clock = FakeStore(), FakePublisher(), Clock()
+    store.recent = [genuine(1, len(KF1_NAMES), seed=3)[0].tolist()]
+    store.recent_windows = lambda user, channel, dkey, exclude, limit: store.recent
+    scorer = TrustScorer(store, pub, enroll_windows=8, clock=clock)
+    u = scorer.on_window(CTX, rec("u1", "s1"), store.recent[0])
+    assert any(f["kind"] == "replay_match" for f in u["bot_flags"])
+
+
+def test_passed_step_up_restores_full_trust():
+    store, pub, clock = FakeStore(), FakePublisher(), Clock()
+    ctl = FakeControl()
+    scorer = TrustScorer(store, pub, enroll_windows=8, clock=clock, control=ctl)
+    X = genuine(8, len(KF1_NAMES))
+    for x in X:
+        store.add_window("u1", "keystroke", "mouse", x)
+        scorer.on_window(CTX, rec("u1", "s1"), x.tolist())
+    for k in range(5):
+        clock.t += 10
+        low = scorer.on_window(CTX, rec("u1", "s1"), (genuine(1, len(KF1_NAMES), seed=70 + k)[0] * 3).tolist())
+    assert low["trust"] < 60
+    ctl.verified["s1"] = clock.t + 1
+    clock.t += 5
+    after = scorer.on_window(CTX, rec("u1", "s1"), genuine(1, len(KF1_NAMES), seed=99)[0].tolist())
+    assert after["trust"] >= 90

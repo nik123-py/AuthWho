@@ -51,6 +51,17 @@ class PgScoringStore:
             rows = conn.execute(query, params).fetchall()
         return [(decrypt_features(bytes(enc), self.key, str(wid)), float(q)) for wid, enc, q in rows]
 
+    def recent_windows(self, user_id: str, channel: str, dkey: str, exclude: str, limit: int) -> list[list[float]]:
+        """The user's other windows on this channel from the last 30 days, newest first, for replay checks."""
+        query = ("SELECT window_id, features_enc FROM windows WHERE user_id = %s AND channel = %s "
+                 "AND window_id <> %s AND created_at > now() - interval '30 days' "
+                 + ("" if dkey == "any" else "AND pointer_device = %s ")
+                 + "ORDER BY created_at DESC LIMIT %s")
+        params = (user_id, channel, exclude, limit) if dkey == "any" else (user_id, channel, exclude, dkey, limit)
+        with self._connect() as conn:
+            rows = conn.execute(query, params).fetchall()
+        return [decrypt_features(bytes(enc), self.key, str(wid)) for wid, enc in rows]
+
     def save_profile(self, user_id: str, channel: str, dkey: str, template: dict) -> bool:
         """Store a template, replacing any earlier version. False if the user is gone or opted out."""
         profile_id = str(uuid.uuid4())
