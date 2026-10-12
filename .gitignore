@@ -1,0 +1,26 @@
+# Secrets: only .env.example is committed
+.env
+.env.*
+!.env.example
+
+# Python
+__pycache__/
+*.pyc
+.venv/
+.pytest_cache/
+.coverage
+htmlcov/
+
+# Node
+node_modules/
+dist/
+coverage/
+
+# Datasets and volunteer data are downloaded or collected locally, never committed
+data/
+
+# Playwright output
+test-results/
+playwright-report/
+
+authwho.egg-info/

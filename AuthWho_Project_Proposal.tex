@@ -1,0 +1,466 @@
+% AuthWho Project Proposal
+% Compile with: pdflatex AuthWho_Project_Proposal.tex (run twice so citations resolve)
+\documentclass[10pt,letterpaper]{article}
+
+% ---------------- Page setup ----------------
+\usepackage[letterpaper,left=0.8in,right=0.8in,top=0.7in,bottom=0.7in]{geometry}
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+
+% ---------------- Fonts ----------------
+\usepackage[scaled=1.05]{helvet}
+\renewcommand{\familydefault}{\sfdefault}
+% Consolas-like monospace for the architecture diagram (falls back gracefully)
+\IfFileExists{inconsolata.sty}{\usepackage[scaled=0.95]{inconsolata}}{%
+  \IfFileExists{zi4.sty}{\usepackage[scaled=0.95]{zi4}}{}}
+
+% ---------------- Colours ----------------
+\usepackage[table]{xcolor}
+\definecolor{navy}{HTML}{17324D}
+\definecolor{gold}{HTML}{B08D57}
+\definecolor{slate}{HTML}{5B6770}
+\definecolor{panel}{HTML}{F3F6F8}
+\definecolor{white}{HTML}{FFFFFF}
+\definecolor{rulegrey}{HTML}{C9D1D7}
+
+% ---------------- Packages ----------------
+\usepackage{microtype}
+\usepackage{tabularx}
+\usepackage{xltabular}
+\usepackage{booktabs}
+\usepackage{array}
+\usepackage{enumitem}
+\usepackage{titlesec}
+\usepackage{tcolorbox}
+\usepackage[hidelinks]{hyperref}
+\hypersetup{colorlinks=true,linkcolor=navy,urlcolor=navy,citecolor=navy}
+\urlstyle{same}
+
+% ---------------- Paragraphs and lists ----------------
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{3pt}
+\setlist{itemsep=1pt,topsep=2pt,parsep=0pt,partopsep=0pt,leftmargin=16pt}
+\setlist[itemize]{label={\color{navy}\textbullet}}
+\pagestyle{plain}
+\raggedbottom
+
+% ---------------- Section headings ----------------
+\titleformat{\section}{\color{navy}\bfseries\fontsize{18}{22}\selectfont}{\thesection.}{0.4em}{}
+\titleformat{name=\section,numberless}{\color{navy}\bfseries\fontsize{18}{22}\selectfont}{}{0pt}{}
+\titlespacing*{\section}{0pt}{9pt}{3pt}
+
+% ---------------- Callout boxes ----------------
+\newtcolorbox{callout}[1]{colback=panel,colframe=gold,boxrule=0pt,leftrule=3pt,
+  arc=0pt,outer arc=0pt,left=9pt,right=9pt,top=5pt,bottom=5pt,
+  before skip=6pt,after skip=8pt,
+  fontupper=\normalsize,
+  before upper={{\color{gold}\bfseries\small\MakeUppercase{#1}}\par\vspace{3pt}}}
+
+% ---------------- Tables ----------------
+\newcolumntype{L}{>{\raggedright\arraybackslash}X}
+\newcolumntype{P}[1]{>{\raggedright\arraybackslash}p{#1}}
+\newcommand{\hd}[1]{\textcolor{white}{\bfseries #1}}
+\newcommand{\headrow}{\rowcolor{navy}}
+\arrayrulecolor{rulegrey}
+\renewcommand{\arraystretch}{1.12}
+\usepackage{etoolbox}
+
+\AtBeginEnvironment{xltabular}{\fontsize{8.6}{10.2}\selectfont}
+\setlength{\tabcolsep}{5pt}
+
+% ---------------- References ----------------
+\renewcommand{\refname}{References}
+\makeatletter
+\renewcommand{\@biblabel}[1]{[#1]}
+\makeatother
+
+\setlength{\LTpre}{4pt}\setlength{\LTpost}{2pt}
+\begin{document}
+
+% ================= Title block =================
+{\color{navy}\bfseries\fontsize{29}{34}\selectfont AuthWho\par}
+\vspace{2pt}
+{\color{slate}\itshape\fontsize{13}{16}\selectfont Continuous Behavioural Biometric Authentication Engine for Web Sessions\par}
+\vspace{4pt}
+
+\begin{callout}{One-line pitch}
+AuthWho keeps checking who is behind a session after login, using how the person types, moves the mouse and interacts with the page. When confidence drops it reacts in proportion (quiet monitoring, step-up verification, re-authentication or session termination), and when there is not enough behaviour to judge it says so explicitly instead of guessing.
+\end{callout}
+
+% ================= 1 =================
+\section{Executive proposal}
+
+AuthWho is a continuous authentication system for web applications. It is designed for settings where a hijacked session is expensive: web applications in general, banking and fintech portals, administrator consoles, online examination portals and remote-work tools. Rather than fully trusting a session once the password and multi-factor authentication (MFA, a second check such as a one-time code or phone approval) have been passed, AuthWho learns a behavioural profile for each user from keystroke timing, mouse motion and page-interaction patterns, and compares live behaviour against that profile for the whole session. The output is a continuous trust score with an attached confidence value, which a policy engine converts into proportionate actions.
+
+The defining principle is that \textbf{trust is continuous, earned from behaviour, and every decision must be explainable and privacy-preserving}. The system must be able to distinguish ``this is the enrolled user'' from ``this is probably someone else'' and from ``there is not enough signal to tell''. This makes the project a strong demonstration of behavioural biometrics, streaming machine learning, anomaly detection, adversarial machine learning, privacy engineering and secure system design. It needs no special hardware: all signals come from an ordinary laptop's keyboard, mouse or touchpad through standard browser events, and the whole system uses free, open-source software.
+
+% ================= 2 =================
+\section{AuthWho in simple words}
+
+Today, most websites check who you are only once, when you log in. After you type your password and approve the code on your phone, the website trusts everything that happens next until you log out. If someone else takes over at that point, for example by stealing your logged-in session through a fake website, or simply by sitting down at your unlocked laptop, the website has no way of noticing that it is no longer you.
+
+AuthWho fixes this by paying attention to \emph{how} you use the computer, not \emph{what} you type. Everyone has a personal typing rhythm, a personal way of moving and clicking the mouse, and personal habits when filling in forms or moving around a website. AuthWho learns this ``behavioural signature'' and quietly keeps comparing it with what is happening now. If the behaviour stops looking like you, it first watches more carefully, then asks for a quick extra check before anything risky (such as sending money), and ends the session if the check fails. It never records the letters you type, only timing and movement, and if you are simply reading or away from the keyboard, it honestly says ``I cannot tell yet'' instead of making a guess.
+
+\begin{callout}{In simple words}
+Think of a bank cashier who has served the same customer for years. One day a stranger walks in with that customer's genuine passbook. The passbook is real, but the cashier notices that ``something is off'' in the way this person behaves. The passbook is your password and OTP. The cashier's familiarity with how you behave is AuthWho.
+\end{callout}
+
+% ================= 3 =================
+\section{Problem statement}
+
+\emph{In everyday words: websites check your identity once at the door and then never look again, and attackers exploit exactly that gap.}
+
+Authentication in most systems is a point-in-time event. Once login and MFA succeed, the server issues a session token (a random value, usually stored in a session cookie, that proves ``this browser already logged in''), and every later request carrying that token is trusted. NIST's guidelines already treat reauthentication and session management as part of authentication \cite{nist80063b}, and zero trust architecture (a model in which no request is trusted by default) calls for continuous evaluation of trust \cite{nist800207}. In practice, these gaps remain:
+
+\begin{itemize}
+  \item MFA is a one-time check: after it succeeds, the rest of the session inherits full trust regardless of who is actually operating it.
+  \item Stolen session cookies and tokens can be replayed from another machine. Adversary-in-the-middle phishing kits (fake login pages that relay traffic to the real site) capture the cookie after the victim completes MFA, so MFA is bypassed rather than broken.
+  \item Unattended, unlocked computers let anyone nearby act inside an authenticated session.
+  \item Credential sharing and insider misuse: the person using an account is not always its owner.
+  \item Bots and remote-access malware (software that lets an attacker control a victim's computer) can act inside a real session from the victim's own device and network.
+  \item Account takeover after credential stuffing (automated login attempts using passwords leaked from other sites) produces sessions that look valid from the server's point of view.
+  \item IP address, geolocation and device-fingerprint rules help, but an attacker on the same device, or behind a proxy in the same city, passes all of them.
+\end{itemize}
+
+% ================= 4 =================
+\section{Proposed solution}
+
+\emph{In everyday words: a small piece of code in the web page measures the rhythm of typing and mouse movement, a server compares it with the user's usual rhythm, and a set of rules decides what to do.}
+
+\begin{itemize}
+  \item A lightweight browser JavaScript SDK (software development kit, a small library added to the web application) that listens to standard keyboard, mouse, scroll and focus events and records key-down and key-up times with a coarse key-category code, pointer positions and click times. It never records which character was typed, and it does no feature extraction: it only converts timestamps to relative times and batches the events.
+  \item Keystroke dynamics features (measurements of typing rhythm): dwell time (how long a key is held down), flight time (the gap between releasing one key and pressing the next), key rollover (pressing the next key before releasing the previous one), the rhythm of errors and corrections, and digraph and trigraph latencies (timings across pairs and triples of keys) \cite{monrose2000,killourhy2009,dhakal2018}. Because AuthWho sees only key categories, digraphs are computed per category pair (for example letter$\rightarrow$space or letter$\rightarrow$backspace) rather than per key pair (for example t$\rightarrow$h). This deliberately gives up part of the per-key signal in exchange for privacy, and the accuracy cost is measured as an explicit experiment (Section 13).
+  \item Mouse dynamics features (measurements of pointer movement): velocity, acceleration, curvature, pause distribution, click timing and movement efficiency (straight-line distance divided by path length) \cite{ahmed2007,shen2013,antal2021}. Mouse and touchpad input behave differently, so the pointing device type is recorded and each user gets a separate pointer profile per device type.
+  \item Interaction features: navigation patterns, hesitation before sensitive actions, form-filling order, scrolling behaviour and use of copy and paste.
+  \item Per-user profile enrollment from a consented initial period of normal use, stored as an encrypted template (model parameters and summary statistics of window features, not raw events).
+  \item Continuous trust scoring over sliding windows of recent actions, fusing channels in the spirit of the penalty-and-reward trust model used for combined keystroke and mouse continuous authentication \cite{mondal2017}.
+  \item A policy engine that maps the trust score, its confidence and the sensitivity of the requested action to an outcome.
+  \item Bot and replay detection (machine-like timing, impossible motion, repeated behaviour) and drift-aware profile updates (behaviour changes slowly over time) that accept data only from verified sessions.
+  \item An administrator view that explains every decision in terms of which channels and features moved the score.
+\end{itemize}
+
+\textbf{Scope and limits.} AuthWho targets desktop web only: laptop and desktop browsers (Chrome, Firefox, Edge) with a physical keyboard and a mouse or touchpad. Mobile browsers and touchscreens are out of scope. People who use screen readers, on-screen keyboards, voice input, switch devices or other assistive tools, or who have motor impairments, may type and point in ways that vary more than the models expect. They must never be locked out: any user can opt out of one or all channels at enrollment, an administrator can exempt a user or role, and an opted-out channel is treated as ``insufficient signal'', so the session falls back to normal rules. The strongest action AuthWho can take is to ask for the user's normal credentials again; it never disables an account.
+
+% ================= 5 =================
+\section{Concrete example}
+
+A finance analyst logs in with a password and MFA and then steps away from the desk. Either a phishing kit has already captured the session cookie and an attacker replays it on another machine, or a colleague uses the unlocked laptop directly. Within the first few dozen keystrokes, the new operator's dwell and flight times sit well outside the analyst's usual range, and the mouse moves in faster, straighter strokes with different pauses before clicks. AuthWho's trust score falls steadily over the next few seconds while its confidence rises, because both channels agree. The operator then tries to add a new payee and export a customer report, two actions marked as high risk. Before either completes, AuthWho requires step-up verification (an extra identity check at that moment); when that fails, the action is blocked, the session is ended and an incident record lists the features and time windows behind the decision. Earlier, while the real analyst was only scrolling through a report, AuthWho did not guess: it reported ``insufficient behavioural signal'' and left the session under normal rules.
+
+% ================= 6 =================
+\section{Industry-grade architecture}
+
+\emph{In everyday words: signals flow from the browser to a server that turns them into measurements, scores them against the user's profile, and hands the result to a rule engine that decides what to do.}
+
+\begingroup
+\fontsize{8.5}{9.3}\selectfont
+\begin{verbatim}
+ Browser SDK (TypeScript): key-down/up times, key category, pointer motion; no characters
+   |  HTTPS + WebSocket, signed and sequence-numbered batches
+   v
+ Event Collector API (FastAPI): auth, schema check, rate limiting, nonce check
+   v
+ Redis Streams: raw event batches, expire after 24 hours (never copied to PostgreSQL)
+   v
+ Feature Extraction Service (server side, sliding windows per channel)
+   +--> Window Store (PostgreSQL, encrypted: feature vectors only, 30-day rolling)
+                                      |
+                  +-------------------+-------------------------+
+                  v                                             v
+     Per-User Behaviour Model <-- Profile Store     Bot / Replay Detector
+     (keystroke, pointer and      (encrypted        (automation, replay vs
+      interaction scorers)         template)         Window Store, synthetic)
+                  +-------------------+-------------------------+
+                                      v
+     Trust Score Engine: channel fusion + confidence + "insufficient signal"
+                                      v
+     Policy / Decision Engine: thresholds per app, role and action
+                                      |
+          +---------------------------+--------------------+
+          v                           v                    v
+  Step-up re-prompt            Session Manager       Decision Log
+  (TOTP in MVP; Keycloak       (continue / end)      (append-only, 90 days)
+   OIDC as stretch goal)
+          +---------------------------+--------------------+
+                                      v
+     Admin Dashboard (React): live trust over WebSocket, explanations, reports
+ All services run locally with Docker Compose on a single laptop.
+\end{verbatim}
+\endgroup
+
+\begin{callout}{Architecture principle}
+Separate raw signal capture, scoring and policy so that each can change independently; never capture which characters were typed, and keep raw timing events only as long as feature extraction needs them; keep scoring asynchronous and off the user's request path so that the application never waits for the model; persist every decision together with the evidence and confidence behind it rather than only the final verdict.
+\end{callout}
+
+% ================= 7 =================
+\section{The trust model}
+
+\emph{In everyday words: AuthWho never simply says ``yes'' or ``no''; it says how sure it is, why, and what it is allowed to do at that level of certainty.}
+
+Every decision is a trust statement backed by signals. ``Typing rhythm over the last 60 keystrokes matches the enrolled profile'' is a direct observation. ``The current operator is probably not the enrolled user'' is an inference supported by several channels diverging together. ``The operator is the enrolled user'' is recorded as ``Cannot determine'' if the user has been idle and there are too few recent events to score.
+
+\begin{xltabular}{\textwidth}{P{3.1cm} L P{4.6cm}}
+\headrow \hd{Trust level} & \hd{Example signal pattern} & \hd{Allowed system action} \\
+\endhead
+High confidence & Keystroke and mouse channels both match the profile within normal variation & Continue silently \\ \hline
+Moderate deviation & One channel deviates (for example a new keyboard, tiredness, or an unusual task) while others match & Keep monitoring; apply stricter thresholds for sensitive actions \\ \hline
+Strong deviation & Several channels diverge together, or timing looks bot-like or replayed & Step-up authentication before continuing \\ \hline
+Critical & Strong deviation combined with a high-risk action, or confirmed automation & Block the action and end the session \\ \hline
+Insufficient signal & User idle, only scrolling, or too few events in the window & Report ``Cannot determine''; fall back to normal session rules \\
+\end{xltabular}
+
+% ================= 8 =================
+\section{Continuous authentication pipeline}
+
+\emph{In everyday words: these are the steps AuthWho repeats every few seconds, from noticing a key press to deciding whether the session is still safe.}
+
+\begin{enumerate}[label=\arabic*.,leftmargin=18pt]
+  \item Signal capture: the SDK records key-down and key-up times with a coarse key-category code (letter, digit, space, backspace, modifier, navigation), pointer coordinates with high-resolution timestamps, clicks, scrolls and focus changes.
+  \item Secure transport: events are batched, sequence-numbered and signed with a per-session key, then sent over HTTPS or WebSocket so that tampered, reordered or replayed batches are rejected.
+  \item Windowing: the stream is cut into overlapping windows defined by a number of actions (for example 50 keystrokes or 30 mouse strokes) rather than a fixed time, so idle periods do not dilute the evidence.
+  \item Feature extraction: each window becomes a feature vector: dwell, flight, rollover and category-level digraph statistics for keystrokes \cite{killourhy2009}; velocity, acceleration, curvature and pause statistics per mouse stroke \cite{ahmed2007,shen2013}; and navigation and hesitation features for interaction.
+  \item Per-user scoring: each channel is scored against the user's own model (one-class models in the core scope; learned embeddings as a stretch goal) \cite{killourhy2009,acien2022,antal2021}, producing a match score and a confidence.
+  \item Fusion into a trust score: channel scores are combined with weights that depend on how much evidence each channel had, and the running trust value is updated with a penalty-and-reward rule so that single odd actions do not end a session while sustained deviation does \cite{mondal2017}.
+  \item Bot, replay and adversarial checks: timing regularity, physically implausible motion, near-exact matches to the user's stored window feature vectors from the last 30 days, and population-statistics patterns are flagged independently of the user model \cite{tey2013,serwadda2013}.
+  \item Policy decision: the policy engine combines trust, confidence and action sensitivity into continue, monitor, step-up or terminate, and writes the decision with its evidence to the audit log.
+  \item Feedback and profile update: the profile is updated only from windows in sessions that passed step-up verification or were otherwise confirmed genuine, with limits on how far a single update may move it, to prevent profile poisoning.
+\end{enumerate}
+
+% ================= 9 =================
+\section{Explainability, privacy \& adversarial robustness}
+
+\emph{In everyday words: AuthWho must be able to say why it acted, must not collect anything it does not need, and must be hard to fool on purpose.}
+
+The model never acts on its own. It produces scores and confidences; a separate, human-readable policy decides what happens, and every decision records which channels and features drove the score, the size of each deviation, the event window and the model version. A channel with too little data is marked as missing rather than estimated, making explainability a system property rather than a dashboard feature.
+
+\begin{itemize}
+  \item Characters are never captured: the SDK records only timings and coarse key-category codes. Timing data is still sensitive, because keystroke-inference research (recovering what was typed from its timing) shows that timing and category sequences can leak partial information about the text. AuthWho therefore treats all behavioural data as biometric personal data: encrypted in transit and at rest, restricted to the scoring service, never shared, and kept only as long as listed below.
+  \item Feature extraction happens on the server. Raw event batches exist only in the Redis stream and expire after 24 hours; only window feature vectors, profile templates and decisions are persisted. Moving extraction into the browser would reduce what leaves the device and is noted as future work, not part of this design.
+  \item Hashing key identities per user (to recover per-key digraphs) was considered and rejected as the default: a fixed per-user hash acts as a substitution cipher that frequency analysis can partly reverse, so it would weaken the privacy claim. It is kept only as an offline comparison in the evaluation.
+  \item Profile templates are versioned and fully deletable; users see a plain-language notice and give consent at enrollment, and can withdraw it at any time.
+  \item The design follows the data-minimisation and purpose-limitation principles of India's Digital Personal Data Protection Act, 2023 \cite{dpdp2023} and the EU GDPR \cite{gdpr2016}, which explicitly lists behavioural characteristics within its definition of biometric data.
+  \item Mimicry defence: Tey et al.\ showed that people given feedback about a victim's typing can learn to imitate it closely enough to defeat several keystroke verifiers \cite{tey2013}, so AuthWho fuses independent channels, uses features that are hard to observe from outside (rollover, correction rhythm, mouse curvature) and never shows its internal score to the operator.
+  \item Synthetic-behaviour defence: Serwadda and Phoha showed that keystroke timings generated from population statistics can substantially increase verifier error rates \cite{serwadda2013}, so AuthWho checks whether a window looks like the population average rather than like the user.
+  \item Replay and automation defence: signed, sequence-numbered batches block network replay; similarity checks against the user's 30 days of stored window feature vectors catch recorded behaviour played back; timing regularity and missing micro-corrections flag script- or ML-generated input.
+  \item Slow profile poisoning (gradually training the profile towards an attacker) is limited by verified-only updates, capped update size and alerts on sustained drift.
+\end{itemize}
+
+\begin{xltabular}{\textwidth}{P{3.6cm} P{3.8cm} P{3.1cm} L}
+\headrow \hd{Data} & \hd{Where it is kept} & \hd{How long} & \hd{Why it is kept} \\
+\endhead
+Raw event batches & Redis Streams (in memory) & At most 24 hours & Feature extraction and short-term debugging \\ \hline
+Window feature vectors & PostgreSQL, encrypted & 30 days, rolling & Replay and similarity checks; explanations \\ \hline
+Profile template & PostgreSQL, encrypted & Until re-enrollment or account deletion & Per-user scoring \\ \hline
+Decision records & PostgreSQL & 90 days & Audit trail and incident reports \\ \hline
+Volunteer research dataset & Encrypted local disk, pseudonymous IDs & Until the project ends, then deleted & Training and evaluation \\
+\end{xltabular}
+
+% ================= 10 =================
+\section{Product orientation \& UX}
+
+\emph{In everyday words: this is what administrators and users actually see and click on.}
+
+\begin{itemize}
+  \item Session list and trust timeline: live trust scores and confidence per session, charted over time with decision points marked.
+  \item Channel breakdown: separate keystroke, mouse and interaction contributions for any moment in the session.
+  \item Plain-language explanations: each decision rendered as a sentence, for example ``typing rhythm and mouse speed both diverged from this user's profile for 40 seconds''.
+  \item Policy editor (thresholds per application, role and action, plus per-user or per-role exemptions) and a guided enrollment and re-enrollment flow with channel opt-outs for new users, new hardware or assistive input.
+  \item ``What we collect'' page: an end-user privacy page listing exactly which signals are captured and which are not.
+  \item Exportable incident report: timeline, decisions, contributing features and confidence for a flagged session.
+  \item Live demo mode: an evaluator uses the author's logged-in session on a test application and watches the trust score fall in real time until step-up is triggered.
+\end{itemize}
+
+% ================= 11 =================
+\section{Engineering quality bar}
+
+\emph{In everyday words: the project is built the way real production systems are built, but sized for one student laptop, with a small core that must work and extras that are added only if time allows.}
+
+Core (part of the MVP):
+\begin{itemize}
+  \item Event-driven scoring so that capture, feature extraction, scoring and policy are independently testable and replaceable.
+  \item FastAPI for the collector and query APIs, and WebSockets for live session state on the dashboard.
+  \item PostgreSQL for users, policies, window features and decisions; Redis Streams for the event queue and Redis keys for hot session state; both started with one Docker Compose file.
+  \item Unit and replay-based tests with pytest, run on every push by a single GitHub Actions workflow (free tier).
+  \item An append-only decisions table, and secrets kept in environment files excluded from version control.
+\end{itemize}
+Stretch (added only after the MVP works end to end):
+\begin{itemize}
+  \item Model versioning with a local MLflow server and ONNX Runtime for serving exported deep models.
+  \item Self-hosted Prometheus and Grafana for scoring latency, queue lag, dropped batches and step-up rate.
+  \item A hash-chained audit log so that past decisions cannot be silently altered, and Keycloak (OIDC) in place of the built-in TOTP step-up.
+\end{itemize}
+
+\section{Tech stack and zero-cost setup}
+
+\emph{In everyday words: every tool listed here is free, and all of it runs on an ordinary laptop.}
+
+\begin{xltabular}{\textwidth}{P{2.2cm} P{3.1cm} L P{1.2cm} P{1.5cm}}
+\headrow \hd{Layer} & \hd{Technology} & \hd{Purpose / justification} & \hd{Scope} & \hd{Cost} \\
+\endfirsthead
+\headrow \hd{Layer} & \hd{Technology} & \hd{Purpose / justification} & \hd{Scope} & \hd{Cost} \\
+\endhead
+Client capture & TypeScript browser SDK & Reads standard DOM keyboard, mouse, scroll and focus events; no plugins or extra hardware & Core & Free, open source \\ \hline
+Backend & Python, FastAPI & Collector and query APIs, WebSocket push, fast to develop and test & Core & Free, open source \\ \hline
+Queue & Redis Streams & Short-lived, ordered stream of raw events between collector and feature service & Core & Free, open source \\ \hline
+Classical ML & NumPy, pandas, scikit-learn & Scaled Manhattan distance, One-Class SVM and Gaussian Mixture Models following the detector comparison in \cite{killourhy2009}, plus Isolation Forest as a standard extra baseline & Core & Free, open source \\ \hline
+Deep ML & PyTorch & Autoencoders (related to the auto-associative network in \cite{killourhy2009}); Siamese or triplet LSTM encoders following TypeNet \cite{acien2022}; 1D CNN or Transformer encoders for pointer strokes, building on \cite{antal2021} & Stretch & Free, open source \\ \hline
+Model serving and tracking & ONNX Runtime, MLflow (local) & Fast CPU inference of exported deep models; versions and metrics per experiment & Stretch & Free, open source \\ \hline
+Storage & PostgreSQL, Redis & Window features, templates, policies and decisions; hot session state & Core & Free, open source \\ \hline
+Step-up (MVP) & TOTP re-prompt (pyotp) & Built-in one-time-code re-verification inside the demo application & Core & Free, open source \\ \hline
+Step-up (upgrade) & Keycloak (self-hosted, OIDC) & Standard identity-provider re-authentication flow & Stretch & Free, open source \\ \hline
+Dashboard & React, TypeScript, Chart.js & Session list, trust timelines, channel breakdowns and policy editor & Core & Free, open source \\ \hline
+Infrastructure & Docker Compose & Whole stack on one laptop; optional free-tier hosting for a public demo & Core & Free \\ \hline
+CI & GitHub Actions & One workflow running the test suite on every push & Core & Free tier \\ \hline
+Monitoring & Prometheus, Grafana & Metrics and dashboards for latency, lag and error rates & Stretch & Free, open source \\ \hline
+Datasets & CMU, Aalto, Balabit, SapiMouse, consented volunteer data & Baselines and evaluation (see Section 13) & Core & Free \\
+\end{xltabular}
+
+The complete system runs on a single student laptop with a standard keyboard and mouse or touchpad, inside an ordinary web browser. It needs no cameras, fingerprint readers, IoT devices or other sensors, and no paid services, SIEMs (security information and event management platforms) or ML platforms. This is a strength as well as a constraint: AuthWho works on the hardware users already have.
+
+% ================= 13 =================
+\section{Evaluation plan}
+
+\emph{In everyday words: these are the numbers that show whether AuthWho catches impostors without annoying genuine users.}
+
+\begin{xltabular}{\textwidth}{P{4.3cm} L}
+\headrow \hd{Metric} & \hd{What it measures} \\
+\endhead
+False Acceptance Rate (FAR) & How often an impostor is wrongly accepted as the genuine user \\ \hline
+False Rejection Rate (FRR) & How often the genuine user is wrongly flagged as an impostor \\ \hline
+Equal Error Rate (EER) & The point where FAR equals FRR; a single number for comparing models, lower is better \\ \hline
+ROC-AUC & How well genuine and impostor behaviour are separated across all thresholds (1.0 is perfect) \\ \hline
+Time-to-detect an impostor & How many seconds, or how many actions, an impostor can perform before step-up or termination, in the spirit of the impostor-actions measure used in \cite{mondal2017} \\ \hline
+Bot / replay detection rate & Share of scripted, synthetic and replayed sessions that are caught \\ \hline
+Scoring latency (p50 / p95) & Typical and worst-case time from an event arriving to an updated trust score \\ \hline
+Robustness under drift & Error rates when the genuine user switches keyboard, is tired, or uses the system at a different time of day \\ \hline
+Robustness under attack & Error rates under population-statistics synthetic attacks \cite{serwadda2013} (core) and a small volunteer mimicry study \cite{tey2013} (stretch) \\ \hline
+Privacy cost of key categories & EER with category-level digraphs versus full key-pair digraphs on CMU and Aalto, which record key identities; this measures what the privacy choice costs \\ \hline
+Mouse versus touchpad & The same metrics reported separately for each pointing device \\ \hline
+User friction & Step-up prompts shown to genuine users per hour of active use \\
+\end{xltabular}
+
+\vspace{4pt}
+\textbf{Public datasets and their limits.} Methods are developed and baselined on free public datasets: the CMU Keystroke Dynamics benchmark (51 subjects typing the same password 400 times) \cite{killourhy2009}, the Aalto 136 million keystrokes dataset (sentence transcription by about 168,000 volunteers) \cite{dhakal2018}, the Balabit Mouse Dynamics Challenge dataset \cite{balabit2016} and the SapiMouse dataset \cite{antal2021}. None of them matches the live task. CMU is fixed-password typing, Aalto is copying given sentences rather than composing free text, and Balabit and SapiMouse are mouse-only with no keyboard data, while AuthWho sees free-text typing combined with pointer input that is often a laptop touchpad, whose strokes are shorter and slower than a mouse's. Public datasets are therefore used only for baselines and design choices; all headline numbers come from the volunteer dataset.
+
+\textbf{Consented volunteer dataset.} The target is 25 volunteers (minimum 20), each completing 6 sessions of about 15 minutes on their own laptop, spread over at least 3 different days within two weeks, which gives about 37 hours of genuine behaviour and makes drift measurable across days. Each session mixes free-text writing (short answers), form filling and browsing in a demo web application; the pointing device (mouse or touchpad) is recorded. Impostor data comes from other volunteers' sessions scored against each profile (zero-effort impostors) and from about 30 short staged takeovers in which one volunteer continues another's logged-in session. Participation requires written consent, data is stored under pseudonymous IDs, any volunteer can withdraw and have their data deleted, and any ethics approval the institution requires is obtained before collection.
+
+\textbf{Targets.} The keystroke channel should match or beat the best EER of about 9.6\% reported on the CMU benchmark \cite{killourhy2009}; deep free-text models such as TypeNet report a few per cent with large training sets \cite{acien2022}, which is not expected with 25 users. For the fused keystroke and pointer trust score on the volunteer dataset, the aim is an EER below 5\% within about one minute of active use, reported with confidence intervals because of the small number of users, and with mouse and touchpad results shown separately. Friction target: at most one step-up prompt per two hours of active use across all genuine sessions, which the roughly 37 hours of genuine data can test.
+
+% ================= 14 =================
+\section{MVP, phased roadmap and stretch goals}
+
+\emph{In everyday words: a small working version comes first, in fourteen weeks, and extras are added only after it works.}
+
+\begin{callout}{MVP (core scope)}
+Browser SDK and server-side feature extraction; one-class keystroke and pointer models (scaled Manhattan, One-Class SVM, Gaussian Mixture Model); channel fusion into a trust score with an explicit ``insufficient signal'' state; basic bot and replay checks; a policy engine with TOTP step-up and session termination; a dashboard with explanations and the live demo; and evaluation on the multi-day volunteer dataset.
+\end{callout}
+
+\begin{xltabular}{\textwidth}{P{0.9cm} P{1.5cm} L L}
+\headrow \hd{Phase} & \hd{Weeks} & \hd{Deliverable} & \hd{Success criterion} \\
+\endhead
+P0 & 1 to 2 & SDK, event schema, consent form, demo web app; volunteer sessions start & Capture verified to contain no characters; first sessions recorded \\ \hline
+P1 & 3 to 4 & Keystroke features and one-class baselines on CMU and Aalto; category versus key-pair experiment & EER comparable to published baselines; privacy cost measured \\ \hline
+P2 & 5 to 6 & Pointer and interaction features on Balabit, SapiMouse and volunteer data & Per-user pointer models with EER and AUC, mouse and touchpad separately \\ \hline
+P3 & 7 to 8 & Channel fusion, continuous trust score, ``insufficient signal'' handling & Fused score beats each single channel on volunteer data \\ \hline
+P4 & 9 to 10 & Policy engine, TOTP step-up, session termination, basic bot and replay checks & End-to-end step-up and termination driven by trust thresholds \\ \hline
+P5 & 11 to 12 & Dashboard, explanations and live demo mode & Every decision explained; live takeover demo works reliably \\ \hline
+P6 & 13 to 14 & Full evaluation on the multi-day dataset and final report & All Section 13 core metrics reported with confidence intervals \\
+\end{xltabular}
+
+Stretch goals, in priority order, after week 14: (1) deep models (autoencoder, TypeNet-style keystroke encoder, CNN or Transformer pointer encoder) served with ONNX Runtime and tracked in MLflow; (2) a volunteer mimicry study; (3) Keycloak (OIDC) step-up; (4) Prometheus and Grafana monitoring and a hash-chained audit log; (5) optional free-tier public deployment.
+
+% ================= 15 =================
+\section{Research papers referred}
+
+\emph{In everyday words: these are the published studies that AuthWho builds on, and what each one contributes.}
+
+\begin{xltabular}{\textwidth}{P{0.6cm} P{4.2cm} L L}
+\headrow \hd{\#} & \hd{Paper (authors, year, venue)} & \hd{Key idea} & \hd{How AuthWho uses it} \\
+\endfirsthead
+\headrow \hd{\#} & \hd{Paper (authors, year, venue)} & \hd{Key idea} & \hd{How AuthWho uses it} \\
+\endhead
+\cite{monrose2000} & Monrose and Rubin, 2000, Future Generation Computer Systems & Keystroke latencies and durations can identify and authenticate users, including during free-text typing & Foundation for using timing only, and for monitoring typing throughout a session rather than at login \\ \hline
+\cite{killourhy2009} & Killourhy and Maxion, 2009, IEEE/IFIP DSN & Compared 14 anomaly detectors on a common keystroke benchmark; source of the CMU dataset & Baseline one-class detectors, evaluation protocol and EER target for the keystroke channel \\ \hline
+\cite{dhakal2018} & Dhakal, Feit, Kristensson and Oulasvirta, 2018, ACM CHI & Large-scale analysis of typing behaviour from 136 million keystrokes & Realistic feature ranges, rollover as a feature, population baseline for synthetic-attack checks \\ \hline
+\cite{acien2022} & Acien, Morales, Monaco, Vera-Rodriguez and Fierrez, 2022, IEEE T-BIOM & TypeNet: LSTM-based Siamese and triplet networks for free-text keystroke authentication at scale & Embedding model for users with enough data; comparison with one-class baselines \\ \hline
+\cite{ahmed2007} & Ahmed and Traore, 2007, IEEE TDSC & Mouse dynamics as a behavioural biometric using speed, direction and action-type features & Core mouse feature set and the observation that longer observation lowers error \\ \hline
+\cite{shen2013} & Shen, Cai, Guan, Du and Maxion, 2013, IEEE TIFS & Mouse authentication from frequent operation patterns; analyses behavioural variability & Procedural mouse features and drift-aware thresholds \\ \hline
+\cite{antal2021} & Antal, Fej\'er and Buza, 2021, IEEE SACI & SapiMouse dataset and deep feature learning (1D CNN) on short raw mouse segments & Mouse-stroke encoder and benchmark for short-window mouse scoring \\ \hline
+\cite{balabit2016} & Balabit Mouse Dynamics Challenge, 2016, GitHub & Public mouse dataset with genuine and impostor test sessions & Benchmark for mouse-channel impostor detection \\ \hline
+\cite{mondal2017} & Mondal and Bours, 2017, Neurocomputing & Continuous authentication combining keystroke and mouse, with a trust model and impostor-action metrics & Trust update rule, channel fusion and time-to-detect metric \\ \hline
+\cite{tey2013} & Tey, Gupta and Gao, 2013, NDSS & Humans trained with feedback can imitate another user's keystroke timing & Mimicry threat model, hidden scores and multi-channel fusion as defences \\ \hline
+\cite{serwadda2013} & Serwadda and Phoha, 2013, ACM TISSEC & Population-statistics forgeries raise error rates of keystroke verifiers & Synthetic-behaviour threat model and population-likeness check \\ \hline
+\cite{nist80063b} & NIST SP 800-63B-4, Digital Identity Guidelines, 2025 & Authenticator assurance, reauthentication and session management requirements & Framing of step-up and reauthentication as part of session security \\ \hline
+\cite{nist800207} & NIST SP 800-207, Zero Trust Architecture, 2020 & Trust must be evaluated continuously per request, not granted once & Architectural motivation for a continuous trust score and policy engine \\
+\end{xltabular}
+
+\textbf{Research gap.} Most of the work above studies a single channel (keystroke or mouse) offline on fixed datasets. AuthWho combines several channels, scores them continuously inside a live web session, treats ``insufficient signal'' as an explicit outcome rather than forcing a decision, defends against the mimicry, synthetic and replay attacks documented in the literature, and does all of this with zero special hardware on free software.
+
+\textbf{Commercial systems.} Behavioural biometrics is already sold commercially. BioCatch offers behavioural biometrics for fraud detection in online banking, TypingDNA offers typing-biometrics authentication through an API, and BehavioSec, a continuous-authentication vendor, was acquired by LexisNexis Risk Solutions in 2022 \cite{behaviosec2022}. These products show that the approach is practical at scale, but they are closed source and report results on proprietary data, so their methods and error rates cannot be independently checked. AuthWho does not aim to compete with them; it contributes an open, reproducible implementation whose design choices (category-only capture, explicit uncertainty, documented retention) and error rates are published and testable.
+
+% ================= Glossary =================
+\section*{Glossary}
+
+\begin{xltabular}{\textwidth}{P{4.3cm} L}
+\headrow \hd{Term} & \hd{Plain-English meaning} \\
+\endhead
+MFA & Multi-factor authentication: proving identity with more than one thing, e.g.\ password plus phone code \\ \hline
+Session cookie & A value stored by the browser that tells the website ``this browser is already logged in'' \\ \hline
+Step-up authentication & Asking for an extra identity check in the middle of a session, just before a risky action \\ \hline
+Keystroke dynamics & Recognising a person by the rhythm and timing of their typing \\ \hline
+Dwell time & How long a single key is held down \\ \hline
+Flight time & The gap between releasing one key and pressing the next \\ \hline
+Mouse dynamics & Recognising a person by how they move and click the mouse \\ \hline
+Trust score & AuthWho's running estimate of how likely it is that the enrolled user is operating the session \\ \hline
+FAR & False Acceptance Rate: how often an impostor is wrongly let through \\ \hline
+FRR & False Rejection Rate: how often the real user is wrongly challenged \\ \hline
+EER & Equal Error Rate: the point where FAR and FRR are equal; lower is better \\ \hline
+Drift & Slow, natural change in a person's behaviour over time \\ \hline
+Mimicry attack & An attacker deliberately copying the victim's typing or mouse style \\ \hline
+Replay attack & Re-sending previously recorded data or behaviour to pretend to be the user \\ \hline
+Keystroke inference & Guessing what someone typed from the timing of their key presses \\ \hline
+MVP & Minimum viable product: the smallest version that works end to end \\ \hline
+OIDC & OpenID Connect: a standard way for an app to ask an identity provider to log a user in or re-verify them \\
+\end{xltabular}
+
+% ================= References =================
+\begin{thebibliography}{99}
+\setlength{\itemsep}{0pt}\setlength{\parsep}{0pt}
+\footnotesize
+
+\bibitem{monrose2000} F. Monrose and A. D. Rubin, ``Keystroke dynamics as a biometric for authentication,'' \emph{Future Generation Computer Systems}, vol.~16, no.~4, pp.~351--359, 2000.
+
+\bibitem{killourhy2009} K. S. Killourhy and R. A. Maxion, ``Comparing anomaly-detection algorithms for keystroke dynamics,'' in \emph{Proc. IEEE/IFIP International Conference on Dependable Systems and Networks (DSN)}, 2009, pp.~125--134. Dataset: \url{https://www.cs.cmu.edu/~keystroke/}
+
+\bibitem{dhakal2018} V. Dhakal, A. M. Feit, P. O. Kristensson and A. Oulasvirta, ``Observations on typing from 136 million keystrokes,'' in \emph{Proc. ACM CHI Conference on Human Factors in Computing Systems}, 2018.
+
+\bibitem{acien2022} A. Acien, A. Morales, J. V. Monaco, R. Vera-Rodriguez and J. Fierrez, ``TypeNet: Deep learning keystroke biometrics,'' \emph{IEEE Transactions on Biometrics, Behavior, and Identity Science}, vol.~4, no.~1, 2022.
+
+\bibitem{ahmed2007} A. A. E. Ahmed and I. Traore, ``A new biometric technology based on mouse dynamics,'' \emph{IEEE Transactions on Dependable and Secure Computing}, vol.~4, no.~3, pp.~165--179, 2007.
+
+\bibitem{shen2013} C. Shen, Z. Cai, X. Guan, Y. Du and R. A. Maxion, ``User authentication through mouse dynamics,'' \emph{IEEE Transactions on Information Forensics and Security}, vol.~8, no.~1, pp.~16--30, 2013.
+
+\bibitem{antal2021} M. Antal, N. Fej\'er and K. Buza, ``SapiMouse: Mouse dynamics-based user authentication using deep feature learning,'' in \emph{Proc. IEEE International Symposium on Applied Computational Intelligence and Informatics (SACI)}, 2021.
+
+\bibitem{balabit2016} Balabit, ``Mouse Dynamics Challenge,'' dataset, 2016. \url{https://github.com/balabit/Mouse-Dynamics-Challenge}
+
+\bibitem{mondal2017} S. Mondal and P. Bours, ``A study on continuous authentication using a combination of keystroke and mouse biometrics,'' \emph{Neurocomputing}, vol.~230, pp.~1--22, 2017.
+
+\bibitem{tey2013} C. M. Tey, P. Gupta and D. Gao, ``I can be you: Questioning the use of keystroke dynamics as biometrics,'' in \emph{Proc. Network and Distributed System Security Symposium (NDSS)}, 2013.
+
+\bibitem{serwadda2013} A. Serwadda and V. V. Phoha, ``Examining a large keystroke biometrics dataset for statistical-attack openings,'' \emph{ACM Transactions on Information and System Security}, vol.~16, no.~2, 2013.
+
+\bibitem{nist80063b} D. Temoshok et al., ``Digital Identity Guidelines: Authentication and Authenticator Management,'' NIST Special Publication 800-63B-4, National Institute of Standards and Technology, July 2025. \url{https://doi.org/10.6028/NIST.SP.800-63b-4}
+
+\bibitem{nist800207} S. Rose, O. Borchert, S. Mitchell and S. Connelly, ``Zero Trust Architecture,'' NIST Special Publication 800-207, National Institute of Standards and Technology, 2020. \url{https://doi.org/10.6028/NIST.SP.800-207}
+
+\bibitem{behaviosec2022} LexisNexis Risk Solutions, ``LexisNexis Risk Solutions acquires behavioral biometric innovator BehavioSec,'' press release, 3 May 2022. \url{https://risk.lexisnexis.com/about-us/press-room/press-release/20220503-behaviosec}
+
+\bibitem{dpdp2023} Government of India, \emph{The Digital Personal Data Protection Act, 2023}.
+
+\bibitem{gdpr2016} European Parliament and Council, \emph{Regulation (EU) 2016/679 (General Data Protection Regulation)}, Arts.~4(14), 5(1)(c).
+
+\end{thebibliography}
+
+{\small\color{slate} References are provided for the mentor; AuthWho is an independent personal student project, not affiliated with any cited author or organisation.\par}
+
+\end{document}
