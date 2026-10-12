@@ -102,3 +102,14 @@ def test_message_shape_seq_and_round_trip():
     assert isinstance(u2["at"], str) and u2["bot_flags"] == []
     restored = TrustEngine.from_dict(json.loads(json.dumps(e.to_dict())))
     assert restored.snapshot(now=3.0) == {**e.snapshot(now=3.0)}
+
+
+def test_bot_flags_are_carried_while_fresh():
+    e = TrustEngine("s", "u", now=0.0)
+    flag = {"kind": "timing_regularity", "severity": "high", "evidence": "x"}
+    e.add_flags([flag], now=10.0)
+    u = e.update("keystroke", scored(0.5), now=11.0)
+    assert u["bot_flags"] == [flag]
+    assert e.snapshot(now=10.0 + FRESH_S + 1)["bot_flags"] == []
+    restored = TrustEngine.from_dict(json.loads(json.dumps(e.to_dict())))
+    assert restored.snapshot(now=12.0)["bot_flags"] == [flag]
