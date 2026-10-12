@@ -19,14 +19,14 @@ Status values: todo, in progress, review, done, blocked. "Tests passing" is reco
 | P1-2 | P1 | orchestrator | done | yes | Metrics, four JSON-serialisable detectors, CMU standard protocol (scaled Manhattan EER 0.0962 vs published 0.096); Aalto subset fetcher via HTTP range requests (500 participants, seed 0) |
 | P1-3 | P1 | orchestrator | done | yes | Category vs key-pair: CMU cost +0.053 to +0.069 EER (CI excludes 0); Aalto cost -0.022 to -0.003 (categories as good or better). `experiments/results/category_vs_keypair.md` |
 | P1-4 | P1 | orchestrator | done | n/a | Privacy review by orchestrator (no subagents): worker logs counts only, windows encrypted, Aalto text discarded at parse, `data/` gitignored. PASS |
-| P2-1 | P2 | backend-engineer | todo | no | `pf-1`, `if-1` extraction and windowing |
-| P2-2 | P2 | ml-engineer | todo | no | Balabit, SapiMouse, pointer models |
-| P2-3 | P2 | ml-engineer | todo | no | Templates, enrollment, runtime scorers |
-| P2-4 | P2 | backend-engineer | todo | no | Profiles table and enrollment trigger |
-| P2-5 | P2 | privacy-reviewer | todo | n/a | |
-| P3-1 | P3 | ml-engineer | todo | no | Fusion, trust update, insufficient signal |
-| P3-2 | P3 | backend-engineer | todo | no | Worker wiring, `trust_points`, pub/sub |
-| P3-3 | P3 | privacy-reviewer | todo | n/a | |
+| P2-1 | P2 | orchestrator | done | yes | `pf-1` (22) and `if-1` (17) extractors and windowers; worker windows all three channels with per-channel opt-outs |
+| P2-2 | P2 | orchestrator | done | yes | Balabit (10 users) and SapiMouse (120) with live `pf-1`: best EER 0.163 Balabit, 0.158 SapiMouse at 30 strokes. Touchpad not measured (no labelled data) |
+| P2-3 | P2 | orchestrator | done | yes | `ml/profile.py`: JSON templates, per-user calibrated scores with a far-tail decay, top deviating features |
+| P2-4 | P2 | orchestrator | done | yes | `profiles` and `trust_points` (migration 0005), encrypted templates, enrollment at `AUTHWHO_ENROLL_WINDOWS` (default 20), deletion on withdrawal |
+| P2-5 | P2 | orchestrator | done | n/a | Privacy self-review: templates encrypted with profile id as AAD; trust points hold scores and feature names only; logs hold counts |
+| P3-1 | P3 | orchestrator | done | yes | `ml/trust.py` penalty-reward fusion with insufficient-signal state; chimeric users: fused EER 0.089 vs keystroke 0.144, pointer 0.197. Volunteer-data criterion not measurable yet |
+| P3-2 | P3 | orchestrator | done | yes | Worker scoring stage, trust points, `aw:trust` publish, staleness tick. Live SDK test: genuine trust 100, takeover below 50 after 7 windows |
+| P3-3 | P3 | orchestrator | done | n/a | Privacy self-review PASS |
 | P4-1 | P4 | policy-engineer | todo | no | Policy engine, decisions, session control API |
 | P4-2 | P4 | policy-engineer | todo | no | Bot and replay heuristics |
 | P4-3 | P4 | policy-engineer | todo | no | Demo backend TOTP and high-risk actions |

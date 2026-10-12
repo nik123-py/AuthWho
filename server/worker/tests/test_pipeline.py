@@ -131,3 +131,48 @@ def test_idle_streams_are_evicted(ids):
     now[0] = 61.0
     pipe.process([])
     assert pipe.open_streams() == 0
+
+
+def _strokes(start, n, device_gap=1000.0):
+    """n straight strokes, each 11 moves 10 ms apart, strokes 1 s apart."""
+    events = []
+    for s in range(start, start + n):
+        t0 = s * device_gap
+        events += [[3, t0 + 10.0 * i, 10.0 * i + s, 5.0 * i] for i in range(11)]
+    return events
+
+
+def _scrolls(start, n):
+    return [[7, 50.0 * k + 1.0, 0.0, float(k * 10)] for k in range(start, start + n)]
+
+
+def test_pointer_and_interaction_windows(ids):
+    user, session, stream = ids
+    store = FakeStore({session: UserContext(user, (), False)})
+    pipe = FeaturePipeline(store, KEY)
+    events = _strokes(0, 31) + _scrolls(0, 20)
+    assert pipe.process([_entry(session, stream, 0, events, device="touchpad")]) == 2
+    by_channel = {r.channel: r for r in store.rows}
+    p, i = by_channel["pointer"], by_channel["interaction"]
+    assert (p.schema, p.pointer_device, p.n_actions) == ("pf-1", "touchpad", 30)
+    assert (i.schema, i.n_actions) == ("if-1", 20)
+    assert p.start_t == 0.0 and p.end_t == 29 * 1000.0 + 100.0
+    assert len(decrypt_features(p.features_enc, KEY, p.window_id)) == 22
+    assert len(decrypt_features(i.features_enc, KEY, i.window_id)) == 17
+
+
+def test_each_channel_honours_its_own_opt_out(ids):
+    user, session, stream = ids
+    store = FakeStore({session: UserContext(user, ("pointer",), False)})
+    pipe = FeaturePipeline(store, KEY)
+    events = _presses(0, 50) + _strokes(0, 31) + _scrolls(0, 20)
+    pipe.process([_entry(session, stream, 0, events)])
+    assert sorted(r.channel for r in store.rows) == ["interaction", "keystroke"]
+
+
+def test_keystroke_opt_out_still_windows_pointer(ids):
+    user, session, stream = ids
+    store = FakeStore({session: UserContext(user, ("keystroke", "interaction"), False)})
+    pipe = FeaturePipeline(store, KEY)
+    pipe.process([_entry(session, stream, 0, _presses(0, 50) + _strokes(0, 31) + _scrolls(0, 20))])
+    assert [r.channel for r in store.rows] == ["pointer"]

@@ -49,6 +49,7 @@ All secrets come from `.env` (gitignored). `.env.example` lists every variable w
 | `AUTHWHO_CORS_ORIGINS` | collector | Comma-separated allowed browser origins |
 | `AUTHWHO_COLLECTOR_URL` | demo backend | AuthWho API base URL, default `http://localhost:8000` |
 | `DEMO_DB_PATH` | demo backend | SQLite file for demo users, default `data/demo/demo.sqlite` |
+| `AUTHWHO_ENROLL_WINDOWS` | worker | Windows needed before a channel's profile is trained, default 20, minimum 5 |
 | `DEMO_WITHDRAWAL_RETRY_SECONDS` | demo backend | Interval for retrying unconfirmed consent withdrawals, default 300, must be greater than zero |
 | `DEMO_SECRET_KEY` | demo backend | Reserved for signing demo app values; login sessions use opaque server-side tokens |
 | `DEMO_TOTP_KEY` | demo backend | 32-byte key, base64, encrypting stored TOTP secrets |
@@ -219,7 +220,7 @@ Window store (PostgreSQL table `windows`):
 
 ## 9. Profiles, scoring and trust
 
-Profile template (table `profiles`): one active template per user, channel and, for the pointer channel, device type.
+Profile template (table `profiles`, migration `0005`): one active template per user, channel and device key, where the device key is the pointer device type for the pointer channel and `any` for keystroke and interaction. The template is the JSON document built by `ml/profile.py` (model parameters, per-feature mean and deviation, and a per-user calibration set), encrypted with the `profile_id` bytes as associated data.
 
 | Column | Type | Notes |
 |---|---|---|
@@ -232,7 +233,7 @@ Profile template (table `profiles`): one active template per user, channel and, 
 | `n_windows` | int | Enrollment windows used |
 | `created_at` | timestamptz | Kept until re-enrollment or account deletion |
 
-Enrollment: a channel is enrolled once the user has at least 20 windows on that channel (and device type) from consented sessions. Until then the channel's status is `no_profile`.
+Enrollment: a channel is enrolled once the user has at least 20 windows on that channel (and device type) from consented sessions (`AUTHWHO_ENROLL_WINDOWS`, minimum 5, may lower this for demos). Until then the channel's status is `no_profile`. Scores are calibrated per user: `score` is the share of the user's own cross-validated enrollment scores at or below the window's raw score, so genuine windows score roughly uniformly in (0, 1) (ruling R14).
 
 Channel score (output of `ml` scorers, one per window):
 
@@ -273,7 +274,8 @@ Trust update (output of the `ml` trust engine, one per session after each scored
 
 - `trust` is in [0, 100], higher means more likely the enrolled user. It starts at 100 when the session starts (the user has just passed login and MFA) and moves with the penalty-and-reward rule (Mondal and Bours) applied to evidence-weighted channel scores.
 - `state` is `scored` or `insufficient_signal`. It is `insufficient_signal` when no channel has a fresh `scored` window (fresh means the window ended within the last 120 s). In that state `trust` and `confidence` are `null` in the message, so no consumer can act on a stale or guessed number. The engine keeps its internal running value for when evidence returns.
-- Trust updates are stored in table `trust_points` for the dashboard timeline and incident reports, and deleted after 30 days, the same as the windows they derive from.
+- Trust updates are stored in table `trust_points` (`session_id`, `user_id`, `seq`, `at`, `state`, `trust`, `confidence`, and the whole update as `payload`) for the dashboard timeline and incident reports, and deleted after 30 days, the same as the windows they derive from. Each update is also published on `aw:trust` as `{"type": "trust", "data": <update>}` and kept as `last_trust` in `aw:session:{session_id}`.
+- Trust update constants: TAU 0.25, REWARD 5, PENALTY 10; channel weights keystroke 1, pointer 1, interaction 0.5 (`ml/trust.py`, ruling R13). A channel whose user opted out reports status `opted_out`.
 
 ## 10. Bot and replay flags
 
@@ -412,5 +414,6 @@ Errors are always `{"error": "<code>"}`, never echoing submitted input: `usernam
 | Date | Version | Change |
 |---|---|---|
 | 2026-10-09 | 1 | First version |
+| 2026-10-12 | 1.3 | Pointer (`pf-1`, 22 features) and interaction (`if-1`, 17 features) windows in the worker; `profiles` and `trust_points` tables (migration 0005) with `device_key`; per-user score calibration; trust constants; `AUTHWHO_ENROLL_WINDOWS` |
 | 2026-10-09 | 1.1 | Added user consent endpoints (section 4), `sessions` table and research consumer (section 12), SDK public API (section 14), demo app API (section 15) |
 | 2026-10-12 | 1.2 | `windows` table gains `stream_id`; `features_enc` uses `window_id` as associated data; `kf-1` fixed at 35 features. Withdrawal deletes the `users` row before the user's data rows, and writers lock the user row before inserting |

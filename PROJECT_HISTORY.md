@@ -56,11 +56,20 @@ Earlier notes on the Aalto archive, kept for reference:
 - Reading the central directory over range requests took about 37 s.
 - Decision: do not download the whole archive into this OneDrive folder. Read the zip's central directory with HTTP range requests and fetch only a documented, seeded subset of participant files into `data/aalto/` (gitignored). A working probe is in the session scratchpad; the proper fetcher still has to be written in `ml/datasets/aalto.py`.
 
+### 2026-10-12: P2 and P3 (owner: "do it by yourself", keep going until it works with ML)
+- P2-1: `server/features/pointer.py` (`pf-1`, 22 features, strokes end on a click or a 300 ms pause) and `server/features/interaction.py` (`if-1`, 17 features); the worker windows all three channels, each honouring its own opt-out.
+- P2-2: `ml/datasets/mouse.py` reads Balabit and SapiMouse archives in place; `experiments/pointer_baselines.py`: best mean EER 0.163 (Balabit, OCSVM) and 0.158 (SapiMouse, scaled Manhattan, 30 strokes). Touchpad not measured (no labels).
+- P2-3: `ml/profile.py`: JSON templates, per-user calibration (cross-validated enrollment scores; far-tail exponential decay below the floor), top deviating features.
+- P2-4 and P3-2: migration `0005` (`profiles` with `device_key`, `trust_points`), `server/worker/scoring.py` and `scoring_store.py`: enrollment at `AUTHWHO_ENROLL_WINDOWS` (default 20), scoring, trust engine per session, trust points stored and published on `aw:trust`, staleness tick; withdrawal and 30-day retention cover both tables.
+- P3-1: `ml/trust.py` (TAU 0.25, PENALTY 10, REWARD 5; rulings R13 and R14). `experiments/fusion_chimeric.py` (SapiMouse users paired with Aalto typists, indicative only): fused EER 0.089 vs keystroke 0.144 and pointer 0.197; 2 of 119 genuine users ever below 50; 80% of impostors below 75 within 12 windows.
+- Live test with the built SDK through API, demo backend and worker (enrollment 5): genuine typist trust 100; a different typist on a new login fell 91.8, 83.5, ... 34.2 over 8 windows.
+- Verified: 472 Python and 217 Vitest tests passing.
+
 ## Next steps
 
-1. P2 (owner asked on 2026-10-12 to keep going until the system works end to end with ML): pointer and interaction features (`pf-1`, `if-1`) and their windowers, wired into the worker.
-2. P2: Balabit and SapiMouse pointer baselines (mouse; touchpad needs volunteer data).
-3. P2: JSON profile templates, enrollment at 20 windows, runtime channel scorers. Then P3 fusion and trust, P4 policy and TOTP, P5 dashboard.
+1. P4: policy engine (levels and defaults in `docs/interfaces.md` section 11), append-only `decisions` table, session control API (`status`, `actions`, `step-up-result`), bot and replay heuristics, TOTP step-up in the demo backend, demo frontend step-up and termination screens.
+2. P5: admin API and WebSocket, dashboard, live demo mode, app containers in Compose.
+3. P6: evaluation report.
 
 ## Open items carried forward
 - P0-5 follow-up for P5: login token expiry and Secure cookie.

@@ -99,6 +99,7 @@ jobs:
       DEMO_TOTP_KEY: ZHVtbXktZGVtby10b3RwLWtleS0zMi1ieXRlcy1vayE=
       RESEARCH_EXPORT_KEY: ZHVtbXktcmVzZWFyY2gtZXhwb3J0LWtleS0zMmJ5dGU=
       DEMO_WITHDRAWAL_RETRY_SECONDS: "300"
+      AUTHWHO_ENROLL_WINDOWS: "20"
     steps:
       - name: Start Redis without persistence
         # Same image and flags as docker-compose.yml: no RDB snapshots and no

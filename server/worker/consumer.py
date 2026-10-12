@@ -13,6 +13,7 @@ from __future__ import annotations
 
 import argparse
 import logging
+import os
 import sys
 
 import redis
@@ -20,6 +21,8 @@ import redis
 from server.common.config import ConfigError, load_env_file, load_settings
 from server.common.redis_keys import EVENTS_STREAM
 from server.worker.pipeline import FeaturePipeline
+from server.worker.scoring import ENROLL_WINDOWS, TrustScorer
+from server.worker.scoring_store import PgScoringStore, RedisTrustPublisher
 from server.worker.store import PgWindowStore, WindowStore
 
 GROUP = "features"
@@ -81,12 +84,19 @@ def main(argv: list[str] | None = None) -> int:
     except ConfigError as exc:
         print(f"configuration error: {exc}", file=sys.stderr)
         return 2
-    pipeline = FeaturePipeline(store, key)
+    enroll = int(os.environ.get("AUTHWHO_ENROLL_WINDOWS", ENROLL_WINDOWS))
+    if enroll < 5:
+        print("configuration error: AUTHWHO_ENROLL_WINDOWS must be at least 5", file=sys.stderr)
+        return 2
+    scorer = TrustScorer(PgScoringStore(settings.require("database_url"), key), RedisTrustPublisher(client),
+                         enroll_windows=enroll)
+    pipeline = FeaturePipeline(store, key, on_window=scorer.on_window)
     try:
         while True:
             written = run_once(client, None, None, block_ms=BLOCK_MS, pipeline=pipeline)
             if written:
                 log.info("wrote %d window(s)", written)
+            scorer.tick()
             if args.once:
                 return 0
     except KeyboardInterrupt:

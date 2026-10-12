@@ -27,3 +27,7 @@ def session_key(session_id: str) -> str:
 def raw_event_min_id(now_ms: int) -> str:
     """Smallest stream ID allowed to survive: anything older than 24 hours goes."""
     return str(now_ms - RAW_EVENT_RETENTION_MS)
+
+
+# Pub/Sub channel for trust updates and decisions (dashboard WebSocket).
+TRUST_CHANNEL = "aw:trust"
