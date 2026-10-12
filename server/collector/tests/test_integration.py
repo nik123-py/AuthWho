@@ -105,7 +105,8 @@ def test_batches_do_not_change_postgresql(stack):
     client, _, conn, r = stack
     _, sid, stream = open_stream(client)
     before = _row_counts(conn)
-    assert before == {"sessions": 1, "users": 1}
+    assert before == {t: (1 if t in ("sessions", "users") else 0) for t in before}
+    assert before["sessions"] == 1 and before["users"] == 1
     for seq in range(5):
         events = [[1, MARKER_T + seq, 1, seq], [2, MARKER_T + seq + 50, 1, seq]]
         assert post_batch(client, sid, stream, seq=seq, events=events).status_code == 202

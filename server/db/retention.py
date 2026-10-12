@@ -8,7 +8,7 @@ One function per rule. PostgreSQL rules take ``(conn, now=None)`` and return
 the number of rows deleted; ``run_rule`` runs each in its own transaction with
 ``authwho.retention = on`` (the append-only decision log only allows deletes
 under that setting). Later phases add their rules to ``DB_RULES``:
-windows (30 days), trust points (30 days) and decisions (90 days).
+trust points (30 days) and decisions (90 days).
 Only counts are printed, never row contents.
 """
 
@@ -28,6 +28,7 @@ from server.common.config import load_env_file
 from server.common.redis_keys import EVENTS_STREAM, raw_event_min_id
 
 SESSION_RETENTION = timedelta(days=90)
+WINDOW_RETENTION = timedelta(days=30)
 
 DbRule = Callable[..., int]
 
@@ -43,13 +44,20 @@ def delete_expired_sessions(conn: psycopg.Connection, now: datetime | None = Non
     return cur.rowcount
 
 
+def delete_expired_windows(conn: psycopg.Connection, now: datetime | None = None) -> int:
+    cur = conn.execute(
+        "DELETE FROM windows WHERE created_at < %s", (_now(now) - WINDOW_RETENTION,)
+    )
+    return cur.rowcount
+
+
 def trim_raw_events(client: redis.Redis, now_ms: int | None = None) -> int:
     """Remove raw event batches older than 24 hours, even if no new batch arrives."""
     now_ms = int(time.time() * 1000) if now_ms is None else now_ms
     return int(client.xtrim(EVENTS_STREAM, minid=raw_event_min_id(now_ms), approximate=False))
 
 
-DB_RULES: list[DbRule] = [delete_expired_sessions]
+DB_RULES: list[DbRule] = [delete_expired_sessions, delete_expired_windows]
 
 
 def run_rule(conn: psycopg.Connection, rule: DbRule, now: datetime | None = None) -> int:

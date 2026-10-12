@@ -1,0 +1,1742 @@
+{
+  "experiment": "cmu_standard_protocol",
+  "command": "python -m experiments.cmu_standard_protocol",
+  "dataset": {
+    "file": "data/cmu/DSL-StrongPasswordData.csv",
+    "sha256": "b11d23538b1865fa6ecf4e8b78567caa312e9c1027604bb022fcc6ad7eaa7a33",
+    "n_subjects": 51,
+    "n_rows": 20400,
+    "n_features": 31
+  },
+  "protocol": {
+    "n_train": 200,
+    "n_genuine_test": 200,
+    "n_impostor_reps_per_other_subject": 5
+  },
+  "seed": 0,
+  "environment": {
+    "python": "3.14.6",
+    "numpy": "2.5.3",
+    "scikit_learn": "1.9.1",
+    "platform": "Windows-11-10.0.26200-SP0"
+  },
+  "published_baseline": {
+    "source": "Killourhy and Maxion 2009, scaled Manhattan",
+    "eer_mean": 0.096,
+    "eer_sd": 0.069
+  },
+  "detectors": {
+    "scaled_manhattan": {
+      "summary": {
+        "n_users": 51,
+        "eer_mean": 0.09619607843137254,
+        "eer_sd": 0.06935272730263552,
+        "eer_ci95": [
+          0.07631274509803922,
+          0.11564705882352941
+        ],
+        "roc_auc_mean": 0.9537698039215685,
+        "roc_auc_sd": 0.049980288334110126,
+        "roc_auc_ci95": [
+          0.9396928921568628,
+          0.9673669901960785
+        ]
+      },
+      "seconds": 0.2,
+      "per_user": [
+        {
+          "subject": "s002",
+          "n_train": 200,
+          "n_genuine": 200,
+          "n_impostor": 250,
+          "eer": 0.24,
+          "roc_auc": 0.87188
+        },
+        {
+          "subject": "s003",
+          "n_train": 200,
+          "n_genuine": 200,
+          "n_impostor": 250,
+          "eer": 0.14,
+          "roc_auc": 0.9307
+        },
+        {
+          "subject": "s004",
+          "n_train": 200,
+          "n_genuine": 200,
+          "n_impostor": 250,
+          "eer": 0.08,
+          "roc_auc": 0.9644400000000001
+        },
+        {
+          "subject": "s005",
+          "n_train": 200,
+          "n_genuine": 200,
+          "n_impostor": 250,
+          "eer": 0.04400000000000004,
+          "roc_auc": 0.9907199999999999
+        },
+        {
+          "subject": "s007",
+          "n_train": 200,
+          "n_genuine": 200,
+          "n_impostor": 250,
+          "eer": 0.11199999999999999,
+          "roc_auc": 0.94468
+        },
+        {
+          "subject": "s008",
+          "n_train": 200,
+          "n_genuine": 200,
+          "n_impostor": 250,
+          "eer": 0.065,
+          "roc_auc": 0.98058
+        },
+        {
+          "subject": "s010",
+          "n_train": 200,
+          "n_genuine": 200,
+          "n_impostor": 250,
+          "eer": 0.025,
+          "roc_auc": 0.9978
+        },
+        {
+          "subject": "s011",
+          "n_train": 200,
+          "n_genuine": 200,
+          "n_impostor": 250,
+          "eer": 0.07199999999999995,
+          "roc_auc": 0.9796799999999999
+        },
+        {
+          "subject": "s012",
+          "n_train": 200,
+          "n_genuine": 200,
+          "n_impostor": 250,
+          "eer": 0.020000000000000018,
+          "roc_auc": 0.99674
+        },
+        {
+          "subject": "s013",
+          "n_train": 200,
+          "n_genuine": 200,
+          "n_impostor": 250,
+          "eer": 0.07199999999999995,
+          "roc_auc": 0.97498
+        },
+        {
+          "subject": "s015",
+          "n_train": 200,
+          "n_genuine": 200,
+          "n_impostor": 250,
+          "eer": 0.10799999999999998,
+          "roc_auc": 0.9313400000000001
+        },
+        {
+          "subject": "s016",
+          "n_train": 200,
+          "n_genuine": 200,
+          "n_impostor": 250,
+          "eer": 0.18,
+          "roc_auc": 0.9013399999999999
+        },
+        {
+          "subject": "s017",
+          "n_train": 200,
+          "n_genuine": 200,
+          "n_impostor": 250,
+          "eer": 0.03,
+          "roc_auc": 0.99526
+        },
+        {
+          "subject": "s018",
+          "n_train": 200,
+          "n_genuine": 200,
+          "n_impostor": 250,
+          "eer": 0.125,
+          "roc_auc": 0.9418
+        },
+        {
+          "subject": "s019",
+          "n_train": 200,
+          "n_genuine": 200,
+          "n_impostor": 250,
+          "eer": 0.045,
+          "roc_auc": 0.9894799999999999
+        },
+        {
+          "subject": "s020",
+          "n_train": 200,
+          "n_genuine": 200,
+          "n_impostor": 250,
+          "eer": 0.14,
+          "roc_auc": 0.9336199999999999
+        },
+        {
+          "subject": "s021",
+          "n_train": 200,
+          "n_genuine": 200,
+          "n_impostor": 250,
+          "eer": 0.11599999999999999,
+          "roc_auc": 0.9553799999999999
+        },
+        {
+          "subject": "s022",
+          "n_train": 200,
+          "n_genuine": 200,
+          "n_impostor": 250,
+          "eer": 0.03,
+          "roc_auc": 0.99356
+        },
+        {
+          "subject": "s024",
+          "n_train": 200,
+          "n_genuine": 200,
+          "n_impostor": 250,
+          "eer": 0.052000000000000046,
+          "roc_auc": 0.99212
+        },
+        {
+          "subject": "s025",
+          "n_train": 200,
+          "n_genuine": 200,
+          "n_impostor": 250,
+          "eer": 0.07599999999999996,
+          "roc_auc": 0.9669000000000001
+        },
+        {
+          "subject": "s026",
+          "n_train": 200,
+          "n_genuine": 200,
+          "n_impostor": 250,
+          "eer": 0.045,
+          "roc_auc": 0.98324
+        },
+        {
+          "subject": "s027",
+          "n_train": 200,
+          "n_genuine": 200,
+          "n_impostor": 250,
+          "eer": 0.07,
+          "roc_auc": 0.97598
+        },
+        {
+          "subject": "s028",
+          "n_train": 200,
+          "n_genuine": 200,
+          "n_impostor": 250,
+          "eer": 0.06000000000000005,
+          "roc_auc": 0.98244
+        },
+        {
+          "subject": "s029",
+          "n_train": 200,
+          "n_genuine": 200,
+          "n_impostor": 250,
+          "eer": 0.07199999999999995,
+          "roc_auc": 0.9791000000000001
+        },
+        {
+          "subject": "s030",
+          "n_train": 200,
+          "n_genuine": 200,
+          "n_impostor": 250,
+          "eer": 0.08,
+          "roc_auc": 0.96292
+        },
+        {
+          "subject": "s031",
+          "n_train": 200,
+          "n_genuine": 200,
+          "n_impostor": 250,
+          "eer": 0.275,
+          "roc_auc": 0.8261999999999999
+        },
+        {
+          "subject": "s032",
+          "n_train": 200,
+          "n_genuine": 200,
+          "n_impostor": 250,
+          "eer": 0.272,
+          "roc_auc": 0.80972
+        },
+        {
+          "subject": "s033",
+          "n_train": 200,
+          "n_genuine": 200,
+          "n_impostor": 250,
+          "eer": 0.10799999999999998,
+          "roc_auc": 0.9500599999999999
+        },
+        {
+          "subject": "s034",
+          "n_train": 200,
+          "n_genuine": 200,
+          "n_impostor": 250,
+          "eer": 0.145,
+          "roc_auc": 0.9131
+        },
+        {
+          "subject": "s035",
+          "n_train": 200,
+          "n_genuine": 200,
+          "n_impostor": 250,
+          "eer": 0.195,
+          "roc_auc": 0.91088
+        },
+        {
+          "subject": "s036",
+          "n_train": 200,
+          "n_genuine": 200,
+          "n_impostor": 250,
+          "eer": 0.01,
+          "roc_auc": 0.99986
+        },
+        {
+          "subject": "s037",
+          "n_train": 200,
+          "n_genuine": 200,
+          "n_impostor": 250,
+          "eer": 0.11,
+          "roc_auc": 0.9481999999999999
+        },
+        {
+          "subject": "s038",
+          "n_train": 200,
+          "n_genuine": 200,
+          "n_impostor": 250,
+          "eer": 0.09,
+          "roc_auc": 0.9658200000000001
+        },
+        {
+          "subject": "s039",
+          "n_train": 200,
+          "n_genuine": 200,
+          "n_impostor": 250,
+          "eer": 0.085,
+          "roc_auc": 0.95606
+        },
+        {
+          "subject": "s040",
+          "n_train": 200,
+          "n_genuine": 200,
+          "n_impostor": 250,
+          "eer": 0.15600000000000003,
+          "roc_auc": 0.91528
+        },
+        {
+          "subject": "s041",
+          "n_train": 200,
+          "n_genuine": 200,
+          "n_impostor": 250,
+          "eer": 0.1,
+          "roc_auc": 0.96192
+        },
+        {
+          "subject": "s042",
+          "n_train": 200,
+          "n_genuine": 200,
+          "n_impostor": 250,
+          "eer": 0.045,
+          "roc_auc": 0.9898399999999999
+        },
+        {
+          "subject": "s043",
+          "n_train": 200,
+          "n_genuine": 200,
+          "n_impostor": 250,
+          "eer": 0.015,
+          "roc_auc": 0.99528
+        },
+        {
+          "subject": "s044",
+          "n_train": 200,
+          "n_genuine": 200,
+          "n_impostor": 250,
+          "eer": 0.075,
+          "roc_auc": 0.97654
+        },
+        {
+          "subject": "s046",
+          "n_train": 200,
+          "n_genuine": 200,
+          "n_impostor": 250,
+          "eer": 0.14400000000000002,
+          "roc_auc": 0.93426
+        },
+        {
+          "subject": "s047",
+          "n_train": 200,
+          "n_genuine": 200,
+          "n_impostor": 250,
+          "eer": 0.325,
+          "roc_auc": 0.74768
+        },
+        {
+          "subject": "s048",
+          "n_train": 200,
+          "n_genuine": 200,
+          "n_impostor": 250,
+          "eer": 0.065,
+          "roc_auc": 0.9787600000000001
+        },
+        {
+          "subject": "s049",
+          "n_train": 200,
+          "n_genuine": 200,
+          "n_impostor": 250,
+          "eer": 0.06399999999999995,
+          "roc_auc": 0.9662200000000001
+        },
+        {
+          "subject": "s050",
+          "n_train": 200,
+          "n_genuine": 200,
+          "n_impostor": 250,
+          "eer": 0.11,
+          "roc_auc": 0.9577200000000001
+        },
+        {
+          "subject": "s051",
+          "n_train": 200,
+          "n_genuine": 200,
+          "n_impostor": 250,
+          "eer": 0.09599999999999997,
+          "roc_auc": 0.95066
+        },
+        {
+          "subject": "s052",
+          "n_train": 200,
+          "n_genuine": 200,
+          "n_impostor": 250,
+          "eer": 0.016000000000000014,
+          "roc_auc": 0.9957800000000001
+        },
+        {
+          "subject": "s053",
+          "n_train": 200,
+          "n_genuine": 200,
+          "n_impostor": 250,
+          "eer": 0.028000000000000025,
+          "roc_auc": 0.99656
+        },
+        {
+          "subject": "s054",
+          "n_train": 200,
+          "n_genuine": 200,
+          "n_impostor": 250,
+          "eer": 0.06799999999999995,
+          "roc_auc": 0.97138
+        },
+        {
+          "subject": "s055",
+          "n_train": 200,
+          "n_genuine": 200,
+          "n_impostor": 250,
+          "eer": 0.015,
+          "roc_auc": 0.99886
+        },
+        {
+          "subject": "s056",
+          "n_train": 200,
+          "n_genuine": 200,
+          "n_impostor": 250,
+          "eer": 0.08,
+          "roc_auc": 0.9571
+        },
+        {
+          "subject": "s057",
+          "n_train": 200,
+          "n_genuine": 200,
+          "n_impostor": 250,
+          "eer": 0.115,
+          "roc_auc": 0.9518399999999999
+        }
+      ]
+    },
+    "ocsvm": {
+      "summary": {
+        "n_users": 51,
+        "eer_mean": 0.10686274509803922,
+        "eer_sd": 0.07236076826785165,
+        "eer_ci95": [
+          0.08605490196078433,
+          0.1271769607843137
+        ],
+        "roc_auc_mean": 0.9432852941176469,
+        "roc_auc_sd": 0.054675951838187194,
+        "roc_auc_ci95": [
+          0.9279435196078433,
+          0.9587143529411765
+        ]
+      },
+      "seconds": 0.5,
+      "per_user": [
+        {
+          "subject": "s002",
+          "n_train": 200,
+          "n_genuine": 200,
+          "n_impostor": 250,
+          "eer": 0.27,
+          "roc_auc": 0.83118
+        },
+        {
+          "subject": "s003",
+          "n_train": 200,
+          "n_genuine": 200,
+          "n_impostor": 250,
+          "eer": 0.21,
+          "roc_auc": 0.86942
+        },
+        {
+          "subject": "s004",
+          "n_train": 200,
+          "n_genuine": 200,
+          "n_impostor": 250,
+          "eer": 0.08799999999999997,
+          "roc_auc": 0.9747800000000001
+        },
+        {
+          "subject": "s005",
+          "n_train": 200,
+          "n_genuine": 200,
+          "n_impostor": 250,
+          "eer": 0.052000000000000046,
+          "roc_auc": 0.98328
+        },
+        {
+          "subject": "s007",
+          "n_train": 200,
+          "n_genuine": 200,
+          "n_impostor": 250,
+          "eer": 0.136,
+          "roc_auc": 0.93698
+        },
+        {
+          "subject": "s008",
+          "n_train": 200,
+          "n_genuine": 200,
+          "n_impostor": 250,
+          "eer": 0.06799999999999995,
+          "roc_auc": 0.97144
+        },
+        {
+          "subject": "s010",
+          "n_train": 200,
+          "n_genuine": 200,
+          "n_impostor": 250,
+          "eer": 0.052000000000000046,
+          "roc_auc": 0.98932
+        },
+        {
+          "subject": "s011",
+          "n_train": 200,
+          "n_genuine": 200,
+          "n_impostor": 250,
+          "eer": 0.10799999999999998,
+          "roc_auc": 0.9539799999999999
+        },
+        {
+          "subject": "s012",
+          "n_train": 200,
+          "n_genuine": 200,
+          "n_impostor": 250,
+          "eer": 0.03600000000000003,
+          "roc_auc": 0.9888999999999999
+        },
+        {
+          "subject": "s013",
+          "n_train": 200,
+          "n_genuine": 200,
+          "n_impostor": 250,
+          "eer": 0.09999999999999998,
+          "roc_auc": 0.95698
+        },
+        {
+          "subject": "s015",
+          "n_train": 200,
+          "n_genuine": 200,
+          "n_impostor": 250,
+          "eer": 0.16000000000000003,
+          "roc_auc": 0.8988799999999999
+        },
+        {
+          "subject": "s016",
+          "n_train": 200,
+          "n_genuine": 200,
+          "n_impostor": 250,
+          "eer": 0.136,
+          "roc_auc": 0.908
+        },
+        {
+          "subject": "s017",
+          "n_train": 200,
+          "n_genuine": 200,
+          "n_impostor": 250,
+          "eer": 0.020000000000000018,
+          "roc_auc": 0.9937
+        },
+        {
+          "subject": "s018",
+          "n_train": 200,
+          "n_genuine": 200,
+          "n_impostor": 250,
+          "eer": 0.16,
+          "roc_auc": 0.91552
+        },
+        {
+          "subject": "s019",
+          "n_train": 200,
+          "n_genuine": 200,
+          "n_impostor": 250,
+          "eer": 0.035,
+          "roc_auc": 0.9875999999999999
+        },
+        {
+          "subject": "s020",
+          "n_train": 200,
+          "n_genuine": 200,
+          "n_impostor": 250,
+          "eer": 0.12,
+          "roc_auc": 0.9366399999999999
+        },
+        {
+          "subject": "s021",
+          "n_train": 200,
+          "n_genuine": 200,
+          "n_impostor": 250,
+          "eer": 0.14800000000000002,
+          "roc_auc": 0.93234
+        },
+        {
+          "subject": "s022",
+          "n_train": 200,
+          "n_genuine": 200,
+          "n_impostor": 250,
+          "eer": 0.028000000000000025,
+          "roc_auc": 0.9926999999999999
+        },
+        {
+          "subject": "s024",
+          "n_train": 200,
+          "n_genuine": 200,
+          "n_impostor": 250,
+          "eer": 0.03600000000000003,
+          "roc_auc": 0.9942000000000001
+        },
+        {
+          "subject": "s025",
+          "n_train": 200,
+          "n_genuine": 200,
+          "n_impostor": 250,
+          "eer": 0.085,
+          "roc_auc": 0.97036
+        },
+        {
+          "subject": "s026",
+          "n_train": 200,
+          "n_genuine": 200,
+          "n_impostor": 250,
+          "eer": 0.05,
+          "roc_auc": 0.98064
+        },
+        {
+          "subject": "s027",
+          "n_train": 200,
+          "n_genuine": 200,
+          "n_impostor": 250,
+          "eer": 0.07,
+          "roc_auc": 0.9727
+        },
+        {
+          "subject": "s028",
+          "n_train": 200,
+          "n_genuine": 200,
+          "n_impostor": 250,
+          "eer": 0.028000000000000025,
+          "roc_auc": 0.9858399999999999
+        },
+        {
+          "subject": "s029",
+          "n_train": 200,
+          "n_genuine": 200,
+          "n_impostor": 250,
+          "eer": 0.07999999999999996,
+          "roc_auc": 0.9696199999999999
+        },
+        {
+          "subject": "s030",
+          "n_train": 200,
+          "n_genuine": 200,
+          "n_impostor": 250,
+          "eer": 0.14,
+          "roc_auc": 0.92936
+        },
+        {
+          "subject": "s031",
+          "n_train": 200,
+          "n_genuine": 200,
+          "n_impostor": 250,
+          "eer": 0.275,
+          "roc_auc": 0.8156
+        },
+        {
+          "subject": "s032",
+          "n_train": 200,
+          "n_genuine": 200,
+          "n_impostor": 250,
+          "eer": 0.31,
+          "roc_auc": 0.75722
+        },
+        {
+          "subject": "s033",
+          "n_train": 200,
+          "n_genuine": 200,
+          "n_impostor": 250,
+          "eer": 0.1,
+          "roc_auc": 0.9542999999999999
+        },
+        {
+          "subject": "s034",
+          "n_train": 200,
+          "n_genuine": 200,
+          "n_impostor": 250,
+          "eer": 0.19,
+          "roc_auc": 0.8757599999999999
+        },
+        {
+          "subject": "s035",
+          "n_train": 200,
+          "n_genuine": 200,
+          "n_impostor": 250,
+          "eer": 0.14,
+          "roc_auc": 0.9375200000000001
+        },
+        {
+          "subject": "s036",
+          "n_train": 200,
+          "n_genuine": 200,
+          "n_impostor": 250,
+          "eer": 0.008000000000000007,
+          "roc_auc": 0.99974
+        },
+        {
+          "subject": "s037",
+          "n_train": 200,
+          "n_genuine": 200,
+          "n_impostor": 250,
+          "eer": 0.145,
+          "roc_auc": 0.92058
+        },
+        {
+          "subject": "s038",
+          "n_train": 200,
+          "n_genuine": 200,
+          "n_impostor": 250,
+          "eer": 0.12,
+          "roc_auc": 0.94806
+        },
+        {
+          "subject": "s039",
+          "n_train": 200,
+          "n_genuine": 200,
+          "n_impostor": 250,
+          "eer": 0.09,
+          "roc_auc": 0.9491999999999998
+        },
+        {
+          "subject": "s040",
+          "n_train": 200,
+          "n_genuine": 200,
+          "n_impostor": 250,
+          "eer": 0.124,
+          "roc_auc": 0.93682
+        },
+        {
+          "subject": "s041",
+          "n_train": 200,
+          "n_genuine": 200,
+          "n_impostor": 250,
+          "eer": 0.12,
+          "roc_auc": 0.93637
+        },
+        {
+          "subject": "s042",
+          "n_train": 200,
+          "n_genuine": 200,
+          "n_impostor": 250,
+          "eer": 0.065,
+          "roc_auc": 0.9764
+        },
+        {
+          "subject": "s043",
+          "n_train": 200,
+          "n_genuine": 200,
+          "n_impostor": 250,
+          "eer": 0.015,
+          "roc_auc": 0.9945
+        },
+        {
+          "subject": "s044",
+          "n_train": 200,
+          "n_genuine": 200,
+          "n_impostor": 250,
+          "eer": 0.06000000000000005,
+          "roc_auc": 0.98312
+        },
+        {
+          "subject": "s046",
+          "n_train": 200,
+          "n_genuine": 200,
+          "n_impostor": 250,
+          "eer": 0.15,
+          "roc_auc": 0.9227000000000001
+        },
+        {
+          "subject": "s047",
+          "n_train": 200,
+          "n_genuine": 200,
+          "n_impostor": 250,
+          "eer": 0.29600000000000004,
+          "roc_auc": 0.77282
+        },
+        {
+          "subject": "s048",
+          "n_train": 200,
+          "n_genuine": 200,
+          "n_impostor": 250,
+          "eer": 0.06799999999999995,
+          "roc_auc": 0.9741599999999999
+        },
+        {
+          "subject": "s049",
+          "n_train": 200,
+          "n_genuine": 200,
+          "n_impostor": 250,
+          "eer": 0.085,
+          "roc_auc": 0.95374
+        },
+        {
+          "subject": "s050",
+          "n_train": 200,
+          "n_genuine": 200,
+          "n_impostor": 250,
+          "eer": 0.125,
+          "roc_auc": 0.95346
+        },
+        {
+          "subject": "s051",
+          "n_train": 200,
+          "n_genuine": 200,
+          "n_impostor": 250,
+          "eer": 0.115,
+          "roc_auc": 0.9467800000000001
+        },
+        {
+          "subject": "s052",
+          "n_train": 200,
+          "n_genuine": 200,
+          "n_impostor": 250,
+          "eer": 0.015,
+          "roc_auc": 0.995
+        },
+        {
+          "subject": "s053",
+          "n_train": 200,
+          "n_genuine": 200,
+          "n_impostor": 250,
+          "eer": 0.040000000000000036,
+          "roc_auc": 0.9905200000000001
+        },
+        {
+          "subject": "s054",
+          "n_train": 200,
+          "n_genuine": 200,
+          "n_impostor": 250,
+          "eer": 0.09,
+          "roc_auc": 0.94644
+        },
+        {
+          "subject": "s055",
+          "n_train": 200,
+          "n_genuine": 200,
+          "n_impostor": 250,
+          "eer": 0.016000000000000014,
+          "roc_auc": 0.99724
+        },
+        {
+          "subject": "s056",
+          "n_train": 200,
+          "n_genuine": 200,
+          "n_impostor": 250,
+          "eer": 0.132,
+          "roc_auc": 0.92308
+        },
+        {
+          "subject": "s057",
+          "n_train": 200,
+          "n_genuine": 200,
+          "n_impostor": 250,
+          "eer": 0.14,
+          "roc_auc": 0.9220600000000001
+        }
+      ]
+    },
+    "gmm": {
+      "summary": {
+        "n_users": 51,
+        "eer_mean": 0.10329411764705884,
+        "eer_sd": 0.06141638026378535,
+        "eer_ci95": [
+          0.08596078431372552,
+          0.12092205882352942
+        ],
+        "roc_auc_mean": 0.9526541176470588,
+        "roc_auc_sd": 0.04175389156361216,
+        "roc_auc_ci95": [
+          0.9408995882352942,
+          0.9643038725490196
+        ]
+      },
+      "seconds": 1.1,
+      "per_user": [
+        {
+          "subject": "s002",
+          "n_train": 200,
+          "n_genuine": 200,
+          "n_impostor": 250,
+          "eer": 0.26,
+          "roc_auc": 0.8452799999999999
+        },
+        {
+          "subject": "s003",
+          "n_train": 200,
+          "n_genuine": 200,
+          "n_impostor": 250,
+          "eer": 0.19999999999999996,
+          "roc_auc": 0.8909199999999999
+        },
+        {
+          "subject": "s004",
+          "n_train": 200,
+          "n_genuine": 200,
+          "n_impostor": 250,
+          "eer": 0.08,
+          "roc_auc": 0.9793200000000001
+        },
+        {
+          "subject": "s005",
+          "n_train": 200,
+          "n_genuine": 200,
+          "n_impostor": 250,
+          "eer": 0.065,
+          "roc_auc": 0.9674400000000001
+        },
+        {
+          "subject": "s007",
+          "n_train": 200,
+          "n_genuine": 200,
+          "n_impostor": 250,
+          "eer": 0.11,
+          "roc_auc": 0.96152
+        },
+        {
+          "subject": "s008",
+          "n_train": 200,
+          "n_genuine": 200,
+          "n_impostor": 250,
+          "eer": 0.09999999999999998,
+          "roc_auc": 0.96662
+        },
+        {
+          "subject": "s010",
+          "n_train": 200,
+          "n_genuine": 200,
+          "n_impostor": 250,
+          "eer": 0.03600000000000003,
+          "roc_auc": 0.99472
+        },
+        {
+          "subject": "s011",
+          "n_train": 200,
+          "n_genuine": 200,
+          "n_impostor": 250,
+          "eer": 0.115,
+          "roc_auc": 0.95598
+        },
+        {
+          "subject": "s012",
+          "n_train": 200,
+          "n_genuine": 200,
+          "n_impostor": 250,
+          "eer": 0.085,
+          "roc_auc": 0.97952
+        },
+        {
+          "subject": "s013",
+          "n_train": 200,
+          "n_genuine": 200,
+          "n_impostor": 250,
+          "eer": 0.07599999999999996,
+          "roc_auc": 0.9724999999999999
+        },
+        {
+          "subject": "s015",
+          "n_train": 200,
+          "n_genuine": 200,
+          "n_impostor": 250,
+          "eer": 0.14400000000000002,
+          "roc_auc": 0.94128
+        },
+        {
+          "subject": "s016",
+          "n_train": 200,
+          "n_genuine": 200,
+          "n_impostor": 250,
+          "eer": 0.15,
+          "roc_auc": 0.91564
+        },
+        {
+          "subject": "s017",
+          "n_train": 200,
+          "n_genuine": 200,
+          "n_impostor": 250,
+          "eer": 0.04400000000000004,
+          "roc_auc": 0.9859
+        },
+        {
+          "subject": "s018",
+          "n_train": 200,
+          "n_genuine": 200,
+          "n_impostor": 250,
+          "eer": 0.095,
+          "roc_auc": 0.9632999999999999
+        },
+        {
+          "subject": "s019",
+          "n_train": 200,
+          "n_genuine": 200,
+          "n_impostor": 250,
+          "eer": 0.07,
+          "roc_auc": 0.9718199999999999
+        },
+        {
+          "subject": "s020",
+          "n_train": 200,
+          "n_genuine": 200,
+          "n_impostor": 250,
+          "eer": 0.12,
+          "roc_auc": 0.9371
+        },
+        {
+          "subject": "s021",
+          "n_train": 200,
+          "n_genuine": 200,
+          "n_impostor": 250,
+          "eer": 0.12,
+          "roc_auc": 0.9585199999999999
+        },
+        {
+          "subject": "s022",
+          "n_train": 200,
+          "n_genuine": 200,
+          "n_impostor": 250,
+          "eer": 0.03,
+          "roc_auc": 0.9892599999999999
+        },
+        {
+          "subject": "s024",
+          "n_train": 200,
+          "n_genuine": 200,
+          "n_impostor": 250,
+          "eer": 0.04,
+          "roc_auc": 0.99416
+        },
+        {
+          "subject": "s025",
+          "n_train": 200,
+          "n_genuine": 200,
+          "n_impostor": 250,
+          "eer": 0.08,
+          "roc_auc": 0.9715
+        },
+        {
+          "subject": "s026",
+          "n_train": 200,
+          "n_genuine": 200,
+          "n_impostor": 250,
+          "eer": 0.08,
+          "roc_auc": 0.9651599999999999
+        },
+        {
+          "subject": "s027",
+          "n_train": 200,
+          "n_genuine": 200,
+          "n_impostor": 250,
+          "eer": 0.075,
+          "roc_auc": 0.97156
+        },
+        {
+          "subject": "s028",
+          "n_train": 200,
+          "n_genuine": 200,
+          "n_impostor": 250,
+          "eer": 0.035,
+          "roc_auc": 0.99428
+        },
+        {
+          "subject": "s029",
+          "n_train": 200,
+          "n_genuine": 200,
+          "n_impostor": 250,
+          "eer": 0.06,
+          "roc_auc": 0.9819399999999999
+        },
+        {
+          "subject": "s030",
+          "n_train": 200,
+          "n_genuine": 200,
+          "n_impostor": 250,
+          "eer": 0.14,
+          "roc_auc": 0.9298000000000001
+        },
+        {
+          "subject": "s031",
+          "n_train": 200,
+          "n_genuine": 200,
+          "n_impostor": 250,
+          "eer": 0.21599999999999997,
+          "roc_auc": 0.8594
+        },
+        {
+          "subject": "s032",
+          "n_train": 200,
+          "n_genuine": 200,
+          "n_impostor": 250,
+          "eer": 0.29600000000000004,
+          "roc_auc": 0.80862
+        },
+        {
+          "subject": "s033",
+          "n_train": 200,
+          "n_genuine": 200,
+          "n_impostor": 250,
+          "eer": 0.11,
+          "roc_auc": 0.94224
+        },
+        {
+          "subject": "s034",
+          "n_train": 200,
+          "n_genuine": 200,
+          "n_impostor": 250,
+          "eer": 0.16,
+          "roc_auc": 0.9208999999999999
+        },
+        {
+          "subject": "s035",
+          "n_train": 200,
+          "n_genuine": 200,
+          "n_impostor": 250,
+          "eer": 0.10799999999999998,
+          "roc_auc": 0.9555
+        },
+        {
+          "subject": "s036",
+          "n_train": 200,
+          "n_genuine": 200,
+          "n_impostor": 250,
+          "eer": 0.01,
+          "roc_auc": 0.99976
+        },
+        {
+          "subject": "s037",
+          "n_train": 200,
+          "n_genuine": 200,
+          "n_impostor": 250,
+          "eer": 0.12,
+          "roc_auc": 0.94738
+        },
+        {
+          "subject": "s038",
+          "n_train": 200,
+          "n_genuine": 200,
+          "n_impostor": 250,
+          "eer": 0.105,
+          "roc_auc": 0.9559
+        },
+        {
+          "subject": "s039",
+          "n_train": 200,
+          "n_genuine": 200,
+          "n_impostor": 250,
+          "eer": 0.07,
+          "roc_auc": 0.95468
+        },
+        {
+          "subject": "s040",
+          "n_train": 200,
+          "n_genuine": 200,
+          "n_impostor": 250,
+          "eer": 0.19,
+          "roc_auc": 0.88986
+        },
+        {
+          "subject": "s041",
+          "n_train": 200,
+          "n_genuine": 200,
+          "n_impostor": 250,
+          "eer": 0.125,
+          "roc_auc": 0.9358600000000001
+        },
+        {
+          "subject": "s042",
+          "n_train": 200,
+          "n_genuine": 200,
+          "n_impostor": 250,
+          "eer": 0.06799999999999995,
+          "roc_auc": 0.97152
+        },
+        {
+          "subject": "s043",
+          "n_train": 200,
+          "n_genuine": 200,
+          "n_impostor": 250,
+          "eer": 0.028000000000000025,
+          "roc_auc": 0.99286
+        },
+        {
+          "subject": "s044",
+          "n_train": 200,
+          "n_genuine": 200,
+          "n_impostor": 250,
+          "eer": 0.06799999999999995,
+          "roc_auc": 0.97792
+        },
+        {
+          "subject": "s046",
+          "n_train": 200,
+          "n_genuine": 200,
+          "n_impostor": 250,
+          "eer": 0.15,
+          "roc_auc": 0.94288
+        },
+        {
+          "subject": "s047",
+          "n_train": 200,
+          "n_genuine": 200,
+          "n_impostor": 250,
+          "eer": 0.24,
+          "roc_auc": 0.8462
+        },
+        {
+          "subject": "s048",
+          "n_train": 200,
+          "n_genuine": 200,
+          "n_impostor": 250,
+          "eer": 0.065,
+          "roc_auc": 0.9744400000000001
+        },
+        {
+          "subject": "s049",
+          "n_train": 200,
+          "n_genuine": 200,
+          "n_impostor": 250,
+          "eer": 0.115,
+          "roc_auc": 0.9423999999999999
+        },
+        {
+          "subject": "s050",
+          "n_train": 200,
+          "n_genuine": 200,
+          "n_impostor": 250,
+          "eer": 0.12,
+          "roc_auc": 0.95498
+        },
+        {
+          "subject": "s051",
+          "n_train": 200,
+          "n_genuine": 200,
+          "n_impostor": 250,
+          "eer": 0.12,
+          "roc_auc": 0.95504
+        },
+        {
+          "subject": "s052",
+          "n_train": 200,
+          "n_genuine": 200,
+          "n_impostor": 250,
+          "eer": 0.045,
+          "roc_auc": 0.98976
+        },
+        {
+          "subject": "s053",
+          "n_train": 200,
+          "n_genuine": 200,
+          "n_impostor": 250,
+          "eer": 0.03,
+          "roc_auc": 0.99234
+        },
+        {
+          "subject": "s054",
+          "n_train": 200,
+          "n_genuine": 200,
+          "n_impostor": 250,
+          "eer": 0.06799999999999995,
+          "roc_auc": 0.97732
+        },
+        {
+          "subject": "s055",
+          "n_train": 200,
+          "n_genuine": 200,
+          "n_impostor": 250,
+          "eer": 0.025,
+          "roc_auc": 0.99746
+        },
+        {
+          "subject": "s056",
+          "n_train": 200,
+          "n_genuine": 200,
+          "n_impostor": 250,
+          "eer": 0.11,
+          "roc_auc": 0.96104
+        },
+        {
+          "subject": "s057",
+          "n_train": 200,
+          "n_genuine": 200,
+          "n_impostor": 250,
+          "eer": 0.09599999999999997,
+          "roc_auc": 0.95406
+        }
+      ]
+    },
+    "isolation_forest": {
+      "summary": {
+        "n_users": 51,
+        "eer_mean": 0.08880392156862744,
+        "eer_sd": 0.07138683901332041,
+        "eer_ci95": [
+          0.06900000000000002,
+          0.10909852941176468
+        ],
+        "roc_auc_mean": 0.9625239215686273,
+        "roc_auc_sd": 0.05015531844494385,
+        "roc_auc_ci95": [
+          0.9476804607843138,
+          0.9757753529411765
+        ]
+      },
+      "seconds": 11.9,
+      "per_user": [
+        {
+          "subject": "s002",
+          "n_train": 200,
+          "n_genuine": 200,
+          "n_impostor": 250,
+          "eer": 0.25,
+          "roc_auc": 0.87216
+        },
+        {
+          "subject": "s003",
+          "n_train": 200,
+          "n_genuine": 200,
+          "n_impostor": 250,
+          "eer": 0.128,
+          "roc_auc": 0.95356
+        },
+        {
+          "subject": "s004",
+          "n_train": 200,
+          "n_genuine": 200,
+          "n_impostor": 250,
+          "eer": 0.05,
+          "roc_auc": 0.9854999999999999
+        },
+        {
+          "subject": "s005",
+          "n_train": 200,
+          "n_genuine": 200,
+          "n_impostor": 250,
+          "eer": 0.05,
+          "roc_auc": 0.99258
+        },
+        {
+          "subject": "s007",
+          "n_train": 200,
+          "n_genuine": 200,
+          "n_impostor": 250,
+          "eer": 0.08799999999999997,
+          "roc_auc": 0.9655400000000001
+        },
+        {
+          "subject": "s008",
+          "n_train": 200,
+          "n_genuine": 200,
+          "n_impostor": 250,
+          "eer": 0.05600000000000005,
+          "roc_auc": 0.98516
+        },
+        {
+          "subject": "s010",
+          "n_train": 200,
+          "n_genuine": 200,
+          "n_impostor": 250,
+          "eer": 0.020000000000000018,
+          "roc_auc": 0.99904
+        },
+        {
+          "subject": "s011",
+          "n_train": 200,
+          "n_genuine": 200,
+          "n_impostor": 250,
+          "eer": 0.05600000000000005,
+          "roc_auc": 0.98758
+        },
+        {
+          "subject": "s012",
+          "n_train": 200,
+          "n_genuine": 200,
+          "n_impostor": 250,
+          "eer": 0.020000000000000018,
+          "roc_auc": 0.99676
+        },
+        {
+          "subject": "s013",
+          "n_train": 200,
+          "n_genuine": 200,
+          "n_impostor": 250,
+          "eer": 0.052000000000000046,
+          "roc_auc": 0.98706
+        },
+        {
+          "subject": "s015",
+          "n_train": 200,
+          "n_genuine": 200,
+          "n_impostor": 250,
+          "eer": 0.1,
+          "roc_auc": 0.95304
+        },
+        {
+          "subject": "s016",
+          "n_train": 200,
+          "n_genuine": 200,
+          "n_impostor": 250,
+          "eer": 0.215,
+          "roc_auc": 0.8637800000000001
+        },
+        {
+          "subject": "s017",
+          "n_train": 200,
+          "n_genuine": 200,
+          "n_impostor": 250,
+          "eer": 0.028000000000000025,
+          "roc_auc": 0.99666
+        },
+        {
+          "subject": "s018",
+          "n_train": 200,
+          "n_genuine": 200,
+          "n_impostor": 250,
+          "eer": 0.10799999999999998,
+          "roc_auc": 0.9643799999999999
+        },
+        {
+          "subject": "s019",
+          "n_train": 200,
+          "n_genuine": 200,
+          "n_impostor": 250,
+          "eer": 0.06,
+          "roc_auc": 0.9883
+        },
+        {
+          "subject": "s020",
+          "n_train": 200,
+          "n_genuine": 200,
+          "n_impostor": 250,
+          "eer": 0.09199999999999997,
+          "roc_auc": 0.96514
+        },
+        {
+          "subject": "s021",
+          "n_train": 200,
+          "n_genuine": 200,
+          "n_impostor": 250,
+          "eer": 0.105,
+          "roc_auc": 0.9632400000000001
+        },
+        {
+          "subject": "s022",
+          "n_train": 200,
+          "n_genuine": 200,
+          "n_impostor": 250,
+          "eer": 0.04,
+          "roc_auc": 0.9934000000000001
+        },
+        {
+          "subject": "s024",
+          "n_train": 200,
+          "n_genuine": 200,
+          "n_impostor": 250,
+          "eer": 0.052000000000000046,
+          "roc_auc": 0.99258
+        },
+        {
+          "subject": "s025",
+          "n_train": 200,
+          "n_genuine": 200,
+          "n_impostor": 250,
+          "eer": 0.09999999999999998,
+          "roc_auc": 0.96534
+        },
+        {
+          "subject": "s026",
+          "n_train": 200,
+          "n_genuine": 200,
+          "n_impostor": 250,
+          "eer": 0.04400000000000004,
+          "roc_auc": 0.9905
+        },
+        {
+          "subject": "s027",
+          "n_train": 200,
+          "n_genuine": 200,
+          "n_impostor": 250,
+          "eer": 0.07,
+          "roc_auc": 0.98406
+        },
+        {
+          "subject": "s028",
+          "n_train": 200,
+          "n_genuine": 200,
+          "n_impostor": 250,
+          "eer": 0.03200000000000003,
+          "roc_auc": 0.9904000000000001
+        },
+        {
+          "subject": "s029",
+          "n_train": 200,
+          "n_genuine": 200,
+          "n_impostor": 250,
+          "eer": 0.06000000000000005,
+          "roc_auc": 0.98786
+        },
+        {
+          "subject": "s030",
+          "n_train": 200,
+          "n_genuine": 200,
+          "n_impostor": 250,
+          "eer": 0.124,
+          "roc_auc": 0.9507800000000001
+        },
+        {
+          "subject": "s031",
+          "n_train": 200,
+          "n_genuine": 200,
+          "n_impostor": 250,
+          "eer": 0.272,
+          "roc_auc": 0.83406
+        },
+        {
+          "subject": "s032",
+          "n_train": 200,
+          "n_genuine": 200,
+          "n_impostor": 250,
+          "eer": 0.255,
+          "roc_auc": 0.8395600000000001
+        },
+        {
+          "subject": "s033",
+          "n_train": 200,
+          "n_genuine": 200,
+          "n_impostor": 250,
+          "eer": 0.165,
+          "roc_auc": 0.9112600000000001
+        },
+        {
+          "subject": "s034",
+          "n_train": 200,
+          "n_genuine": 200,
+          "n_impostor": 250,
+          "eer": 0.10399999999999998,
+          "roc_auc": 0.95042
+        },
+        {
+          "subject": "s035",
+          "n_train": 200,
+          "n_genuine": 200,
+          "n_impostor": 250,
+          "eer": 0.135,
+          "roc_auc": 0.9485399999999999
+        },
+        {
+          "subject": "s036",
+          "n_train": 200,
+          "n_genuine": 200,
+          "n_impostor": 250,
+          "eer": 0.008000000000000007,
+          "roc_auc": 0.9998600000000001
+        },
+        {
+          "subject": "s037",
+          "n_train": 200,
+          "n_genuine": 200,
+          "n_impostor": 250,
+          "eer": 0.10399999999999998,
+          "roc_auc": 0.9638000000000001
+        },
+        {
+          "subject": "s038",
+          "n_train": 200,
+          "n_genuine": 200,
+          "n_impostor": 250,
+          "eer": 0.075,
+          "roc_auc": 0.9756
+        },
+        {
+          "subject": "s039",
+          "n_train": 200,
+          "n_genuine": 200,
+          "n_impostor": 250,
+          "eer": 0.065,
+          "roc_auc": 0.98646
+        },
+        {
+          "subject": "s040",
+          "n_train": 200,
+          "n_genuine": 200,
+          "n_impostor": 250,
+          "eer": 0.14,
+          "roc_auc": 0.92528
+        },
+        {
+          "subject": "s041",
+          "n_train": 200,
+          "n_genuine": 200,
+          "n_impostor": 250,
+          "eer": 0.085,
+          "roc_auc": 0.97582
+        },
+        {
+          "subject": "s042",
+          "n_train": 200,
+          "n_genuine": 200,
+          "n_impostor": 250,
+          "eer": 0.035,
+          "roc_auc": 0.99654
+        },
+        {
+          "subject": "s043",
+          "n_train": 200,
+          "n_genuine": 200,
+          "n_impostor": 250,
+          "eer": 0.028000000000000025,
+          "roc_auc": 0.99716
+        },
+        {
+          "subject": "s044",
+          "n_train": 200,
+          "n_genuine": 200,
+          "n_impostor": 250,
+          "eer": 0.06799999999999995,
+          "roc_auc": 0.97932
+        },
+        {
+          "subject": "s046",
+          "n_train": 200,
+          "n_genuine": 200,
+          "n_impostor": 250,
+          "eer": 0.115,
+          "roc_auc": 0.9599
+        },
+        {
+          "subject": "s047",
+          "n_train": 200,
+          "n_genuine": 200,
+          "n_impostor": 250,
+          "eer": 0.35,
+          "roc_auc": 0.74108
+        },
+        {
+          "subject": "s048",
+          "n_train": 200,
+          "n_genuine": 200,
+          "n_impostor": 250,
+          "eer": 0.04800000000000004,
+          "roc_auc": 0.98814
+        },
+        {
+          "subject": "s049",
+          "n_train": 200,
+          "n_genuine": 200,
+          "n_impostor": 250,
+          "eer": 0.055,
+          "roc_auc": 0.9781399999999999
+        },
+        {
+          "subject": "s050",
+          "n_train": 200,
+          "n_genuine": 200,
+          "n_impostor": 250,
+          "eer": 0.09,
+          "roc_auc": 0.96942
+        },
+        {
+          "subject": "s051",
+          "n_train": 200,
+          "n_genuine": 200,
+          "n_impostor": 250,
+          "eer": 0.08799999999999997,
+          "roc_auc": 0.9752399999999999
+        },
+        {
+          "subject": "s052",
+          "n_train": 200,
+          "n_genuine": 200,
+          "n_impostor": 250,
+          "eer": 0.005,
+          "roc_auc": 0.9989600000000001
+        },
+        {
+          "subject": "s053",
+          "n_train": 200,
+          "n_genuine": 200,
+          "n_impostor": 250,
+          "eer": 0.02,
+          "roc_auc": 0.99832
+        },
+        {
+          "subject": "s054",
+          "n_train": 200,
+          "n_genuine": 200,
+          "n_impostor": 250,
+          "eer": 0.06000000000000005,
+          "roc_auc": 0.9768600000000001
+        },
+        {
+          "subject": "s055",
+          "n_train": 200,
+          "n_genuine": 200,
+          "n_impostor": 250,
+          "eer": 0.008000000000000007,
+          "roc_auc": 0.99952
+        },
+        {
+          "subject": "s056",
+          "n_train": 200,
+          "n_genuine": 200,
+          "n_impostor": 250,
+          "eer": 0.055,
+          "roc_auc": 0.97588
+        },
+        {
+          "subject": "s057",
+          "n_train": 200,
+          "n_genuine": 200,
+          "n_impostor": 250,
+          "eer": 0.09599999999999997,
+          "roc_auc": 0.9691799999999999
+        }
+      ]
+    }
+  }
+}
