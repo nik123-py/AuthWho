@@ -62,6 +62,12 @@ class TrustEngine:
         self.seq = 0
         self.created = float(now)
         self.channels: dict[str, dict[str, Any]] = {c: _empty() for c in CHANNELS}
+        self.flags: list[dict[str, Any]] = []  # bot and replay flags with the time they were raised
+
+    def add_flags(self, flags: list[dict[str, Any]], now: float) -> None:
+        """Attach bot or replay flags (server/policy/bots.py); they stay in updates while fresh."""
+        self.flags += [{**f, "raised_at": float(now)} for f in flags]
+        self.flags = [f for f in self.flags if now - f["raised_at"] <= FRESH_S]
 
     def set_status(self, channel: str, status: str) -> None:
         """Mark a channel as opted out, without a profile, and so on."""
@@ -123,17 +129,19 @@ class TrustEngine:
             "trust": round(self.trust, 2) if scored else None,
             "confidence": round(confidence, 4) if scored else None,
             "channels": channels,
-            "bot_flags": [],
+            "bot_flags": [{k: v for k, v in f.items() if k != "raised_at"}
+                          for f in self.flags if now - f["raised_at"] <= FRESH_S],
             "model_versions": versions,
         }
 
     def to_dict(self) -> dict[str, Any]:
         return {"session_id": self.session_id, "user_id": self.user_id, "trust": self.trust,
-                "seq": self.seq, "created": self.created, "channels": self.channels}
+                "seq": self.seq, "created": self.created, "channels": self.channels, "flags": self.flags}
 
     @classmethod
     def from_dict(cls, d: dict[str, Any]) -> "TrustEngine":
         e = cls(d["session_id"], d["user_id"], now=d["created"], trust=d["trust"])
         e.seq = int(d["seq"])
         e.channels = {c: dict(d["channels"][c]) for c in CHANNELS}
+        e.flags = [dict(f) for f in d.get("flags", [])]
         return e
