@@ -1,0 +1,1544 @@
+{
+  "experiment": "fusion_chimeric",
+  "command": "python -m experiments.fusion_chimeric",
+  "seed": 0,
+  "environment": {
+    "python": "3.14.6",
+    "numpy": "2.5.3",
+    "scikit_learn": "1.9.1",
+    "platform": "Windows-11-10.0.26200-SP0"
+  },
+  "fusion": {
+    "n_users": 119,
+    "per_user": [
+      {
+        "subject": "user1+aalto192452",
+        "n_genuine": 8,
+        "n_impostor": 50,
+        "keystroke_eer": 0.037974683544303826,
+        "keystroke_auc": 0.9824999999999999,
+        "pointer_eer": 0.0,
+        "pointer_auc": 1.0,
+        "fused_eer": 0.0,
+        "fused_auc": 1.0
+      },
+      {
+        "subject": "user10+aalto315912",
+        "n_genuine": 7,
+        "n_impostor": 50,
+        "keystroke_eer": 0.05263157894736846,
+        "keystroke_auc": 0.9871428571428571,
+        "pointer_eer": 0.5714285714285714,
+        "pointer_auc": 0.5028571428571429,
+        "fused_eer": 0.06000000000000005,
+        "fused_auc": 0.9771428571428571
+      },
+      {
+        "subject": "user100+aalto27317",
+        "n_genuine": 8,
+        "n_impostor": 50,
+        "keystroke_eer": 0.14,
+        "keystroke_auc": 0.9199999999999999,
+        "pointer_eer": 0.33073929961089493,
+        "pointer_auc": 0.7737499999999999,
+        "fused_eer": 0.125,
+        "fused_auc": 0.935
+      },
+      {
+        "subject": "user101+aalto301845",
+        "n_genuine": 9,
+        "n_impostor": 50,
+        "keystroke_eer": 0.06299212598425194,
+        "keystroke_auc": 0.9888888888888889,
+        "pointer_eer": 0.64,
+        "pointer_auc": 0.36,
+        "fused_eer": 0.2222222222222222,
+        "fused_auc": 0.911111111111111
+      },
+      {
+        "subject": "user102+aalto59793",
+        "n_genuine": 6,
+        "n_impostor": 50,
+        "keystroke_eer": 0.019230769230769246,
+        "keystroke_auc": 0.9950000000000001,
+        "pointer_eer": 0.5,
+        "pointer_auc": 0.67,
+        "fused_eer": 0.0,
+        "fused_auc": 1.0
+      },
+      {
+        "subject": "user103+aalto130312",
+        "n_genuine": 9,
+        "n_impostor": 50,
+        "keystroke_eer": 0.11764705882352941,
+        "keystroke_auc": 0.9411111111111111,
+        "pointer_eer": 0.30000000000000004,
+        "pointer_auc": 0.7799999999999999,
+        "fused_eer": 0.12,
+        "fused_auc": 0.9266666666666667
+      },
+      {
+        "subject": "user104+aalto512462",
+        "n_genuine": 7,
+        "n_impostor": 50,
+        "keystroke_eer": 0.020000000000000018,
+        "keystroke_auc": 0.9971428571428571,
+        "pointer_eer": 0.505050505050505,
+        "pointer_auc": 0.49,
+        "fused_eer": 0.040000000000000036,
+        "fused_auc": 0.9885714285714285
+      },
+      {
+        "subject": "user105+aalto86950",
+        "n_genuine": 7,
+        "n_impostor": 50,
+        "keystroke_eer": 0.14285714285714285,
+        "keystroke_auc": 0.8685714285714285,
+        "pointer_eer": 0.06741573033707862,
+        "pointer_auc": 0.9828571428571429,
+        "fused_eer": 0.11267605633802816,
+        "fused_auc": 0.9728571428571429
+      },
+      {
+        "subject": "user106+aalto316708",
+        "n_genuine": 8,
+        "n_impostor": 50,
+        "keystroke_eer": 0.16037735849056603,
+        "keystroke_auc": 0.9349999999999999,
+        "pointer_eer": 0.18000000000000005,
+        "pointer_auc": 0.8200000000000001,
+        "fused_eer": 0.12,
+        "fused_auc": 0.96
+      },
+      {
+        "subject": "user107+aalto110977",
+        "n_genuine": 7,
+        "n_impostor": 50,
+        "keystroke_eer": 0.03738317757009349,
+        "keystroke_auc": 0.9885714285714285,
+        "pointer_eer": 0.0,
+        "pointer_auc": 1.0,
+        "fused_eer": 0.0,
+        "fused_auc": 1.0
+      },
+      {
+        "subject": "user108+aalto494471",
+        "n_genuine": 7,
+        "n_impostor": 50,
+        "keystroke_eer": 0.020000000000000018,
+        "keystroke_auc": 0.9971428571428571,
+        "pointer_eer": 0.28,
+        "pointer_auc": 0.7371428571428571,
+        "fused_eer": 0.07999999999999996,
+        "fused_auc": 0.9885714285714287
+      },
+      {
+        "subject": "user109+aalto69500",
+        "n_genuine": 7,
+        "n_impostor": 50,
+        "keystroke_eer": 0.1295336787564766,
+        "keystroke_auc": 0.9171428571428571,
+        "pointer_eer": 0.14723926380368102,
+        "pointer_auc": 0.9571428571428572,
+        "fused_eer": 0.07999999999999996,
+        "fused_auc": 0.9885714285714285
+      },
+      {
+        "subject": "user11+aalto238131",
+        "n_genuine": 8,
+        "n_impostor": 50,
+        "keystroke_eer": 0.23039215686274506,
+        "keystroke_auc": 0.8249999999999998,
+        "pointer_eer": 0.020000000000000018,
+        "pointer_auc": 0.98,
+        "fused_eer": 0.125,
+        "fused_auc": 0.8950000000000001
+      },
+      {
+        "subject": "user110+aalto246648",
+        "n_genuine": 8,
+        "n_impostor": 50,
+        "keystroke_eer": 0.125,
+        "keystroke_auc": 0.9675,
+        "pointer_eer": 0.0,
+        "pointer_auc": 1.0,
+        "fused_eer": 0.09999999999999998,
+        "fused_auc": 0.9875
+      },
+      {
+        "subject": "user111+aalto161560",
+        "n_genuine": 6,
+        "n_impostor": 50,
+        "keystroke_eer": 0.0,
+        "keystroke_auc": 1.0,
+        "pointer_eer": 0.5,
+        "pointer_auc": 0.57,
+        "fused_eer": 0.0,
+        "fused_auc": 1.0
+      },
+      {
+        "subject": "user112+aalto46026",
+        "n_genuine": 8,
+        "n_impostor": 50,
+        "keystroke_eer": 0.3138075313807531,
+        "keystroke_auc": 0.7675,
+        "pointer_eer": 0.4237288135593221,
+        "pointer_auc": 0.665,
+        "fused_eer": 0.25,
+        "fused_auc": 0.8525
+      },
+      {
+        "subject": "user113+aalto342291",
+        "n_genuine": 6,
+        "n_impostor": 50,
+        "keystroke_eer": 0.2793296089385475,
+        "keystroke_auc": 0.8099999999999998,
+        "pointer_eer": 0.21818181818181817,
+        "pointer_auc": 0.81,
+        "fused_eer": 0.22033898305084743,
+        "fused_auc": 0.9233333333333333
+      },
+      {
+        "subject": "user114+aalto13243",
+        "n_genuine": 6,
+        "n_impostor": 50,
+        "keystroke_eer": 0.0697674418604651,
+        "keystroke_auc": 0.99,
+        "pointer_eer": 0.06000000000000005,
+        "pointer_auc": 0.94,
+        "fused_eer": 0.0,
+        "fused_auc": 1.0
+      },
+      {
+        "subject": "user115+aalto307537",
+        "n_genuine": 7,
+        "n_impostor": 50,
+        "keystroke_eer": 0.13192612137203152,
+        "keystroke_auc": 0.9142857142857144,
+        "pointer_eer": 0.24,
+        "pointer_auc": 0.8285714285714285,
+        "fused_eer": 0.14,
+        "fused_auc": 0.9628571428571429
+      },
+      {
+        "subject": "user116+aalto425946",
+        "n_genuine": 8,
+        "n_impostor": 50,
+        "keystroke_eer": 0.25,
+        "keystroke_auc": 0.91,
+        "pointer_eer": 0.019230769230769246,
+        "pointer_auc": 0.995,
+        "fused_eer": 0.06000000000000005,
+        "fused_auc": 0.9724999999999999
+      },
+      {
+        "subject": "user117+aalto109515",
+        "n_genuine": 9,
+        "n_impostor": 50,
+        "keystroke_eer": 0.0,
+        "keystroke_auc": 1.0,
+        "pointer_eer": 0.03846153846153849,
+        "pointer_auc": 0.98,
+        "fused_eer": 0.0,
+        "fused_auc": 1.0
+      },
+      {
+        "subject": "user118+aalto243906",
+        "n_genuine": 7,
+        "n_impostor": 50,
+        "keystroke_eer": 0.125,
+        "keystroke_auc": 0.9285714285714286,
+        "pointer_eer": 0.35491606714628293,
+        "pointer_auc": 0.7542857142857142,
+        "fused_eer": 0.13857677902621723,
+        "fused_auc": 0.9242857142857144
+      },
+      {
+        "subject": "user119+aalto195926",
+        "n_genuine": 7,
+        "n_impostor": 50,
+        "keystroke_eer": 0.20141342756183744,
+        "keystroke_auc": 0.9185714285714286,
+        "pointer_eer": 0.18000000000000005,
+        "pointer_auc": 0.8371428571428572,
+        "fused_eer": 0.09999999999999998,
+        "fused_auc": 0.9571428571428572
+      },
+      {
+        "subject": "user12+aalto339370",
+        "n_genuine": 8,
+        "n_impostor": 50,
+        "keystroke_eer": 0.020000000000000018,
+        "keystroke_auc": 0.99,
+        "pointer_eer": 0.0,
+        "pointer_auc": 1.0,
+        "fused_eer": 0.020000000000000018,
+        "fused_auc": 0.9924999999999999
+      },
+      {
+        "subject": "user120+aalto280427",
+        "n_genuine": 7,
+        "n_impostor": 50,
+        "keystroke_eer": 0.2857142857142857,
+        "keystroke_auc": 0.7728571428571429,
+        "pointer_eer": 0.0,
+        "pointer_auc": 0.9999999999999999,
+        "fused_eer": 0.0,
+        "fused_auc": 1.0
+      },
+      {
+        "subject": "user13+aalto183400",
+        "n_genuine": 9,
+        "n_impostor": 50,
+        "keystroke_eer": 0.14482758620689656,
+        "keystroke_auc": 0.9411111111111111,
+        "pointer_eer": 0.0,
+        "pointer_auc": 1.0,
+        "fused_eer": 0.0,
+        "fused_auc": 1.0
+      },
+      {
+        "subject": "user14+aalto248370",
+        "n_genuine": 9,
+        "n_impostor": 50,
+        "keystroke_eer": 0.06779661016949154,
+        "keystroke_auc": 0.9855555555555555,
+        "pointer_eer": 0.018867924528301903,
+        "pointer_auc": 0.9966666666666667,
+        "fused_eer": 0.020000000000000018,
+        "fused_auc": 0.9977777777777778
+      },
+      {
+        "subject": "user15+aalto1010",
+        "n_genuine": 9,
+        "n_impostor": 50,
+        "keystroke_eer": 0.040000000000000036,
+        "keystroke_auc": 0.9866666666666667,
+        "pointer_eer": 0.5555555555555556,
+        "pointer_auc": 0.5333333333333332,
+        "fused_eer": 0.09999999999999998,
+        "fused_auc": 0.9822222222222222
+      },
+      {
+        "subject": "user16+aalto363936",
+        "n_genuine": 8,
+        "n_impostor": 50,
+        "keystroke_eer": 0.15384615384615383,
+        "keystroke_auc": 0.8925,
+        "pointer_eer": 0.06000000000000005,
+        "pointer_auc": 0.96,
+        "fused_eer": 0.125,
+        "fused_auc": 0.9175
+      },
+      {
+        "subject": "user17+aalto501558",
+        "n_genuine": 8,
+        "n_impostor": 50,
+        "keystroke_eer": 0.07575757575757575,
+        "keystroke_auc": 0.985,
+        "pointer_eer": 0.38157894736842113,
+        "pointer_auc": 0.68,
+        "fused_eer": 0.06000000000000005,
+        "fused_auc": 0.97
+      },
+      {
+        "subject": "user18+aalto129156",
+        "n_genuine": 8,
+        "n_impostor": 50,
+        "keystroke_eer": 0.07999999999999996,
+        "keystroke_auc": 0.96625,
+        "pointer_eer": 0.22972972972972971,
+        "pointer_auc": 0.8600000000000001,
+        "fused_eer": 0.020000000000000018,
+        "fused_auc": 0.99625
+      },
+      {
+        "subject": "user19+aalto483388",
+        "n_genuine": 7,
+        "n_impostor": 50,
+        "keystroke_eer": 0.06249999999999999,
+        "keystroke_auc": 0.9742857142857142,
+        "pointer_eer": 0.020000000000000018,
+        "pointer_auc": 0.9914285714285713,
+        "fused_eer": 0.020000000000000018,
+        "fused_auc": 0.9942857142857142
+      },
+      {
+        "subject": "user2+aalto71827",
+        "n_genuine": 6,
+        "n_impostor": 50,
+        "keystroke_eer": 0.25,
+        "keystroke_auc": 0.8333333333333333,
+        "pointer_eer": 0.0,
+        "pointer_auc": 1.0,
+        "fused_eer": 0.0,
+        "fused_auc": 1.0
+      },
+      {
+        "subject": "user20+aalto47531",
+        "n_genuine": 6,
+        "n_impostor": 50,
+        "keystroke_eer": 0.3461538461538462,
+        "keystroke_auc": 0.76,
+        "pointer_eer": 0.020000000000000018,
+        "pointer_auc": 0.9866666666666667,
+        "fused_eer": 0.020000000000000018,
+        "fused_auc": 0.9933333333333333
+      },
+      {
+        "subject": "user21+aalto386179",
+        "n_genuine": 8,
+        "n_impostor": 50,
+        "keystroke_eer": 0.13513513513513514,
+        "keystroke_auc": 0.935,
+        "pointer_eer": 0.4901960784313725,
+        "pointer_auc": 0.5425000000000001,
+        "fused_eer": 0.125,
+        "fused_auc": 0.94375
+      },
+      {
+        "subject": "user22+aalto130082",
+        "n_genuine": 8,
+        "n_impostor": 50,
+        "keystroke_eer": 0.018987341772151913,
+        "keystroke_auc": 0.99625,
+        "pointer_eer": 0.5897435897435898,
+        "pointer_auc": 0.36,
+        "fused_eer": 0.1329113924050633,
+        "fused_auc": 0.95
+      },
+      {
+        "subject": "user23+aalto500680",
+        "n_genuine": 7,
+        "n_impostor": 50,
+        "keystroke_eer": 0.0588235294117647,
+        "keystroke_auc": 0.9928571428571429,
+        "pointer_eer": 0.5617977528089887,
+        "pointer_auc": 0.39,
+        "fused_eer": 0.0641025641025641,
+        "fused_auc": 0.9914285714285714
+      },
+      {
+        "subject": "user24+aalto275206",
+        "n_genuine": 6,
+        "n_impostor": 50,
+        "keystroke_eer": 0.10294117647058823,
+        "keystroke_auc": 0.975,
+        "pointer_eer": 0.08823529411764705,
+        "pointer_auc": 0.98,
+        "fused_eer": 0.040000000000000036,
+        "fused_auc": 0.9916666666666667
+      },
+      {
+        "subject": "user25+aalto498002",
+        "n_genuine": 7,
+        "n_impostor": 50,
+        "keystroke_eer": 0.23310023310023298,
+        "keystroke_auc": 0.8485714285714285,
+        "pointer_eer": 0.0,
+        "pointer_auc": 1.0,
+        "fused_eer": 0.0,
+        "fused_auc": 1.0
+      },
+      {
+        "subject": "user26+aalto391276",
+        "n_genuine": 7,
+        "n_impostor": 50,
+        "keystroke_eer": 0.0823529411764706,
+        "keystroke_auc": 0.9785714285714285,
+        "pointer_eer": 0.018691588785046745,
+        "pointer_auc": 0.9971428571428571,
+        "fused_eer": 0.0,
+        "fused_auc": 1.0
+      },
+      {
+        "subject": "user27+aalto35701",
+        "n_genuine": 7,
+        "n_impostor": 50,
+        "keystroke_eer": 0.24561403508771928,
+        "keystroke_auc": 0.8571428571428572,
+        "pointer_eer": 0.76,
+        "pointer_auc": 0.24,
+        "fused_eer": 0.2857142857142857,
+        "fused_auc": 0.8285714285714285
+      },
+      {
+        "subject": "user28+aalto83933",
+        "n_genuine": 8,
+        "n_impostor": 50,
+        "keystroke_eer": 0.125,
+        "keystroke_auc": 0.8775,
+        "pointer_eer": 0.6799999999999999,
+        "pointer_auc": 0.31999999999999995,
+        "fused_eer": 0.14,
+        "fused_auc": 0.8624999999999999
+      },
+      {
+        "subject": "user29+aalto270067",
+        "n_genuine": 9,
+        "n_impostor": 50,
+        "keystroke_eer": 0.05813953488372092,
+        "keystroke_auc": 0.9911111111111112,
+        "pointer_eer": 0.020000000000000018,
+        "pointer_auc": 0.9844444444444445,
+        "fused_eer": 0.0,
+        "fused_auc": 1.0
+      },
+      {
+        "subject": "user3+aalto329108",
+        "n_genuine": 7,
+        "n_impostor": 50,
+        "keystroke_eer": 0.019455252918287955,
+        "keystroke_auc": 0.9928571428571429,
+        "pointer_eer": 0.12,
+        "pointer_auc": 0.9142857142857143,
+        "fused_eer": 0.020000000000000018,
+        "fused_auc": 0.98
+      },
+      {
+        "subject": "user30+aalto14518",
+        "n_genuine": 7,
+        "n_impostor": 50,
+        "keystroke_eer": 0.125,
+        "keystroke_auc": 0.9628571428571429,
+        "pointer_eer": 0.5,
+        "pointer_auc": 0.6414285714285715,
+        "fused_eer": 0.19999999999999996,
+        "fused_auc": 0.9
+      },
+      {
+        "subject": "user31+aalto97735",
+        "n_genuine": 7,
+        "n_impostor": 50,
+        "keystroke_eer": 0.0588235294117647,
+        "keystroke_auc": 0.9928571428571429,
+        "pointer_eer": 0.0,
+        "pointer_auc": 1.0,
+        "fused_eer": 0.0,
+        "fused_auc": 1.0
+      },
+      {
+        "subject": "user32+aalto315647",
+        "n_genuine": 7,
+        "n_impostor": 50,
+        "keystroke_eer": 0.10738255033557048,
+        "keystroke_auc": 0.9728571428571429,
+        "pointer_eer": 0.36674816625916873,
+        "pointer_auc": 0.7271428571428571,
+        "fused_eer": 0.020000000000000018,
+        "fused_auc": 0.9914285714285715
+      },
+      {
+        "subject": "user33+aalto403",
+        "n_genuine": 7,
+        "n_impostor": 50,
+        "keystroke_eer": 0.2857142857142857,
+        "keystroke_auc": 0.7657142857142858,
+        "pointer_eer": 0.38834951456310685,
+        "pointer_auc": 0.6771428571428572,
+        "fused_eer": 0.2857142857142857,
+        "fused_auc": 0.7685714285714286
+      },
+      {
+        "subject": "user34+aalto306443",
+        "n_genuine": 7,
+        "n_impostor": 50,
+        "keystroke_eer": 0.0,
+        "keystroke_auc": 1.0,
+        "pointer_eer": 0.4911591355599214,
+        "pointer_auc": 0.5499999999999999,
+        "fused_eer": 0.0,
+        "fused_auc": 1.0
+      },
+      {
+        "subject": "user35+aalto419596",
+        "n_genuine": 8,
+        "n_impostor": 50,
+        "keystroke_eer": 0.125,
+        "keystroke_auc": 0.90875,
+        "pointer_eer": 0.31999999999999995,
+        "pointer_auc": 0.74,
+        "fused_eer": 0.125,
+        "fused_auc": 0.935
+      },
+      {
+        "subject": "user36+aalto400104",
+        "n_genuine": 7,
+        "n_impostor": 50,
+        "keystroke_eer": 0.2785515320334262,
+        "keystroke_auc": 0.8085714285714287,
+        "pointer_eer": 0.43999999999999995,
+        "pointer_auc": 0.56,
+        "fused_eer": 0.2857142857142857,
+        "fused_auc": 0.8342857142857143
+      },
+      {
+        "subject": "user37+aalto127647",
+        "n_genuine": 7,
+        "n_impostor": 50,
+        "keystroke_eer": 0.46153846153846156,
+        "keystroke_auc": 0.5714285714285714,
+        "pointer_eer": 0.36,
+        "pointer_auc": 0.64,
+        "fused_eer": 0.36,
+        "fused_auc": 0.6885714285714286
+      },
+      {
+        "subject": "user38+aalto235359",
+        "n_genuine": 9,
+        "n_impostor": 50,
+        "keystroke_eer": 0.22429906542056072,
+        "keystroke_auc": 0.8955555555555555,
+        "pointer_eer": 0.1349693251533742,
+        "pointer_auc": 0.9666666666666668,
+        "fused_eer": 0.1111111111111111,
+        "fused_auc": 0.9811111111111112
+      },
+      {
+        "subject": "user39+aalto127806",
+        "n_genuine": 7,
+        "n_impostor": 50,
+        "keystroke_eer": 0.019543973941368094,
+        "keystroke_auc": 0.9914285714285713,
+        "pointer_eer": 0.2622950819672131,
+        "pointer_auc": 0.8228571428571428,
+        "fused_eer": 0.06000000000000005,
+        "fused_auc": 0.9471428571428573
+      },
+      {
+        "subject": "user4+aalto400362",
+        "n_genuine": 7,
+        "n_impostor": 50,
+        "keystroke_eer": 0.056074766355140235,
+        "keystroke_auc": 0.9742857142857143,
+        "pointer_eer": 0.2953846153846154,
+        "pointer_auc": 0.8214285714285714,
+        "fused_eer": 0.08771929824561403,
+        "fused_auc": 0.9771428571428572
+      },
+      {
+        "subject": "user40+aalto45982",
+        "n_genuine": 6,
+        "n_impostor": 50,
+        "keystroke_eer": 0.3333333333333333,
+        "keystroke_auc": 0.75,
+        "pointer_eer": 0.3333333333333333,
+        "pointer_auc": 0.6466666666666666,
+        "fused_eer": 0.3333333333333333,
+        "fused_auc": 0.8133333333333332
+      },
+      {
+        "subject": "user41+aalto506013",
+        "n_genuine": 7,
+        "n_impostor": 50,
+        "keystroke_eer": 0.31999999999999995,
+        "keystroke_auc": 0.7114285714285714,
+        "pointer_eer": 0.30819672131147535,
+        "pointer_auc": 0.7942857142857143,
+        "fused_eer": 0.2857142857142857,
+        "fused_auc": 0.8200000000000001
+      },
+      {
+        "subject": "user42+aalto66919",
+        "n_genuine": 7,
+        "n_impostor": 50,
+        "keystroke_eer": 0.13496932515337423,
+        "keystroke_auc": 0.9457142857142857,
+        "pointer_eer": 0.040000000000000036,
+        "pointer_auc": 0.96,
+        "fused_eer": 0.040000000000000036,
+        "fused_auc": 0.9828571428571429
+      },
+      {
+        "subject": "user43+aalto430395",
+        "n_genuine": 7,
+        "n_impostor": 50,
+        "keystroke_eer": 0.295774647887324,
+        "keystroke_auc": 0.7314285714285714,
+        "pointer_eer": 0.42857142857142855,
+        "pointer_auc": 0.7857142857142857,
+        "fused_eer": 0.24,
+        "fused_auc": 0.8457142857142856
+      },
+      {
+        "subject": "user44+aalto495519",
+        "n_genuine": 7,
+        "n_impostor": 50,
+        "keystroke_eer": 0.10526315789473684,
+        "keystroke_auc": 0.9485714285714286,
+        "pointer_eer": 0.0,
+        "pointer_auc": 1.0,
+        "fused_eer": 0.0,
+        "fused_auc": 1.0
+      },
+      {
+        "subject": "user45+aalto188147",
+        "n_genuine": 7,
+        "n_impostor": 50,
+        "keystroke_eer": 0.3683241252302025,
+        "keystroke_auc": 0.7042857142857143,
+        "pointer_eer": 0.5,
+        "pointer_auc": 0.44857142857142857,
+        "fused_eer": 0.5,
+        "fused_auc": 0.6028571428571429
+      },
+      {
+        "subject": "user46+aalto158085",
+        "n_genuine": 7,
+        "n_impostor": 50,
+        "keystroke_eer": 0.10493827160493827,
+        "keystroke_auc": 0.9614285714285713,
+        "pointer_eer": 0.21052631578947367,
+        "pointer_auc": 0.8828571428571429,
+        "fused_eer": 0.020000000000000018,
+        "fused_auc": 0.9971428571428571
+      },
+      {
+        "subject": "user47+aalto106404",
+        "n_genuine": 7,
+        "n_impostor": 50,
+        "keystroke_eer": 0.04958677685950417,
+        "keystroke_auc": 0.9914285714285713,
+        "pointer_eer": 0.03738317757009349,
+        "pointer_auc": 0.9885714285714285,
+        "fused_eer": 0.0,
+        "fused_auc": 1.0
+      },
+      {
+        "subject": "user48+aalto440076",
+        "n_genuine": 8,
+        "n_impostor": 50,
+        "keystroke_eer": 0.17543859649122806,
+        "keystroke_auc": 0.94625,
+        "pointer_eer": 0.78,
+        "pointer_auc": 0.21999999999999997,
+        "fused_eer": 0.25,
+        "fused_auc": 0.9
+      },
+      {
+        "subject": "user49+aalto44846",
+        "n_genuine": 7,
+        "n_impostor": 50,
+        "keystroke_eer": 0.054298642533936695,
+        "keystroke_auc": 0.9828571428571429,
+        "pointer_eer": 0.07692307692307689,
+        "pointer_auc": 0.9400000000000001,
+        "fused_eer": 0.040000000000000036,
+        "fused_auc": 0.9742857142857143
+      },
+      {
+        "subject": "user5+aalto378643",
+        "n_genuine": 6,
+        "n_impostor": 50,
+        "keystroke_eer": 0.16666666666666666,
+        "keystroke_auc": 0.9316666666666668,
+        "pointer_eer": 0.16216216216216214,
+        "pointer_auc": 0.9466666666666667,
+        "fused_eer": 0.16000000000000003,
+        "fused_auc": 0.9666666666666667
+      },
+      {
+        "subject": "user50+aalto352398",
+        "n_genuine": 7,
+        "n_impostor": 50,
+        "keystroke_eer": 0.13567839195979903,
+        "keystroke_auc": 0.9528571428571428,
+        "pointer_eer": 0.07407407407407406,
+        "pointer_auc": 0.9857142857142858,
+        "fused_eer": 0.018691588785046745,
+        "fused_auc": 0.9971428571428571
+      },
+      {
+        "subject": "user51+aalto12617",
+        "n_genuine": 7,
+        "n_impostor": 50,
+        "keystroke_eer": 0.0,
+        "keystroke_auc": 1.0,
+        "pointer_eer": 0.12,
+        "pointer_auc": 0.88,
+        "fused_eer": 0.020000000000000018,
+        "fused_auc": 0.9828571428571429
+      },
+      {
+        "subject": "user52+aalto238071",
+        "n_genuine": 7,
+        "n_impostor": 50,
+        "keystroke_eer": 0.136094674556213,
+        "keystroke_auc": 0.9171428571428573,
+        "pointer_eer": 0.13636363636363635,
+        "pointer_auc": 0.9571428571428572,
+        "fused_eer": 0.06000000000000005,
+        "fused_auc": 0.9857142857142858
+      },
+      {
+        "subject": "user53+aalto45286",
+        "n_genuine": 7,
+        "n_impostor": 50,
+        "keystroke_eer": 0.125,
+        "keystroke_auc": 0.9285714285714286,
+        "pointer_eer": 0.28,
+        "pointer_auc": 0.72,
+        "fused_eer": 0.14285714285714285,
+        "fused_auc": 0.96
+      },
+      {
+        "subject": "user54+aalto37581",
+        "n_genuine": 7,
+        "n_impostor": 50,
+        "keystroke_eer": 0.0,
+        "keystroke_auc": 1.0,
+        "pointer_eer": 0.07999999999999996,
+        "pointer_auc": 0.92,
+        "fused_eer": 0.0,
+        "fused_auc": 1.0
+      },
+      {
+        "subject": "user55+aalto194297",
+        "n_genuine": 12,
+        "n_impostor": 50,
+        "keystroke_eer": 0.08333333333333333,
+        "keystroke_auc": 0.9791666666666667,
+        "pointer_eer": 0.12,
+        "pointer_auc": 0.93,
+        "fused_eer": 0.08333333333333333,
+        "fused_auc": 0.9783333333333334
+      },
+      {
+        "subject": "user56+aalto375877",
+        "n_genuine": 7,
+        "n_impostor": 50,
+        "keystroke_eer": 0.08450704225352113,
+        "keystroke_auc": 0.9828571428571429,
+        "pointer_eer": 0.21999999999999997,
+        "pointer_auc": 0.8742857142857143,
+        "fused_eer": 0.040000000000000036,
+        "fused_auc": 0.9942857142857142
+      },
+      {
+        "subject": "user57+aalto297058",
+        "n_genuine": 6,
+        "n_impostor": 50,
+        "keystroke_eer": 0.25773195876288657,
+        "keystroke_auc": 0.8266666666666665,
+        "pointer_eer": 0.018867924528301903,
+        "pointer_auc": 0.9966666666666667,
+        "fused_eer": 0.01785714285714287,
+        "fused_auc": 0.9983333333333333
+      },
+      {
+        "subject": "user58+aalto371503",
+        "n_genuine": 7,
+        "n_impostor": 50,
+        "keystroke_eer": 0.14285714285714285,
+        "keystroke_auc": 0.8614285714285714,
+        "pointer_eer": 0.05797101449275367,
+        "pointer_auc": 0.9671428571428571,
+        "fused_eer": 0.14285714285714285,
+        "fused_auc": 0.9057142857142857
+      },
+      {
+        "subject": "user59+aalto66943",
+        "n_genuine": 7,
+        "n_impostor": 50,
+        "keystroke_eer": 0.26704545454545453,
+        "keystroke_auc": 0.8071428571428572,
+        "pointer_eer": 0.020000000000000018,
+        "pointer_auc": 0.9885714285714285,
+        "fused_eer": 0.21999999999999997,
+        "fused_auc": 0.8685714285714285
+      },
+      {
+        "subject": "user6+aalto280683",
+        "n_genuine": 6,
+        "n_impostor": 50,
+        "keystroke_eer": 0.0,
+        "keystroke_auc": 1.0,
+        "pointer_eer": 0.18000000000000005,
+        "pointer_auc": 0.8700000000000001,
+        "fused_eer": 0.0,
+        "fused_auc": 1.0
+      },
+      {
+        "subject": "user60+aalto159923",
+        "n_genuine": 7,
+        "n_impostor": 50,
+        "keystroke_eer": 0.04225352112676059,
+        "keystroke_auc": 0.9957142857142858,
+        "pointer_eer": 0.38,
+        "pointer_auc": 0.6314285714285715,
+        "fused_eer": 0.12,
+        "fused_auc": 0.9685714285714286
+      },
+      {
+        "subject": "user61+aalto362921",
+        "n_genuine": 11,
+        "n_impostor": 50,
+        "keystroke_eer": 0.18181818181818182,
+        "keystroke_auc": 0.8345454545454546,
+        "pointer_eer": 0.05882352941176476,
+        "pointer_auc": 0.9500000000000001,
+        "fused_eer": 0.09999999999999998,
+        "fused_auc": 0.9745454545454546
+      },
+      {
+        "subject": "user62+aalto336488",
+        "n_genuine": 7,
+        "n_impostor": 50,
+        "keystroke_eer": 0.09395973154362416,
+        "keystroke_auc": 0.9800000000000001,
+        "pointer_eer": 0.06000000000000005,
+        "pointer_auc": 0.9742857142857143,
+        "fused_eer": 0.0,
+        "fused_auc": 1.0
+      },
+      {
+        "subject": "user63+aalto204420",
+        "n_genuine": 7,
+        "n_impostor": 50,
+        "keystroke_eer": 0.0,
+        "keystroke_auc": 1.0,
+        "pointer_eer": 0.0,
+        "pointer_auc": 1.0,
+        "fused_eer": 0.0,
+        "fused_auc": 1.0
+      },
+      {
+        "subject": "user64+aalto322130",
+        "n_genuine": 9,
+        "n_impostor": 50,
+        "keystroke_eer": 0.07999999999999996,
+        "keystroke_auc": 0.9688888888888889,
+        "pointer_eer": 0.06000000000000005,
+        "pointer_auc": 0.9666666666666666,
+        "fused_eer": 0.09999999999999998,
+        "fused_auc": 0.9755555555555556
+      },
+      {
+        "subject": "user65+aalto6703",
+        "n_genuine": 6,
+        "n_impostor": 50,
+        "keystroke_eer": 0.020000000000000018,
+        "keystroke_auc": 0.9833333333333333,
+        "pointer_eer": 0.020000000000000018,
+        "pointer_auc": 0.98,
+        "fused_eer": 0.020000000000000018,
+        "fused_auc": 0.9866666666666667
+      },
+      {
+        "subject": "user66+aalto404137",
+        "n_genuine": 8,
+        "n_impostor": 50,
+        "keystroke_eer": 0.24111675126903553,
+        "keystroke_auc": 0.87125,
+        "pointer_eer": 0.0,
+        "pointer_auc": 1.0,
+        "fused_eer": 0.0,
+        "fused_auc": 1.0
+      },
+      {
+        "subject": "user67+aalto410304",
+        "n_genuine": 7,
+        "n_impostor": 50,
+        "keystroke_eer": 0.040000000000000036,
+        "keystroke_auc": 0.9742857142857143,
+        "pointer_eer": 0.09999999999999998,
+        "pointer_auc": 0.9457142857142857,
+        "fused_eer": 0.06000000000000005,
+        "fused_auc": 0.98
+      },
+      {
+        "subject": "user68+aalto425304",
+        "n_genuine": 7,
+        "n_impostor": 50,
+        "keystroke_eer": 0.14285714285714285,
+        "keystroke_auc": 0.9257142857142857,
+        "pointer_eer": 0.03738317757009349,
+        "pointer_auc": 0.9914285714285714,
+        "fused_eer": 0.020000000000000018,
+        "fused_auc": 0.9942857142857142
+      },
+      {
+        "subject": "user69+aalto509753",
+        "n_genuine": 8,
+        "n_impostor": 50,
+        "keystroke_eer": 0.0555555555555556,
+        "keystroke_auc": 0.9824999999999999,
+        "pointer_eer": 0.03614457831325304,
+        "pointer_auc": 0.9925,
+        "fused_eer": 0.03448275862068968,
+        "fused_auc": 0.99625
+      },
+      {
+        "subject": "user7+aalto230375",
+        "n_genuine": 7,
+        "n_impostor": 50,
+        "keystroke_eer": 0.12105263157894736,
+        "keystroke_auc": 0.9571428571428572,
+        "pointer_eer": 0.0,
+        "pointer_auc": 1.0,
+        "fused_eer": 0.020000000000000018,
+        "fused_auc": 0.9971428571428571
+      },
+      {
+        "subject": "user70+aalto23352",
+        "n_genuine": 7,
+        "n_impostor": 50,
+        "keystroke_eer": 0.2857142857142857,
+        "keystroke_auc": 0.7885714285714287,
+        "pointer_eer": 0.39759036144578314,
+        "pointer_auc": 0.6699999999999999,
+        "fused_eer": 0.2832618025751073,
+        "fused_auc": 0.8571428571428571
+      },
+      {
+        "subject": "user71+aalto198654",
+        "n_genuine": 8,
+        "n_impostor": 50,
+        "keystroke_eer": 0.33783783783783783,
+        "keystroke_auc": 0.715,
+        "pointer_eer": 0.11538461538461538,
+        "pointer_auc": 0.9099999999999999,
+        "fused_eer": 0.08620689655172412,
+        "fused_auc": 0.92625
+      },
+      {
+        "subject": "user72+aalto359190",
+        "n_genuine": 7,
+        "n_impostor": 50,
+        "keystroke_eer": 0.019323671497584557,
+        "keystroke_auc": 0.9942857142857142,
+        "pointer_eer": 0.12,
+        "pointer_auc": 0.9485714285714286,
+        "fused_eer": 0.0,
+        "fused_auc": 1.0
+      },
+      {
+        "subject": "user73+aalto306315",
+        "n_genuine": 7,
+        "n_impostor": 50,
+        "keystroke_eer": 0.3036649214659686,
+        "keystroke_auc": 0.7242857142857143,
+        "pointer_eer": 0.0,
+        "pointer_auc": 1.0,
+        "fused_eer": 0.2857142857142857,
+        "fused_auc": 0.88
+      },
+      {
+        "subject": "user74+aalto4398",
+        "n_genuine": 7,
+        "n_impostor": 50,
+        "keystroke_eer": 0.14285714285714285,
+        "keystroke_auc": 0.9071428571428571,
+        "pointer_eer": 0.0,
+        "pointer_auc": 1.0,
+        "fused_eer": 0.14,
+        "fused_auc": 0.98
+      },
+      {
+        "subject": "user75+aalto101595",
+        "n_genuine": 6,
+        "n_impostor": 50,
+        "keystroke_eer": 0.3333333333333333,
+        "keystroke_auc": 0.7466666666666666,
+        "pointer_eer": 0.0,
+        "pointer_auc": 1.0,
+        "fused_eer": 0.3333333333333333,
+        "fused_auc": 0.87
+      },
+      {
+        "subject": "user76+aalto110311",
+        "n_genuine": 7,
+        "n_impostor": 50,
+        "keystroke_eer": 0.15624999999999997,
+        "keystroke_auc": 0.9285714285714285,
+        "pointer_eer": 0.0,
+        "pointer_auc": 1.0,
+        "fused_eer": 0.0,
+        "fused_auc": 1.0
+      },
+      {
+        "subject": "user77+aalto25230",
+        "n_genuine": 7,
+        "n_impostor": 50,
+        "keystroke_eer": 0.15151515151515152,
+        "keystroke_auc": 0.9471428571428572,
+        "pointer_eer": 0.18000000000000005,
+        "pointer_auc": 0.88,
+        "fused_eer": 0.06000000000000005,
+        "fused_auc": 0.96
+      },
+      {
+        "subject": "user78+aalto259022",
+        "n_genuine": 7,
+        "n_impostor": 50,
+        "keystroke_eer": 0.14285714285714285,
+        "keystroke_auc": 0.9628571428571429,
+        "pointer_eer": 0.09999999999999998,
+        "pointer_auc": 0.9342857142857143,
+        "fused_eer": 0.14285714285714285,
+        "fused_auc": 0.9771428571428571
+      },
+      {
+        "subject": "user79+aalto62190",
+        "n_genuine": 6,
+        "n_impostor": 50,
+        "keystroke_eer": 0.1046511627906977,
+        "keystroke_auc": 0.9650000000000001,
+        "pointer_eer": 0.01960784313725492,
+        "pointer_auc": 0.99,
+        "fused_eer": 0.0,
+        "fused_auc": 1.0
+      },
+      {
+        "subject": "user8+aalto38546",
+        "n_genuine": 7,
+        "n_impostor": 50,
+        "keystroke_eer": 0.020000000000000018,
+        "keystroke_auc": 0.9942857142857142,
+        "pointer_eer": 0.14953271028037385,
+        "pointer_auc": 0.8942857142857142,
+        "fused_eer": 0.0,
+        "fused_auc": 1.0
+      },
+      {
+        "subject": "user81+aalto52252",
+        "n_genuine": 9,
+        "n_impostor": 50,
+        "keystroke_eer": 0.26666666666666666,
+        "keystroke_auc": 0.8122222222222222,
+        "pointer_eer": 0.41493775933609955,
+        "pointer_auc": 0.6466666666666666,
+        "fused_eer": 0.2857142857142857,
+        "fused_auc": 0.8144444444444444
+      },
+      {
+        "subject": "user82+aalto465821",
+        "n_genuine": 7,
+        "n_impostor": 50,
+        "keystroke_eer": 0.0,
+        "keystroke_auc": 1.0,
+        "pointer_eer": 0.54,
+        "pointer_auc": 0.47714285714285715,
+        "fused_eer": 0.0,
+        "fused_auc": 1.0
+      },
+      {
+        "subject": "user83+aalto205540",
+        "n_genuine": 6,
+        "n_impostor": 50,
+        "keystroke_eer": 0.0,
+        "keystroke_auc": 1.0,
+        "pointer_eer": 0.020000000000000018,
+        "pointer_auc": 0.99,
+        "fused_eer": 0.0,
+        "fused_auc": 1.0
+      },
+      {
+        "subject": "user84+aalto113548",
+        "n_genuine": 8,
+        "n_impostor": 50,
+        "keystroke_eer": 0.020000000000000018,
+        "keystroke_auc": 0.99625,
+        "pointer_eer": 0.4949494949494949,
+        "pointer_auc": 0.51,
+        "fused_eer": 0.020000000000000018,
+        "fused_auc": 0.99625
+      },
+      {
+        "subject": "user85+aalto256313",
+        "n_genuine": 6,
+        "n_impostor": 50,
+        "keystroke_eer": 0.42801556420233466,
+        "keystroke_auc": 0.6333333333333334,
+        "pointer_eer": 0.0,
+        "pointer_auc": 1.0,
+        "fused_eer": 0.0,
+        "fused_auc": 1.0
+      },
+      {
+        "subject": "user86+aalto384343",
+        "n_genuine": 7,
+        "n_impostor": 50,
+        "keystroke_eer": 0.3086419753086419,
+        "keystroke_auc": 0.7671428571428571,
+        "pointer_eer": 0.0,
+        "pointer_auc": 1.0,
+        "fused_eer": 0.040000000000000036,
+        "fused_auc": 0.9914285714285714
+      },
+      {
+        "subject": "user87+aalto402272",
+        "n_genuine": 6,
+        "n_impostor": 50,
+        "keystroke_eer": 0.5040322580645161,
+        "keystroke_auc": 0.5083333333333334,
+        "pointer_eer": 0.040000000000000036,
+        "pointer_auc": 0.96,
+        "fused_eer": 0.06000000000000005,
+        "fused_auc": 0.95
+      },
+      {
+        "subject": "user88+aalto124334",
+        "n_genuine": 7,
+        "n_impostor": 50,
+        "keystroke_eer": 0.020000000000000018,
+        "keystroke_auc": 0.9971428571428571,
+        "pointer_eer": 0.06000000000000005,
+        "pointer_auc": 0.9828571428571428,
+        "fused_eer": 0.0,
+        "fused_auc": 1.0
+      },
+      {
+        "subject": "user89+aalto300677",
+        "n_genuine": 7,
+        "n_impostor": 50,
+        "keystroke_eer": 0.14285714285714285,
+        "keystroke_auc": 0.9585714285714285,
+        "pointer_eer": 0.020000000000000018,
+        "pointer_auc": 0.9885714285714285,
+        "fused_eer": 0.040000000000000036,
+        "fused_auc": 0.9914285714285714
+      },
+      {
+        "subject": "user9+aalto478143",
+        "n_genuine": 8,
+        "n_impostor": 50,
+        "keystroke_eer": 0.30364372469635625,
+        "keystroke_auc": 0.75625,
+        "pointer_eer": 0.12068965517241381,
+        "pointer_auc": 0.9400000000000001,
+        "fused_eer": 0.16216216216216217,
+        "fused_auc": 0.945
+      },
+      {
+        "subject": "user90+aalto492823",
+        "n_genuine": 7,
+        "n_impostor": 50,
+        "keystroke_eer": 0.14285714285714285,
+        "keystroke_auc": 0.8871428571428572,
+        "pointer_eer": 0.056818181818181865,
+        "pointer_auc": 0.9657142857142856,
+        "fused_eer": 0.040000000000000036,
+        "fused_auc": 0.9857142857142858
+      },
+      {
+        "subject": "user91+aalto272163",
+        "n_genuine": 6,
+        "n_impostor": 50,
+        "keystroke_eer": 0.11290322580645164,
+        "keystroke_auc": 0.9533333333333334,
+        "pointer_eer": 0.23958333333333334,
+        "pointer_auc": 0.885,
+        "fused_eer": 0.03571428571428574,
+        "fused_auc": 0.985
+      },
+      {
+        "subject": "user92+aalto152201",
+        "n_genuine": 9,
+        "n_impostor": 50,
+        "keystroke_eer": 0.1111111111111111,
+        "keystroke_auc": 0.9466666666666667,
+        "pointer_eer": 0.24545454545454548,
+        "pointer_auc": 0.8333333333333333,
+        "fused_eer": 0.08474576271186438,
+        "fused_auc": 0.9755555555555556
+      },
+      {
+        "subject": "user93+aalto215225",
+        "n_genuine": 8,
+        "n_impostor": 50,
+        "keystroke_eer": 0.5905511811023623,
+        "keystroke_auc": 0.44,
+        "pointer_eer": 0.019480519480519497,
+        "pointer_auc": 0.9925,
+        "fused_eer": 0.07999999999999996,
+        "fused_auc": 0.9425000000000001
+      },
+      {
+        "subject": "user94+aalto330842",
+        "n_genuine": 7,
+        "n_impostor": 50,
+        "keystroke_eer": 0.05263157894736846,
+        "keystroke_auc": 0.9885714285714287,
+        "pointer_eer": 0.5157894736842105,
+        "pointer_auc": 0.47000000000000003,
+        "fused_eer": 0.05263157894736846,
+        "fused_auc": 0.9885714285714287
+      },
+      {
+        "subject": "user95+aalto93032",
+        "n_genuine": 9,
+        "n_impostor": 50,
+        "keystroke_eer": 0.16766467065868262,
+        "keystroke_auc": 0.9166666666666665,
+        "pointer_eer": 0.24,
+        "pointer_auc": 0.8666666666666667,
+        "fused_eer": 0.18000000000000005,
+        "fused_auc": 0.9466666666666668
+      },
+      {
+        "subject": "user96+aalto100804",
+        "n_genuine": 8,
+        "n_impostor": 50,
+        "keystroke_eer": 0.125,
+        "keystroke_auc": 0.9399999999999998,
+        "pointer_eer": 0.040000000000000036,
+        "pointer_auc": 0.975,
+        "fused_eer": 0.040000000000000036,
+        "fused_auc": 0.9874999999999999
+      },
+      {
+        "subject": "user97+aalto193098",
+        "n_genuine": 8,
+        "n_impostor": 50,
+        "keystroke_eer": 0.33333333333333337,
+        "keystroke_auc": 0.75,
+        "pointer_eer": 0.1935483870967742,
+        "pointer_auc": 0.88,
+        "fused_eer": 0.16216216216216217,
+        "fused_auc": 0.94
+      },
+      {
+        "subject": "user98+aalto188786",
+        "n_genuine": 8,
+        "n_impostor": 50,
+        "keystroke_eer": 0.12121212121212122,
+        "keystroke_auc": 0.93375,
+        "pointer_eer": 0.35897435897435903,
+        "pointer_auc": 0.72,
+        "fused_eer": 0.10344827586206895,
+        "fused_auc": 0.93875
+      },
+      {
+        "subject": "user99+aalto45751",
+        "n_genuine": 7,
+        "n_impostor": 50,
+        "keystroke_eer": 0.0,
+        "keystroke_auc": 1.0,
+        "pointer_eer": 0.05660377358490571,
+        "pointer_auc": 0.9700000000000001,
+        "fused_eer": 0.0,
+        "fused_auc": 1.0
+      }
+    ],
+    "keystroke": {
+      "eer_mean": 0.14389847621094115,
+      "eer_ci95": [
+        0.122980632624974,
+        0.16479561996209416
+      ],
+      "auc_mean": 0.9085699431287666,
+      "auc_ci95": [
+        0.889209890395552,
+        0.9269433462779052
+      ]
+    },
+    "pointer": {
+      "eer_mean": 0.19701986420432188,
+      "eer_ci95": [
+        0.1632576885616916,
+        0.23489396578668437
+      ],
+      "auc_mean": 0.8380870681605975,
+      "auc_ci95": [
+        0.8002868855875683,
+        0.8702236644657863
+      ]
+    },
+    "fused": {
+      "eer_mean": 0.08931831904460868,
+      "eer_ci95": [
+        0.07170116857073268,
+        0.10868168408079469
+      ],
+      "auc_mean": 0.9564270859859095,
+      "auc_ci95": [
+        0.9441244581165801,
+        0.9679652288945881
+      ]
+    },
+    "fused_minus_best_single": {
+      "mean": 0.011138883038002347,
+      "ci95": [
+        0.0006423950111955687,
+        0.02258051445334067
+      ]
+    },
+    "fused_minus_keystroke": {
+      "mean": -0.0545801571663325,
+      "ci95": [
+        -0.07398406183661095,
+        -0.036143928269516366
+      ]
+    },
+    "fused_minus_pointer": {
+      "mean": -0.10770154515971317,
+      "ci95": [
+        -0.1400038805551385,
+        -0.07754518971440877
+      ]
+    }
+  },
+  "trust": {
+    "genuine_users": 119,
+    "genuine_windows": 1138,
+    "genuine_min_trust_median": 90.98,
+    "impostor_streams": 2380,
+    "thresholds": {
+      "75": {
+        "genuine_users_below": 11,
+        "genuine_rate_below": 0.09243697478991597,
+        "impostor_detected_rate": 0.8004201680672269,
+        "time_to_detect_windows_median": 4.0,
+        "time_to_detect_windows_p90": 6.0
+      },
+      "50": {
+        "genuine_users_below": 2,
+        "genuine_rate_below": 0.01680672268907563,
+        "impostor_detected_rate": 0.5844537815126051,
+        "time_to_detect_windows_median": 6.0,
+        "time_to_detect_windows_p90": 8.0
+      }
+    },
+    "chosen": {
+      "tau": 0.25,
+      "penalty": 10.0,
+      "reward": 5.0
+    },
+    "sweep": [
+      {
+        "tau": 0.2,
+        "penalty": 8,
+        "reward": 5,
+        "75": {
+          "genuine_users_below": 7,
+          "genuine_rate_below": 0.058823529411764705,
+          "impostor_detected_rate": 0.6705882352941176,
+          "time_to_detect_windows_median": 4.0,
+          "time_to_detect_windows_p90": 7.0
+        },
+        "50": {
+          "genuine_users_below": 1,
+          "genuine_rate_below": 0.008403361344537815,
+          "impostor_detected_rate": 0.3945378151260504,
+          "time_to_detect_windows_median": 7.0,
+          "time_to_detect_windows_p90": 9.0
+        }
+      },
+      {
+        "tau": 0.2,
+        "penalty": 10,
+        "reward": 5,
+        "75": {
+          "genuine_users_below": 9,
+          "genuine_rate_below": 0.07563025210084033,
+          "impostor_detected_rate": 0.7315126050420168,
+          "time_to_detect_windows_median": 4.0,
+          "time_to_detect_windows_p90": 6.0
+        },
+        "50": {
+          "genuine_users_below": 2,
+          "genuine_rate_below": 0.01680672268907563,
+          "impostor_detected_rate": 0.5533613445378152,
+          "time_to_detect_windows_median": 6.0,
+          "time_to_detect_windows_p90": 8.0
+        }
+      },
+      {
+        "tau": 0.25,
+        "penalty": 8,
+        "reward": 5,
+        "75": {
+          "genuine_users_below": 7,
+          "genuine_rate_below": 0.058823529411764705,
+          "impostor_detected_rate": 0.734873949579832,
+          "time_to_detect_windows_median": 4.0,
+          "time_to_detect_windows_p90": 7.0
+        },
+        "50": {
+          "genuine_users_below": 1,
+          "genuine_rate_below": 0.008403361344537815,
+          "impostor_detected_rate": 0.43907563025210083,
+          "time_to_detect_windows_median": 7.0,
+          "time_to_detect_windows_p90": 8.0
+        }
+      },
+      {
+        "tau": 0.25,
+        "penalty": 10,
+        "reward": 5,
+        "75": {
+          "genuine_users_below": 11,
+          "genuine_rate_below": 0.09243697478991597,
+          "impostor_detected_rate": 0.8004201680672269,
+          "time_to_detect_windows_median": 4.0,
+          "time_to_detect_windows_p90": 6.0
+        },
+        "50": {
+          "genuine_users_below": 2,
+          "genuine_rate_below": 0.01680672268907563,
+          "impostor_detected_rate": 0.5844537815126051,
+          "time_to_detect_windows_median": 6.0,
+          "time_to_detect_windows_p90": 8.0
+        }
+      },
+      {
+        "tau": 0.25,
+        "penalty": 12,
+        "reward": 5,
+        "75": {
+          "genuine_users_below": 23,
+          "genuine_rate_below": 0.19327731092436976,
+          "impostor_detected_rate": 0.846218487394958,
+          "time_to_detect_windows_median": 3.0,
+          "time_to_detect_windows_p90": 6.0
+        },
+        "50": {
+          "genuine_users_below": 7,
+          "genuine_rate_below": 0.058823529411764705,
+          "impostor_detected_rate": 0.6457983193277311,
+          "time_to_detect_windows_median": 5.0,
+          "time_to_detect_windows_p90": 8.0
+        }
+      },
+      {
+        "tau": 0.15,
+        "penalty": 10,
+        "reward": 5,
+        "75": {
+          "genuine_users_below": 8,
+          "genuine_rate_below": 0.06722689075630252,
+          "impostor_detected_rate": 0.7037815126050421,
+          "time_to_detect_windows_median": 4.0,
+          "time_to_detect_windows_p90": 6.0
+        },
+        "50": {
+          "genuine_users_below": 2,
+          "genuine_rate_below": 0.01680672268907563,
+          "impostor_detected_rate": 0.515126050420168,
+          "time_to_detect_windows_median": 6.0,
+          "time_to_detect_windows_p90": 8.0
+        }
+      },
+      {
+        "tau": 0.3,
+        "penalty": 12,
+        "reward": 5,
+        "75": {
+          "genuine_users_below": 27,
+          "genuine_rate_below": 0.226890756302521,
+          "impostor_detected_rate": 0.8928571428571429,
+          "time_to_detect_windows_median": 3.0,
+          "time_to_detect_windows_p90": 6.0
+        },
+        "50": {
+          "genuine_users_below": 7,
+          "genuine_rate_below": 0.058823529411764705,
+          "impostor_detected_rate": 0.6957983193277311,
+          "time_to_detect_windows_median": 5.0,
+          "time_to_detect_windows_p90": 7.0
+        }
+      }
+    ]
+  }
+}

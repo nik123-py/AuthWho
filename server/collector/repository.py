@@ -16,7 +16,7 @@ from psycopg.rows import dict_row
 
 # Tables holding per-user behavioural data, deleted with the user on consent
 # withdrawal. Later phases append "profiles" and "trust_points".
-USER_DATA_TABLES: list[str] = ["windows"]
+USER_DATA_TABLES: list[str] = ["windows", "profiles", "trust_points"]
 
 
 @dataclass(frozen=True)

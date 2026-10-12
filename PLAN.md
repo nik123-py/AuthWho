@@ -27,6 +27,8 @@ Conflicts and gaps found while planning, and how they are resolved. New rulings 
 | R9 | Transport | HTTP POST for batches on `localhost`; WebSocket only for dashboard push; TLS only for the stretch deployment | `localhost` is a secure context for WebCrypto, and the proposal allows HTTPS or WebSocket |
 | R11 | Capture dump tool | `python -m server.collector.dump` prints raw batches to the terminal only, for the owner to inspect a capture as P0 requires. It never writes files; redirecting its output to a file is discouraged | The P0 success criterion needs a capture that can be inspected |
 | R12 | Aalto dataset size | A seeded subset of 500 participants (seed 0) is read from the official archive with HTTP range requests; the 1.57 GB archive is never downloaded whole | Laptop and OneDrive storage; the subset is documented by a manifest hash in the results |
+| R13 | Trust update constants | TAU 0.25, PENALTY 10, REWARD 5, chosen by a sweep on chimeric users: the most impostor detection while keeping at most 2% of genuine users below 50 (`experiments/results/fusion_chimeric.md`) | The proposal fixes the rule (Mondal and Bours) but not its constants; the choice is optimistic until re-checked on volunteer data |
+| R14 | Live model | Scaled Manhattan on every channel, with per-user calibration of scores against cross-validated enrollment scores, and one template per user, channel and (pointer only) device | Best or near best across the CMU, Aalto, Balabit and SapiMouse baselines with small enrollments; simple JSON parameters; easy explanations |
 | R10 | Proposal location | The `.tex` stays at the repository root | The owner placed it there |
 
 ## Phases

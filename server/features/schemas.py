@@ -34,3 +34,29 @@ KF1_NAMES: list[str] = [
     "correction_rate", "correction_burst_len",
     "typing_rate", "hesitation_rate", "pause_rate",
 ]
+
+PF1 = "pf-1"
+PF1_EXTRACTOR_VERSION = "pf-1.0"
+
+# Per-stroke measures aggregated over a window as mean and standard deviation.
+# Their definitions are in ``server/features/pointer.py``.
+PF1_STROKE_MEASURES: list[str] = [
+    "duration", "path_length", "efficiency", "velocity", "velocity_peak",
+    "acceleration", "jerk", "curvature", "angle_change",
+]
+
+PF1_NAMES: list[str] = [
+    *[f"{m}_{s}" for m in PF1_STROKE_MEASURES for s in ("mean", "std")],
+    "pauses_mean", "click_rate", "pre_click_pause_mean", "click_hold_mean",
+]
+
+IF1 = "if-1"
+IF1_EXTRACTOR_VERSION = "if-1.0"
+
+# Definitions and fill rules are in ``server/features/interaction.py``.
+IF1_NAMES: list[str] = [
+    "span_s", "event_rate",
+    "wheel_frac", "scroll_frac", "focus_frac", "clipboard_frac", "visibility_frac", "page_frac", "action_frac",
+    "wheel_dy_abs_mean", "scroll_direction_changes", "field_order_inversions", "focus_dwell_mean",
+    "hesitation_mean", "paste_rate", "gap_mean", "gap_std",
+]
