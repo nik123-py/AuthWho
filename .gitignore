@@ -26,3 +26,7 @@ playwright-report/
 # Upstream superpowers clone (has its own .git)
 claude skills/superpowers-repo/
 authwho.egg-info/
+
+# Local AI tooling, not part of the project
+claude skills/
+.claude/
