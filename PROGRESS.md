@@ -15,10 +15,10 @@ Status values: todo, in progress, review, done, blocked. "Tests passing" is reco
 | P0-6 | P0 | frontend-engineer | done | yes | 96 Vitest tests, typecheck, build verified; not yet viewed in a real browser |
 | P0-7 | P0 | qa-engineer | done | n/a | Workflow checked locally; runs once the repo has a GitHub remote |
 | P0-8 | P0 | privacy-reviewer | done | n/a | First review FAIL (withdrawal), re-review PASS 2026-10-12 |
-| P1-1 | P1 | backend-engineer | todo | no | `kf-1` extraction, windowing, worker, retention |
-| P1-2 | P1 | ml-engineer | todo | no | CMU, Aalto, metrics, baselines |
-| P1-3 | P1 | ml-engineer | todo | no | Category versus key-pair experiment |
-| P1-4 | P1 | privacy-reviewer | todo | n/a | |
+| P1-1 | P1 | orchestrator | done | yes | `kf-1` (35 features), windower, `server.worker`, `windows` table, 30-day retention, withdrawal deletes windows; 393 Python tests verified 2026-10-12 |
+| P1-2 | P1 | orchestrator | done | yes | Metrics, four JSON-serialisable detectors, CMU standard protocol (scaled Manhattan EER 0.0962 vs published 0.096); Aalto subset fetcher via HTTP range requests (500 participants, seed 0) |
+| P1-3 | P1 | orchestrator | done | yes | Category vs key-pair: CMU cost +0.053 to +0.069 EER (CI excludes 0); Aalto cost -0.022 to -0.003 (categories as good or better). `experiments/results/category_vs_keypair.md` |
+| P1-4 | P1 | orchestrator | done | n/a | Privacy review by orchestrator (no subagents): worker logs counts only, windows encrypted, Aalto text discarded at parse, `data/` gitignored. PASS |
 | P2-1 | P2 | backend-engineer | todo | no | `pf-1`, `if-1` extraction and windowing |
 | P2-2 | P2 | ml-engineer | todo | no | Balabit, SapiMouse, pointer models |
 | P2-3 | P2 | ml-engineer | todo | no | Templates, enrollment, runtime scorers |

@@ -37,6 +37,6 @@ docker compose up -d --wait
 |---|---|---|
 | `trim_raw_events` | `aw:events` stream entries (Redis) | 24 hours (also trimmed on every `XADD`) |
 | `delete_expired_sessions` | `sessions` rows | 90 days |
-| later: windows | `windows` rows | 30 days |
+| `delete_expired_windows` | `windows` rows | 30 days |
 | later: trust points | `trust_points` rows | 30 days |
 | later: decisions | `decisions` rows | 90 days |

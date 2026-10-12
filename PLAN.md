@@ -26,6 +26,7 @@ Conflicts and gaps found while planning, and how they are resolved. New rulings 
 | R8 | Profile updates from verified sessions | Deferred until after the MVP | Pipeline step 9 is not in the MVP callout; drift is still measured in P6 |
 | R9 | Transport | HTTP POST for batches on `localhost`; WebSocket only for dashboard push; TLS only for the stretch deployment | `localhost` is a secure context for WebCrypto, and the proposal allows HTTPS or WebSocket |
 | R11 | Capture dump tool | `python -m server.collector.dump` prints raw batches to the terminal only, for the owner to inspect a capture as P0 requires. It never writes files; redirecting its output to a file is discouraged | The P0 success criterion needs a capture that can be inspected |
+| R12 | Aalto dataset size | A seeded subset of 500 participants (seed 0) is read from the official archive with HTTP range requests; the 1.57 GB archive is never downloaded whole | Laptop and OneDrive storage; the subset is documented by a manifest hash in the results |
 | R10 | Proposal location | The `.tex` stays at the repository root | The owner placed it there |
 
 ## Phases

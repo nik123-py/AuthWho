@@ -197,7 +197,7 @@ Each extractor returns a `FeatureVector`:
 
 - Schemas are versioned: `kf-1` (keystroke), `pf-1` (pointer), `if-1` (interaction). The ordered name list for each schema is a constant in `server/features/schemas.py`. Changing names or order requires a new schema version.
 - Values are always finite. A sub-feature with no data in the window (for example no backspaces) is filled by the rule documented next to its name, and `quality` drops below 1.0 in proportion to the share of filled features.
-- Keystroke features (`kf-1`) cover dwell, flight (key-up to next key-down, clipped to [-500, 2000] ms), down-down latency, rollover rate and overlap, correction rate and correction rhythm, category-level digraph latencies (for example letter to space, letter to backspace), typing rate and pause rate.
+- Keystroke features (`kf-1`, 35 values, defined with their fill rules in `server/features/keystroke.py`) cover dwell, flight (key-up to next key-down, clipped to [-500, 2000] ms), down-down latency, rollover rate and overlap, correction rate and correction rhythm, category-level digraph latencies (for example letter to space, letter to backspace), typing rate and pause rate.
 - Pointer features (`pf-1`) cover per-stroke duration, path length, efficiency (straight distance over path length), velocity, acceleration, jerk, curvature and angle change, pauses, pre-click pause and click hold time, aggregated over the window.
 - Interaction features (`if-1`) cover scroll rate and direction changes, field focus order and focus duration, hesitation before marked sensitive actions, clipboard use rate, visibility changes and navigation rate.
 
@@ -206,14 +206,14 @@ Window store (PostgreSQL table `windows`):
 | Column | Type | Notes |
 |---|---|---|
 | `window_id` | uuid | Primary key |
-| `session_id`, `user_id` | uuid | |
+| `session_id`, `stream_id`, `user_id` | uuid | `stream_id` is needed because `start_t` and `end_t` are relative to the stream |
 | `channel` | text | `keystroke`, `pointer`, `interaction` |
 | `pointer_device` | text | `mouse`, `touchpad`, `unknown` |
 | `schema` | text | For example `kf-1` |
 | `start_t`, `end_t` | double precision | Stream-relative ms |
 | `n_actions` | int | |
 | `quality` | real | |
-| `features_enc` | bytea | AES-256-GCM over the JSON `values` array with `AUTHWHO_DATA_KEY` |
+| `features_enc` | bytea | AES-256-GCM over the JSON `values` array with `AUTHWHO_DATA_KEY`; the 16 bytes of `window_id` are the associated data |
 | `extractor_version` | text | |
 | `created_at` | timestamptz | Rows older than 30 days are deleted by the retention job |
 
@@ -302,7 +302,7 @@ Decision record (table `decisions`, append-only, 90 days):
 | Column | Type | Notes |
 |---|---|---|
 | `decision_id` | uuid | |
-| `session_id`, `user_id` | uuid | |
+| `session_id`, `stream_id`, `user_id` | uuid | `stream_id` is needed because `start_t` and `end_t` are relative to the stream |
 | `app_id`, `role` | text | |
 | `created_at` | timestamptz | |
 | `trigger` | text | `trust_update`, `action_request`, `step_up_result` |
@@ -413,3 +413,4 @@ Errors are always `{"error": "<code>"}`, never echoing submitted input: `usernam
 |---|---|---|
 | 2026-10-09 | 1 | First version |
 | 2026-10-09 | 1.1 | Added user consent endpoints (section 4), `sessions` table and research consumer (section 12), SDK public API (section 14), demo app API (section 15) |
+| 2026-10-12 | 1.2 | `windows` table gains `stream_id`; `features_enc` uses `window_id` as associated data; `kf-1` fixed at 35 features. Withdrawal deletes the `users` row before the user's data rows, and writers lock the user row before inserting |

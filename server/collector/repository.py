@@ -15,8 +15,8 @@ from psycopg import sql
 from psycopg.rows import dict_row
 
 # Tables holding per-user behavioural data, deleted with the user on consent
-# withdrawal. Later phases append "windows", "profiles" and "trust_points".
-USER_DATA_TABLES: list[str] = []
+# withdrawal. Later phases append "profiles" and "trust_points".
+USER_DATA_TABLES: list[str] = ["windows"]
 
 
 @dataclass(frozen=True)
@@ -157,12 +157,14 @@ class PostgresRepository:
 
     def delete_user(self, user_id: str) -> list[str]:
         with self._connect() as conn:
+            # The users row goes first: writers such as the feature worker lock it
+            # (FOR KEY SHARE) before inserting, so no row can be added after this.
+            conn.execute("DELETE FROM users WHERE user_id = %s", (user_id,))
             for table in USER_DATA_TABLES:
                 conn.execute(
                     sql.SQL("DELETE FROM {} WHERE user_id = %s").format(sql.Identifier(table)),
                     (user_id,),
                 )
-            conn.execute("DELETE FROM users WHERE user_id = %s", (user_id,))
             conn.execute(
                 "UPDATE sessions SET status = 'terminated', ended_at = now() "
                 "WHERE user_id = %s AND ended_at IS NULL",
