@@ -9,6 +9,10 @@ Variables (see ``docs/interfaces.md`` section 3):
   consent withdrawals, default 300.
 - ``DEMO_TOTP_KEY``: 32-byte key, base64, encrypting stored TOTP secrets. Without
   it TOTP enrollment is unavailable and step-up asks for the password.
+- ``DEMO_PUBLIC_COLLECTOR_URL``: the collector URL browsers use, when it differs
+  from the internal ``AUTHWHO_COLLECTOR_URL`` (for example behind a reverse proxy).
+- ``DEMO_SECURE_COOKIES``: ``true`` to mark the login cookie Secure (HTTPS deployments).
+- ``DEMO_SESSION_HOURS``: hours before a login expires, default 12.
 
 Secrets are never given defaults in source. Load them from ``.env``, for
 example with ``uvicorn demo_app.backend.app:app --port 8100 --env-file .env``.
@@ -32,6 +36,9 @@ class Settings:
     db_path: Path
     withdrawal_retry_seconds: float = DEFAULT_WITHDRAWAL_RETRY_SECONDS
     totp_key: bytes | None = None
+    public_collector_url: str | None = None
+    secure_cookies: bool = False
+    session_hours: float = 12.0
 
     @classmethod
     def from_env(cls) -> "Settings":
@@ -41,6 +48,9 @@ class Settings:
             db_path=Path(os.environ.get("DEMO_DB_PATH", DEFAULT_DB_PATH)),
             withdrawal_retry_seconds=_positive_seconds("DEMO_WITHDRAWAL_RETRY_SECONDS"),
             totp_key=_optional_key("DEMO_TOTP_KEY"),
+            public_collector_url=(os.environ.get("DEMO_PUBLIC_COLLECTOR_URL") or "").rstrip("/") or None,
+            secure_cookies=os.environ.get("DEMO_SECURE_COOKIES", "").lower() in ("1", "true", "yes"),
+            session_hours=float(os.environ.get("DEMO_SESSION_HOURS", "12")),
         )
 
 

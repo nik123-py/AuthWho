@@ -50,6 +50,10 @@ All secrets come from `.env` (gitignored). `.env.example` lists every variable w
 | `AUTHWHO_COLLECTOR_URL` | demo backend | AuthWho API base URL, default `http://localhost:8000` |
 | `DEMO_DB_PATH` | demo backend | SQLite file for demo users, default `data/demo/demo.sqlite` |
 | `AUTHWHO_ENROLL_WINDOWS` | worker | Windows needed before a channel's profile is trained, default 20, minimum 5 |
+| `AUTHWHO_ENV` | every service | `production` turns on start-up checks that refuse placeholder or weak secrets (`server/common/production.py`) |
+| `DEMO_PUBLIC_COLLECTOR_URL` | demo backend | Collector URL given to browsers when it differs from the internal one |
+| `DEMO_SECURE_COOKIES` | demo backend | `true` marks the login cookie Secure (required in production) |
+| `DEMO_SESSION_HOURS` | demo backend | Hours before a login expires, default 12 |
 | `DEMO_WITHDRAWAL_RETRY_SECONDS` | demo backend | Interval for retrying unconfirmed consent withdrawals, default 300, must be greater than zero |
 | `DEMO_SECRET_KEY` | demo backend | Reserved for signing demo app values; login sessions use opaque server-side tokens |
 | `DEMO_TOTP_KEY` | demo backend | 32-byte key, base64, encrypting stored TOTP secrets |
@@ -353,8 +357,8 @@ All admin endpoints need `Authorization: Bearer <AUTHWHO_ADMIN_TOKEN>`.
 | `GET /v1/admin/sessions/{id}/timeline` | Trust points for the session |
 | `GET /v1/admin/sessions/{id}/decisions` | Decision records |
 | `GET /v1/admin/sessions/{id}/incident-report` | JSON report: timeline, decisions, contributing features, confidence |
-| `GET /v1/admin/policies`, `PUT /v1/admin/policies/{policy_id}` | Policy thresholds, action sensitivities, exemptions |
-| `WS /v1/admin/ws?token=...` | Server pushes `{"type": "trust", "data": <trust update>}` and `{"type": "decision", "data": <decision record>}` |
+| `GET /v1/admin/policies`, `PUT /v1/admin/policies/{policy_id}` | Policy thresholds, action sensitivities, exemptions. `PUT` body `{"high", "strong", "channel_low", "action_sensitivity", "exempt"}`; `strong` must be below `high`; each save increases `version`; `400 invalid_policy`, `404 unknown_policy` |
+| `WS /v1/admin/ws?token=...` | Server pushes `{"type": "trust", "data": <trust update>}` and `{"type": "decision", "data": <decision record>}`; a wrong token closes with code 4401. The token is in the query string because browsers cannot set WebSocket headers, so the production web server logs paths without query strings |
 
 ## 14. SDK public API
 
@@ -420,6 +424,7 @@ Errors are always `{"error": "<code>"}`, never echoing submitted input: `usernam
 | Date | Version | Change |
 |---|---|---|
 | 2026-10-09 | 1 | First version |
+| 2026-10-14 | 1.5 | Admin API and WebSocket live (section 13); `channel_low` 0.1 and trust constants of ruling R15; demo app `DEMO_PUBLIC_COLLECTOR_URL`, `DEMO_SECURE_COOKIES`, `DEMO_SESSION_HOURS`; `AUTHWHO_ENV=production` start-up checks |
 | 2026-10-13 | 1.4 | Decisions and policies tables (migration 0100); session control API live in the AuthWho API; demo app TOTP, step-up and session-end endpoints (section 15) |
 | 2026-10-12 | 1.3 | Pointer (`pf-1`, 22 features) and interaction (`if-1`, 17 features) windows in the worker; `profiles` and `trust_points` tables (migration 0005) with `device_key`; per-user score calibration; trust constants; `AUTHWHO_ENROLL_WINDOWS` |
 | 2026-10-09 | 1.1 | Added user consent endpoints (section 4), `sessions` table and research consumer (section 12), SDK public API (section 14), demo app API (section 15) |

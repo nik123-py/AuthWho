@@ -14,6 +14,8 @@ Only counts are printed, never row contents.
 
 from __future__ import annotations
 
+from server.common.production import require_production_ready
+
 import argparse
 import os
 import sys
@@ -98,6 +100,7 @@ def main(argv: list[str] | None = None) -> int:
     args = parser.parse_args(argv)
     if args.env_file:
         load_env_file(args.env_file)
+    require_production_ready()
     db_url = os.environ.get("AUTHWHO_DATABASE_URL")
     redis_url = os.environ.get("AUTHWHO_REDIS_URL")
     if not db_url or not redis_url:

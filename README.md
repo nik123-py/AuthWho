@@ -4,7 +4,7 @@ AuthWho is a continuous behavioural biometric authentication engine for desktop 
 
 This is a personal student project. The design is in `AuthWho_Project_Proposal.tex`; the build plan is in `PLAN.md` and progress is tracked in `PROGRESS.md`.
 
-Status: phases P0 to P4 are complete (capture, features, models, continuous trust, policy and step-up). P5 (dashboard) and P6 (evaluation report) are next.
+Status: the MVP phases P0 to P6 are complete: capture, features, models, continuous trust, policy and step-up, the admin dashboard with live demo mode, and the evaluation report (`docs/evaluation_report.md`). The consented volunteer dataset is not collected yet; a clearly labelled synthetic cohort of 25 people stands in for it. To deploy, see `docs/deployment.md`.
 
 ## What is and is not collected
 
@@ -87,6 +87,28 @@ docker compose exec postgres psql -U authwho -d authwho -c "select session_id, c
 ```
 
 Every event shows only its type, time, category or coordinates. Raw events disappear from Redis after 24 hours. Users who also ticked research consent get an encrypted copy under `data/volunteer/` while `python -m server.research --env-file .env` is running.
+
+## Admin dashboard
+
+```bash
+npm run dev -w dashboard        # http://localhost:5174, sign in with AUTHWHO_ADMIN_TOKEN
+```
+
+Sessions with live trust, each session's trust timeline with decisions and their explanations, a channel breakdown, an incident report export, the policy editor, and a live demo page that follows whichever session changed most recently.
+
+## Synthetic cohort
+
+```bash
+.venv/Scripts/python -m ml.synthetic --users 25 --out data/synthetic      # 25 people, 6 sessions each
+.venv/Scripts/python -m experiments.synthetic_evaluation                  # every Section 13 metric
+.venv/Scripts/python -m ml.load_synthetic --env-file .env                 # replay them into a running stack
+```
+
+The generator's parameters are fitted to the public Aalto and SapiMouse data (`experiments/results/synthetic_calibration.md`). Results on it test the system end to end; they are not measurements of real people.
+
+## Production
+
+`docker-compose.prod.yml` runs the whole system behind nginx with one command, and every service refuses to start with placeholder secrets. See `docs/deployment.md`.
 
 ## Running the tests
 

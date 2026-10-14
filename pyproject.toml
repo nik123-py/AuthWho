@@ -44,5 +44,6 @@ filterwarnings = [
 markers = [
     "integration: needs PostgreSQL and Redis from docker compose",
     "e2e: Playwright end-to-end test (tests/e2e only)",
+    "prod: smoke test against a deployed production stack (needs AUTHWHO_PROD_URL)",
     "slow: long-running dataset or model test",
 ]

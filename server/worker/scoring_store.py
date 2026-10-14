@@ -10,6 +10,7 @@ import psycopg
 import redis
 from psycopg.types.json import Jsonb
 
+from server.common.db import Connector
 from server.common.crypto import decrypt, encrypt
 from server.common.redis_keys import TRUST_CHANNEL, session_key
 from server.worker.store import decrypt_features
@@ -28,10 +29,11 @@ def decrypt_template(blob: bytes, key: bytes, profile_id: str) -> dict:
 class PgScoringStore:
     def __init__(self, conninfo: str, key: bytes) -> None:
         self.conninfo = conninfo
+        self._connector = Connector(conninfo)
         self.key = key
 
-    def _connect(self) -> psycopg.Connection:
-        return psycopg.connect(self.conninfo)
+    def _connect(self):
+        return self._connector()
 
     def active_profile(self, user_id: str, channel: str, dkey: str) -> dict | None:
         with self._connect() as conn:

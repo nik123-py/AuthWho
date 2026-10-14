@@ -28,6 +28,7 @@ from __future__ import annotations
 
 import logging
 import time
+from collections import OrderedDict, deque
 from collections.abc import Callable
 from typing import Any, Protocol
 
@@ -42,6 +43,7 @@ log = logging.getLogger("authwho.worker")
 SCHEMAS = {"keystroke": (KF1, KF1_NAMES), "pointer": (PF1, PF1_NAMES), "interaction": (IF1, IF1_NAMES)}
 ENROLL_WINDOWS = 20
 REPLAY_LOOKBACK = 200
+REPLAY_CACHE_KEYS = 2000
 IDLE_EVICT_S = 1800.0
 
 
@@ -70,6 +72,9 @@ class TrustScorer:
         self.monitor = monitor
         self.control = control
         self._verified: dict[str, float] = {}
+        # Recent window features per (user, channel, device key) for the replay check:
+        # loaded from the store once, then kept up to date in memory.
+        self._recent: OrderedDict[tuple[str, str, str], deque] = OrderedDict()
         self.publisher = publisher
         self.enroll_windows = enroll_windows
         self.clock = clock
@@ -126,11 +131,17 @@ class TrustScorer:
         flags = check_window(rec.channel, names, values)
         recent = getattr(self.store, "recent_windows", None)
         if recent is not None:
-            stored = recent(ctx.user_id, rec.channel, device_key(rec.channel, rec.pointer_device),
-                            rec.window_id, REPLAY_LOOKBACK)
+            key = (ctx.user_id, rec.channel, device_key(rec.channel, rec.pointer_device))
+            if key not in self._recent:
+                self._recent[key] = deque(recent(*key, rec.window_id, REPLAY_LOOKBACK), maxlen=REPLAY_LOOKBACK)
+                if len(self._recent) > REPLAY_CACHE_KEYS:
+                    self._recent.popitem(last=False)
+            self._recent.move_to_end(key)
+            stored = self._recent[key]
             flag = replay_flag(values, stored)
             if flag is not None:
                 flags.append(flag)
+            stored.appendleft(list(values))
         return flags
 
     def _emit(self, update: dict[str, Any]) -> None:

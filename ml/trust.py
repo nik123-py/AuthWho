@@ -12,15 +12,16 @@ channel with weight w:
     delta = w * c * REWARD  * (s - TAU) / (1 - TAU)   if s >= TAU
     delta = -w * c * PENALTY * (TAU - s) / TAU        otherwise
 
-with TAU = 0.25, REWARD = 5 and PENALTY = 10. Because genuine scores are
-roughly uniform (``ml/profile.py``), a genuine user drifts upwards on average
-(about +0.4 per full-confidence window) while a window less like the user than
-any enrollment window costs up to 10 points. These values were chosen by a
-sweep on chimeric users (``experiments/fusion_chimeric.py``, ruling R13). T starts at 100: the user has just
+with TAU = 0.1, REWARD = 5 and PENALTY = 10: only a window in the lowest tenth of the
+user's own enrollment scores costs trust, up to 10 points, so ordinary
+day-to-day drift does not. These values were chosen by a sweep on the
+synthetic cohort against the proposal's friction target (ruling R15,
+``experiments/results/synthetic_evaluation.md``). T starts at 100: the user has just
 passed login and MFA.
 
-Channel weights: keystroke 1, pointer 1, interaction 0.5 (the interaction
-channel has no public benchmark yet). Overall confidence is
+Channel weights: keystroke 1, pointer 1, interaction 0. The interaction
+channel is scored and shown but does not move trust until it is validated on
+real data (ruling R15). Overall confidence is
 1 - prod(1 - w_c * c_c) over fresh scored channels.
 
 A channel is fresh while its latest scored window is at most ``FRESH_S`` (120)
@@ -36,8 +37,8 @@ from datetime import UTC, datetime
 from typing import Any
 
 CHANNELS = ("keystroke", "pointer", "interaction")
-CHANNEL_WEIGHTS = {"keystroke": 1.0, "pointer": 1.0, "interaction": 0.5}
-TAU = 0.25
+CHANNEL_WEIGHTS = {"keystroke": 1.0, "pointer": 1.0, "interaction": 0.0}
+TAU = 0.1
 REWARD = 5.0
 PENALTY = 10.0
 FRESH_S = 120.0

@@ -57,7 +57,7 @@ OUT = Path("experiments/results")
 SEED = 0
 N_IMPOSTOR_ATTEMPTS = 50
 N_IMPOSTOR_STREAMS = 20
-SWEEP = [(0.2, 8, 5), (0.2, 10, 5), (0.25, 8, 5), (0.25, 10, 5), (0.25, 12, 5), (0.15, 10, 5), (0.3, 12, 5)]
+SWEEP = [(0.1, 10, 5), (0.15, 10, 5), (0.2, 10, 5), (0.25, 10, 5), (0.25, 12, 5), (0.3, 12, 5)]
 
 
 def build_users():
@@ -247,8 +247,8 @@ def render(r: dict) -> str:
           f"{v['time_to_detect_windows_median']} | {v['time_to_detect_windows_p90']} |" for th, v in tr["thresholds"].items()],
         "",
         f"Chosen settings: TAU {tr['chosen']['tau']}, PENALTY {tr['chosen']['penalty']}, REWARD {tr['chosen']['reward']} "
-        "(ruling R13): the most impostor detection while keeping genuine users below 50 at about 2% of streams or "
-        "fewer. The sweep below was run on the same chimeric data, so the chosen setting's numbers are optimistic.",
+        "(ruling R15, chosen on the synthetic cohort against the friction target; see synthetic_evaluation.md). "
+        "The sweep below shows how other settings behave on this chimeric data.",
         "",
         "| TAU | PENALTY | REWARD | Genuine below 75 | Impostors below 75 | Genuine below 50 | Impostors below 50 |",
         "|---|---|---|---|---|---|---|",

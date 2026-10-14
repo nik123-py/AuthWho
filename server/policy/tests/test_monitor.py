@@ -58,7 +58,7 @@ def test_strong_deviation_requires_step_up():
     repo, ctl = FakeRepo(), FakeControl()
     m = PolicyMonitor(repo, ctl)
     sid = str(uuid.uuid4())
-    d = m.on_update(u(sid, trust=40, ks=0.1, pt=0.2))
+    d = m.on_update(u(sid, trust=40, ks=0.05, pt=0.08))
     assert d["outcome"] == "step_up"
     assert ("step_up", sid) in ctl.calls and ("publish", "step_up") in ctl.calls
 
@@ -75,5 +75,5 @@ def test_confirmed_automation_terminates():
 def test_exempt_role_records_nothing_and_never_acts():
     repo, ctl = FakeRepo(exempt=True), FakeControl()
     m = PolicyMonitor(repo, ctl)
-    assert m.on_update(u(str(uuid.uuid4()), trust=40, ks=0.1, pt=0.2)) is None
+    assert m.on_update(u(str(uuid.uuid4()), trust=40, ks=0.05, pt=0.08)) is None
     assert repo.decisions == [] and ctl.calls == []

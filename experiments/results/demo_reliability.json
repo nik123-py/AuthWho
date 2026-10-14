@@ -1,0 +1,59 @@
+{
+  "experiment": "demo_reliability",
+  "test": "tests/e2e/test_authwho_e2e.py::test_takeover_step_up_passed_by_the_genuine_user",
+  "runs": [
+    {
+      "run": 1,
+      "passed": true,
+      "seconds": 95.1
+    },
+    {
+      "run": 2,
+      "passed": true,
+      "seconds": 95.1
+    },
+    {
+      "run": 3,
+      "passed": true,
+      "seconds": 94.8
+    },
+    {
+      "run": 4,
+      "passed": true,
+      "seconds": 96.4
+    },
+    {
+      "run": 5,
+      "passed": true,
+      "seconds": 97.3
+    },
+    {
+      "run": 6,
+      "passed": true,
+      "seconds": 98.2
+    },
+    {
+      "run": 7,
+      "passed": true,
+      "seconds": 98.9
+    },
+    {
+      "run": 8,
+      "passed": true,
+      "seconds": 97.0
+    },
+    {
+      "run": 9,
+      "passed": true,
+      "seconds": 106.5
+    },
+    {
+      "run": 10,
+      "passed": true,
+      "seconds": 95.4
+    }
+  ],
+  "passed": 10,
+  "total": 10,
+  "finished_at": "2026-10-14T17:46:12.114946+00:00"
+}

@@ -32,14 +32,15 @@ Status values: todo, in progress, review, done, blocked. "Tests passing" is reco
 | P4-3 | P4 | orchestrator | done | yes | Demo backend: TOTP (pyotp, encrypted secret) or password step-up, three tries, policy check on high-risk actions, status check on every request |
 | P4-4 | P4 | orchestrator | done | yes | Demo frontend: step-up dialog (event and 5 s status poll), session-ended page, authenticator setup, withdrawal-pending notice; 104 Vitest tests |
 | P4-5 | P4 | orchestrator | done | yes | Playwright (Chromium) against the full stack: 5 scenarios pass in about 3 minutes; CI `e2e` job added |
-| P4-6 | P4 | orchestrator | todo | no | Population-statistics synthetic attack generator moved to P6 (needed for the robustness metric) |
+| P4-6 | P4 | orchestrator | done | yes | Population-average typist attack built into `experiments/synthetic_evaluation.py` (keystroke EER 0.136 vs 0.116 zero-effort) |
 | P4-7 | P4 | orchestrator | done | n/a | Privacy self-review PASS: no scores shown to the operator, TOTP secret encrypted, logs hold no passwords, codes or scores |
-| P5-1 | P5 | backend-engineer | todo | no | Admin API, WebSocket, app containers |
-| P5-2 | P5 | frontend-engineer | todo | no | Dashboard |
-| P5-3 | P5 | frontend-engineer | todo | no | Live demo mode |
-| P5-4 | P5 | qa-engineer | todo | no | Scenario 5, demo reliability |
-| P5-5 | P5 | privacy-reviewer | todo | n/a | |
-| P6-1 | P6 | backend-engineer | todo | no | Latency instrumentation, replay harness |
-| P6-2 | P6 | ml-engineer | todo | no | Full evaluation |
-| P6-3 | P6 | orchestrator | todo | n/a | Evaluation report, final README |
-| P6-4 | P6 | privacy-reviewer | todo | n/a | |
+| P5-1 | P5 | orchestrator | done | yes | Admin API (sessions, timeline, decisions, incident report, policy editor) and live WebSocket; production containers in `docker-compose.prod.yml` |
+| P5-2 | P5 | orchestrator | done | yes | React dashboard: sessions with live trust, Chart.js timeline with decision markers and accessible data table, channel breakdown, explanations, incident export, policy editor; 8 Vitest tests |
+| P5-3 | P5 | orchestrator | done | yes | Live demo page follows the most recently active session |
+| P5-4 | P5 | orchestrator | done | yes | E2E scenario 5 passes; takeover demo reliability 10 of 10 runs |
+| P5-5 | P5 | orchestrator | done | n/a | Privacy self-review PASS: admin token only in the WS query string, never logged by nginx; operator never sees scores |
+| P6-1 | P6 | orchestrator | done | yes | In-process latency p50 0.9 ms, p95 4.9 ms per window; worker throughput about 33 batches per second after connection reuse and the replay cache |
+| P6-2 | P6 | orchestrator | done | yes | Synthetic 25-person cohort (`ml/synthetic.py`, calibrated to Aalto and SapiMouse) and `experiments/synthetic_evaluation.py`: every Section 13 metric with CIs. Volunteer data still not collected |
+| P6-3 | P6 | orchestrator | done | n/a | `docs/evaluation_report.md`, `docs/deployment.md`, README updated |
+| P6-4 | P6 | orchestrator | done | n/a | Final privacy self-review PASS; production start-up refuses placeholder secrets |
+| D-1 | deploy | orchestrator | done | yes | Production stack (nginx, API, worker, retention, demo, PostgreSQL, Redis) built and run locally; smoke test passes; synthetic cohort loaded through the real API path (25 users enrolled) |

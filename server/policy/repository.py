@@ -8,6 +8,7 @@ import psycopg
 from psycopg.rows import dict_row
 from psycopg.types.json import Jsonb
 
+from server.common.db import Connector
 from server.policy.engine import DEFAULT_POLICY, Policy
 
 _DECISION_COLUMNS = (
@@ -21,9 +22,10 @@ _JSON = {"channels", "bot_flags", "model_versions"}
 class PgPolicyRepository:
     def __init__(self, conninfo: str) -> None:
         self.conninfo = conninfo
+        self._connector = Connector(conninfo, row_factory=dict_row)
 
-    def _connect(self) -> psycopg.Connection:
-        return psycopg.connect(self.conninfo, row_factory=dict_row)
+    def _connect(self):
+        return self._connector()
 
     def load_policy(self, app_id: str, role: str) -> tuple[Policy, bool]:
         """The policy for an application and role, and whether the role is exempt."""

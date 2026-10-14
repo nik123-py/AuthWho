@@ -4,7 +4,7 @@ The stack uses the Docker Compose PostgreSQL and Redis (``docker compose up -d``
 first) and the local ``.env``. It starts, on ports that do not clash with a
 development setup: the AuthWho API (18000), the worker (enrollment after 5
 windows), the demo backend (18100, its own temporary SQLite file) and the demo
-frontend dev server (15173). Every process started here is stopped here, by
+frontend dev server (15173) and the admin dashboard (15174). Every process started here is stopped here, by
 its own handle; nothing else is touched. All behaviour is scripted.
 """
 
@@ -26,7 +26,7 @@ import redis
 from server.common.config import load_env_file
 
 ROOT = Path(__file__).resolve().parents[2]
-API, DEMO, WEB = 18000, 18100, 15173
+API, DEMO, WEB, DASH = 18000, 18100, 15173, 15174
 PASSWORD = "correct horse 1"
 
 
@@ -41,6 +41,7 @@ def _env(tmp: Path) -> dict[str, str]:
         "AUTHWHO_CORS_ORIGINS": f"http://localhost:{WEB},http://127.0.0.1:{WEB}",
         "DEMO_DB_PATH": str(tmp / "demo.sqlite"),
         "DEMO_BACKEND_URL": f"http://127.0.0.1:{DEMO}",
+        "AUTHWHO_API_URL": f"http://127.0.0.1:{API}",
         "PYTHONUNBUFFERED": "1",
     })
     return env
@@ -70,18 +71,22 @@ def stack(tmp_path_factory):
         "worker": [py, "-m", "server.worker"],
         "demo": [py, "-m", "uvicorn", "demo_app.backend.app:app", "--host", "127.0.0.1", "--port", str(DEMO)],
         "web": [npx, "vite", "--port", str(WEB), "--strictPort", "--host", "127.0.0.1"],
+        "dash": [npx, "vite", "--port", str(DASH), "--strictPort", "--host", "127.0.0.1"],
     }
     procs = {}
     try:
         for name, cmd in commands.items():
-            cwd = ROOT / "demo_app" / "frontend" if name == "web" else ROOT
+            cwd = {"web": ROOT / "demo_app" / "frontend", "dash": ROOT / "dashboard"}.get(name, ROOT)
             log = open(tmp / f"{name}.log", "w", encoding="utf-8")
             procs[name] = subprocess.Popen(cmd, cwd=cwd, env=env, stdout=log, stderr=subprocess.STDOUT)
         _wait(f"http://127.0.0.1:{API}/healthz")
         _wait(f"http://127.0.0.1:{DEMO}/api/registry")
         _wait(f"http://127.0.0.1:{WEB}/")
+        _wait(f"http://127.0.0.1:{DASH}/")
         yield {
             "web": f"http://127.0.0.1:{WEB}",
+            "dash": f"http://127.0.0.1:{DASH}",
+            "admin_token": env["AUTHWHO_ADMIN_TOKEN"],
             "api": f"http://127.0.0.1:{API}",
             "demo": f"http://127.0.0.1:{DEMO}",
             "db": env["AUTHWHO_DATABASE_URL"],

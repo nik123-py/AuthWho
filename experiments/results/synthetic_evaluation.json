@@ -1,0 +1,221 @@
+{
+  "experiment": "synthetic_evaluation",
+  "synthetic": true,
+  "command": "python -m experiments.synthetic_evaluation",
+  "cohort": {
+    "users": 25,
+    "seed": 2026,
+    "mouse": 15,
+    "touchpad": 10,
+    "sessions": 150,
+    "active_hours": 26.087911166666668
+  },
+  "environment": {
+    "python": "3.14.6",
+    "numpy": "2.5.3",
+    "platform": "Windows-11-10.0.26200-SP0"
+  },
+  "channels": {
+    "keystroke": {
+      "eer": {
+        "mean": 0.1134479178783162,
+        "ci95": [
+          0.09387344542277737,
+          0.13567804996503322
+        ],
+        "n_users": 25
+      },
+      "auc": {
+        "mean": 0.9358010272429198,
+        "ci95": [
+          0.9180569268627948,
+          0.9519073958810886
+        ],
+        "n_users": 25
+      }
+    },
+    "pointer_mouse": {
+      "eer": {
+        "mean": 0.08057894520923302,
+        "ci95": [
+          0.04553698898997181,
+          0.11842219218435085
+        ],
+        "n_users": 15
+      },
+      "auc": {
+        "mean": 0.9685192294461642,
+        "ci95": [
+          0.9477450128998969,
+          0.986093216374269
+        ],
+        "n_users": 15
+      }
+    },
+    "pointer_touchpad": {
+      "eer": {
+        "mean": 0.1547012120680995,
+        "ci95": [
+          0.12738704943467735,
+          0.18137385262956154
+        ],
+        "n_users": 10
+      },
+      "auc": {
+        "mean": 0.9145023671962779,
+        "ci95": [
+          0.8904557407482095,
+          0.9368224561521112
+        ],
+        "n_users": 10
+      }
+    },
+    "interaction": {
+      "eer": {
+        "mean": 0.4334771266152877,
+        "ci95": [
+          0.40776570535817475,
+          0.458388998421799
+        ],
+        "n_users": 25
+      },
+      "auc": {
+        "mean": 0.5791151120554714,
+        "ci95": [
+          0.5518219609915204,
+          0.6077039128020849
+        ],
+        "n_users": 25
+      }
+    }
+  },
+  "fusion": {
+    "keystroke": {
+      "mean": 0.11823551167358311,
+      "ci95": [
+        0.09609571234617667,
+        0.14231402247229571
+      ],
+      "n_users": 25
+    },
+    "pointer": {
+      "mean": 0.09210632692077954,
+      "ci95": [
+        0.05422057874129446,
+        0.1347964245764916
+      ],
+      "n_users": 25
+    },
+    "fused": {
+      "mean": 0.06289599359528636,
+      "ci95": [
+        0.046608683449489305,
+        0.07921690805863266
+      ],
+      "n_users": 25
+    },
+    "fused_auc": {
+      "mean": 0.9802233192756625,
+      "ci95": [
+        0.9732289599460211,
+        0.9869254735285862
+      ],
+      "n_users": 25
+    },
+    "fused_minus_keystroke": {
+      "mean": -0.05533951807829679,
+      "ci95": [
+        -0.07400049746654948,
+        -0.036890677291779264
+      ],
+      "n_users": 25
+    },
+    "fused_minus_pointer": {
+      "mean": -0.02921033332549321,
+      "ci95": [
+        -0.06851005532694954,
+        0.006238344228012064
+      ],
+      "n_users": 25
+    }
+  },
+  "friction": {
+    "genuine_hours": 17.395180249999996,
+    "strong_deviation_episodes": 1,
+    "step_ups_per_hour": 0.057487188153741625,
+    "moderate_episodes_per_hour": 32.94015881209395,
+    "step_ups_per_hour_per_user": {
+      "mean": 0.0803481171450997,
+      "ci95": [
+        0.0,
+        0.24104435143529912
+      ],
+      "n_users": 25
+    }
+  },
+  "time_to_detect": {
+    "75": {
+      "detected_rate": 0.996,
+      "takeovers": 250,
+      "seconds_median": 24.153899999999993,
+      "seconds_p90": 86.47128000000015,
+      "actions_median": 200.0
+    },
+    "50": {
+      "detected_rate": 0.988,
+      "takeovers": 250,
+      "seconds_median": 53.352199999999996,
+      "seconds_p90": 192.91436000000002,
+      "actions_median": 380.0
+    }
+  },
+  "drift": {
+    "keystroke_eer_same_day_as_enrolment": {
+      "mean": 0.06438787871428184,
+      "ci95": [
+        0.02581888359651801,
+        0.09870440166913452
+      ],
+      "n_users": 4
+    },
+    "keystroke_eer_later_days": {
+      "mean": 0.10438722222027515,
+      "ci95": [
+        0.08229304868527987,
+        0.12671753862317728
+      ],
+      "n_users": 25
+    }
+  },
+  "bots": {
+    "scripted_typing_flagged": 1.0,
+    "scripted_pointer_flagged": 1.0,
+    "exact_replay_flagged": 1.0,
+    "jittered_replay_flagged": 0.0,
+    "genuine_keystroke_windows_flagged_high": 0.0
+  },
+  "population_attack": {
+    "keystroke_eer_vs_population_average_typist": {
+      "mean": 0.13620982192958866,
+      "ci95": [
+        0.09470229781005991,
+        0.18307103721177798
+      ],
+      "n_users": 25
+    },
+    "keystroke_eer_vs_zero_effort_impostors": {
+      "mean": 0.1161548342967433,
+      "ci95": [
+        0.0946934552075499,
+        0.1385698548467911
+      ],
+      "n_users": 25
+    },
+    "attack_windows": 66
+  },
+  "latency": {
+    "windows": 65,
+    "ms_p50": 0.9441000001970679,
+    "ms_p95": 4.858019994571805
+  }
+}

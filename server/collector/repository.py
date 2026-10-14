@@ -14,6 +14,8 @@ import psycopg
 from psycopg import sql
 from psycopg.rows import dict_row
 
+from server.common.db import Connector
+
 # Tables holding per-user behavioural data, deleted with the user on consent
 # withdrawal. Later phases append "profiles" and "trust_points".
 USER_DATA_TABLES: list[str] = ["windows", "profiles", "trust_points"]
@@ -117,9 +119,10 @@ class PostgresRepository:
 
     def __init__(self, conninfo: str):
         self.conninfo = conninfo
+        self._connector = Connector(conninfo, row_factory=dict_row)
 
-    def _connect(self) -> psycopg.Connection:
-        return psycopg.connect(self.conninfo, row_factory=dict_row)
+    def _connect(self):
+        return self._connector()
 
     def upsert_user(self, user: UserRecord, now: datetime | None = None) -> UserRecord | None:
         """Create or update a user. ``now`` stamps a newly given research consent; the API

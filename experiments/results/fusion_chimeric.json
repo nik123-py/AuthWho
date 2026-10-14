@@ -1382,47 +1382,66 @@
   "trust": {
     "genuine_users": 119,
     "genuine_windows": 1138,
-    "genuine_min_trust_median": 90.98,
+    "genuine_min_trust_median": 93.54,
     "impostor_streams": 2380,
     "thresholds": {
       "75": {
-        "genuine_users_below": 11,
-        "genuine_rate_below": 0.09243697478991597,
-        "impostor_detected_rate": 0.8004201680672269,
+        "genuine_users_below": 7,
+        "genuine_rate_below": 0.058823529411764705,
+        "impostor_detected_rate": 0.6684873949579831,
         "time_to_detect_windows_median": 4.0,
         "time_to_detect_windows_p90": 6.0
       },
       "50": {
         "genuine_users_below": 2,
         "genuine_rate_below": 0.01680672268907563,
-        "impostor_detected_rate": 0.5844537815126051,
+        "impostor_detected_rate": 0.45546218487394957,
         "time_to_detect_windows_median": 6.0,
-        "time_to_detect_windows_p90": 8.0
+        "time_to_detect_windows_p90": 9.0
       }
     },
     "chosen": {
-      "tau": 0.25,
+      "tau": 0.1,
       "penalty": 10.0,
       "reward": 5.0
     },
     "sweep": [
       {
-        "tau": 0.2,
-        "penalty": 8,
+        "tau": 0.1,
+        "penalty": 10,
         "reward": 5,
         "75": {
           "genuine_users_below": 7,
           "genuine_rate_below": 0.058823529411764705,
-          "impostor_detected_rate": 0.6705882352941176,
+          "impostor_detected_rate": 0.6684873949579831,
           "time_to_detect_windows_median": 4.0,
-          "time_to_detect_windows_p90": 7.0
+          "time_to_detect_windows_p90": 6.0
         },
         "50": {
-          "genuine_users_below": 1,
-          "genuine_rate_below": 0.008403361344537815,
-          "impostor_detected_rate": 0.3945378151260504,
-          "time_to_detect_windows_median": 7.0,
+          "genuine_users_below": 2,
+          "genuine_rate_below": 0.01680672268907563,
+          "impostor_detected_rate": 0.45546218487394957,
+          "time_to_detect_windows_median": 6.0,
           "time_to_detect_windows_p90": 9.0
+        }
+      },
+      {
+        "tau": 0.15,
+        "penalty": 10,
+        "reward": 5,
+        "75": {
+          "genuine_users_below": 8,
+          "genuine_rate_below": 0.06722689075630252,
+          "impostor_detected_rate": 0.7037815126050421,
+          "time_to_detect_windows_median": 4.0,
+          "time_to_detect_windows_p90": 6.0
+        },
+        "50": {
+          "genuine_users_below": 2,
+          "genuine_rate_below": 0.01680672268907563,
+          "impostor_detected_rate": 0.515126050420168,
+          "time_to_detect_windows_median": 6.0,
+          "time_to_detect_windows_p90": 8.0
         }
       },
       {
@@ -1441,25 +1460,6 @@
           "genuine_rate_below": 0.01680672268907563,
           "impostor_detected_rate": 0.5533613445378152,
           "time_to_detect_windows_median": 6.0,
-          "time_to_detect_windows_p90": 8.0
-        }
-      },
-      {
-        "tau": 0.25,
-        "penalty": 8,
-        "reward": 5,
-        "75": {
-          "genuine_users_below": 7,
-          "genuine_rate_below": 0.058823529411764705,
-          "impostor_detected_rate": 0.734873949579832,
-          "time_to_detect_windows_median": 4.0,
-          "time_to_detect_windows_p90": 7.0
-        },
-        "50": {
-          "genuine_users_below": 1,
-          "genuine_rate_below": 0.008403361344537815,
-          "impostor_detected_rate": 0.43907563025210083,
-          "time_to_detect_windows_median": 7.0,
           "time_to_detect_windows_p90": 8.0
         }
       },
@@ -1498,25 +1498,6 @@
           "genuine_rate_below": 0.058823529411764705,
           "impostor_detected_rate": 0.6457983193277311,
           "time_to_detect_windows_median": 5.0,
-          "time_to_detect_windows_p90": 8.0
-        }
-      },
-      {
-        "tau": 0.15,
-        "penalty": 10,
-        "reward": 5,
-        "75": {
-          "genuine_users_below": 8,
-          "genuine_rate_below": 0.06722689075630252,
-          "impostor_detected_rate": 0.7037815126050421,
-          "time_to_detect_windows_median": 4.0,
-          "time_to_detect_windows_p90": 6.0
-        },
-        "50": {
-          "genuine_users_below": 2,
-          "genuine_rate_below": 0.01680672268907563,
-          "impostor_detected_rate": 0.515126050420168,
-          "time_to_detect_windows_median": 6.0,
           "time_to_detect_windows_p90": 8.0
         }
       },

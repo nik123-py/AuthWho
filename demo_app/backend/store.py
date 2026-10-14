@@ -246,16 +246,21 @@ class Store:
             )
         return token
 
-    def get_login_session(self, token: str) -> LoginSession | None:
+    def get_login_session(self, token: str, max_age_hours: float | None = None) -> LoginSession | None:
         with closing(self._connect()) as conn:
             row = conn.execute(
-                f"SELECT s.token_hash, s.authwho_session_id, {_USER_COLUMNS}"
+                f"SELECT s.token_hash, s.authwho_session_id, s.created_at AS login_at, {_USER_COLUMNS}"
                 " FROM login_sessions s JOIN users u ON u.id = s.user_id"
                 " WHERE s.token_hash = ?",
                 (_token_hash(token),),
             ).fetchone()
         if row is None:
             return None
+        if max_age_hours is not None:
+            age = datetime.now(timezone.utc) - datetime.fromisoformat(row["login_at"])
+            if age.total_seconds() > max_age_hours * 3600:
+                self.delete_login_session(row["token_hash"])
+                return None
         return LoginSession(row["token_hash"], _user_from_row(row), row["authwho_session_id"])
 
     def get_authwho_session_id(self, token_hash: str) -> str | None:

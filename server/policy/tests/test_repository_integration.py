@@ -24,7 +24,8 @@ def _session(pg_conn):
 def test_seeded_policy_and_unknown_role_fallback(pg_url):
     repo = PgPolicyRepository(pg_url)
     policy, exempt = repo.load_policy("demo", "analyst")
-    assert (policy.high, policy.strong, policy.channel_low, exempt) == (75.0, 50.0, 0.5, False)
+    assert (policy.high, policy.strong, exempt) == (75.0, 50.0, False)
+    assert policy.channel_low == pytest.approx(0.1)
     assert policy.action_sensitivity["add_payee"] == "high"
     assert repo.load_policy("demo", "nobody")[0] == DEFAULT_POLICY
 

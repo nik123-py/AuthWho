@@ -53,7 +53,8 @@ Password hashing in the demo app uses the standard library (`hashlib.scrypt`), s
 | postgres:16-alpine | Database |
 | redis:7-alpine | Event stream and hot state |
 | python:3.14-slim | API, worker and demo backend containers (added in P5) |
-| node:24-alpine | Frontend build containers (added in P5) |
+| node:24-bookworm-slim | Builds the SDK, demo app and dashboard in `deploy/web.Dockerfile` |
+| nginx:1.27-alpine | Production web server and reverse proxy (`deploy/nginx.conf`); added 2026-10-14 for deployment |
 
 ## Datasets (downloaded only from official sources into `data/`, never committed)
 

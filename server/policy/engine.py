@@ -38,7 +38,7 @@ class Policy:
     version: str = "policy-1"
     high: float = 75.0
     strong: float = 50.0
-    channel_low: float = 0.5
+    channel_low: float = 0.1
     action_sensitivity: dict[str, str] = field(default_factory=lambda: {"add_payee": "high", "export_report": "high"})
 
 

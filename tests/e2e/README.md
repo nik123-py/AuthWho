@@ -10,6 +10,9 @@ Playwright for Python tests that drive the demo app in a real Chromium browser a
    - the genuine password passes the check and the action succeeds;
    - three wrong answers end the session and record a critical decision.
 4. A session with scrolling only is judged "insufficient signal": the action is allowed and no trust value is recorded.
+5. The admin dashboard shows every decision of a takeover with its plain-language explanation and the channel breakdown, and its live demo page shows the step-up result as it happens.
+
+`test_production_stack.py` is a separate smoke test for a deployed production stack (marker `prod`); it runs only when `AUTHWHO_PROD_URL` and `AUTHWHO_PROD_ADMIN_TOKEN` are set. `python -m experiments.demo_reliability --runs 10` repeats the takeover scenario to measure demo reliability.
 
 ## Running them
 
@@ -23,4 +26,4 @@ npm run build -w sdk
 .venv/Scripts/python -m pytest tests/e2e -m e2e
 ```
 
-`tests/e2e/conftest.py` starts the AuthWho API (port 18000), the worker (enrollment after 5 windows), the demo backend (18100, temporary SQLite file) and the demo frontend (15173), and stops exactly those processes afterwards. The suite takes about three minutes. CI runs it in the `e2e` job.
+`tests/e2e/conftest.py` starts the AuthWho API (port 18000), the worker (enrollment after 5 windows), the demo backend (18100, temporary SQLite file), the demo frontend (15173) and the admin dashboard (15174), and stops exactly those processes afterwards. The suite takes about three minutes. CI runs it in the `e2e` job.

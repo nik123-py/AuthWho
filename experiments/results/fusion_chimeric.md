@@ -20,23 +20,22 @@ An attempt is one 50-press keystroke window plus one 30-stroke pointer window. M
 
 ## Trust simulation
 
-Genuine streams: 119 users, 1138 windows in total (the user's own test windows, alternating channels); median of each user's minimum trust 91.0. Impostor streams: 2380 (another chimeric user's first 6 keystroke and 6 pointer windows against this user's templates). Trust below 75 means moderate deviation (step-up before high-risk actions); below 50 means strong deviation (step-up before continuing).
+Genuine streams: 119 users, 1138 windows in total (the user's own test windows, alternating channels); median of each user's minimum trust 93.5. Impostor streams: 2380 (another chimeric user's first 6 keystroke and 6 pointer windows against this user's templates). Trust below 75 means moderate deviation (step-up before high-risk actions); below 50 means strong deviation (step-up before continuing).
 
 | Threshold | Genuine users ever below | Impostor streams detected within 12 windows | Windows to detect, median | 90th percentile |
 |---|---|---|---|---|
-| 75 | 11 (0.092) | 0.800 | 4.0 | 6.0 |
-| 50 | 2 (0.017) | 0.584 | 6.0 | 8.0 |
+| 75 | 7 (0.059) | 0.668 | 4.0 | 6.0 |
+| 50 | 2 (0.017) | 0.455 | 6.0 | 9.0 |
 
-Chosen settings: TAU 0.25, PENALTY 10.0, REWARD 5.0 (ruling R13): the most impostor detection while keeping genuine users below 50 at about 2% of streams or fewer. The sweep below was run on the same chimeric data, so the chosen setting's numbers are optimistic.
+Chosen settings: TAU 0.1, PENALTY 10.0, REWARD 5.0 (ruling R15, chosen on the synthetic cohort against the friction target; see synthetic_evaluation.md). The sweep below shows how other settings behave on this chimeric data.
 
 | TAU | PENALTY | REWARD | Genuine below 75 | Impostors below 75 | Genuine below 50 | Impostors below 50 |
 |---|---|---|---|---|---|---|
-| 0.2 | 8 | 5 | 7 | 0.671 | 1 | 0.395 |
+| 0.1 | 10 | 5 | 7 | 0.668 | 2 | 0.455 |
+| 0.15 | 10 | 5 | 8 | 0.704 | 2 | 0.515 |
 | 0.2 | 10 | 5 | 9 | 0.732 | 2 | 0.553 |
-| 0.25 | 8 | 5 | 7 | 0.735 | 1 | 0.439 |
 | 0.25 | 10 | 5 | 11 | 0.800 | 2 | 0.584 |
 | 0.25 | 12 | 5 | 23 | 0.846 | 7 | 0.646 |
-| 0.15 | 10 | 5 | 8 | 0.704 | 2 | 0.515 |
 | 0.3 | 12 | 5 | 27 | 0.893 | 7 | 0.696 |
 
 ## Limits

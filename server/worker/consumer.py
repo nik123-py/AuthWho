@@ -11,6 +11,8 @@ Only counts are logged, never batch contents.
 
 from __future__ import annotations
 
+from server.common.production import require_production_ready
+
 import argparse
 import logging
 import os
@@ -80,6 +82,7 @@ def main(argv: list[str] | None = None) -> int:
     logging.basicConfig(level=logging.INFO, format="%(asctime)s %(name)s %(message)s")
     if args.env_file:
         load_env_file(args.env_file)
+    require_production_ready()
     try:
         settings = load_settings()
         key = settings.require("data_key")

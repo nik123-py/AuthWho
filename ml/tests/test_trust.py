@@ -32,9 +32,9 @@ def test_genuine_like_scores_keep_trust_high():
     assert min(trusts) > 50
 
 
-def test_impostor_scores_drive_trust_below_50_within_six_windows():
+def test_impostor_scores_drive_trust_below_50_within_seven_windows():
     e = TrustEngine("s", "u", now=0.0)
-    for i in range(6):
+    for i in range(7):
         u = e.update("keystroke", scored(0.02), now=float(i))
     assert u["trust"] < 50
     assert u["state"] == "scored"
@@ -52,10 +52,11 @@ def test_low_confidence_moves_trust_less():
     assert 100 - b["trust"] == pytest.approx((100 - a["trust"]) / 2)
 
 
-def test_interaction_channel_counts_half():
-    a = TrustEngine("s", "u", now=0.0).update("keystroke", scored(0.0), now=1.0)
-    b = TrustEngine("s", "u", now=0.0).update("interaction", scored(0.0), now=1.0)
-    assert 100 - b["trust"] == pytest.approx((100 - a["trust"]) / 2)
+def test_interaction_channel_is_shown_but_does_not_move_trust():
+    e = TrustEngine("s", "u", now=0.0)
+    u = e.update("interaction", scored(0.0), now=1.0)
+    assert e.trust == 100.0
+    assert u["channels"]["interaction"]["status"] == "scored" and u["channels"]["interaction"]["score"] == 0.0
 
 
 def test_stale_evidence_becomes_insufficient_signal_and_trust_resumes_later():

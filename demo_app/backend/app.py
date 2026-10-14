@@ -31,6 +31,8 @@ from fastapi.responses import JSONResponse
 from pydantic import BaseModel, StringConstraints
 
 from .authwho_client import CollectorClient, CollectorNoConsent, CollectorUnavailable
+from server.common.production import require_production_ready
+
 from .config import Settings
 from .passwords import burn_time, hash_password, verify_password
 from . import totp
@@ -130,6 +132,7 @@ def create_app(settings: Settings | None = None, collector_http: httpx.Client | 
 
     @asynccontextmanager
     async def lifespan(app: FastAPI):
+        require_production_ready()
         # Background retry of pending consent withdrawals, so users who never
         # come back are still deleted from AuthWho.
         stop = asyncio.Event()
@@ -167,7 +170,7 @@ def create_app(settings: Settings | None = None, collector_http: httpx.Client | 
 
     def current_login(request: Request) -> LoginSession:
         token = request.cookies.get(COOKIE_NAME)
-        login_session = store.get_login_session(token) if token else None
+        login_session = store.get_login_session(token, settings.session_hours) if token else None
         if login_session is None:
             raise NotLoggedIn
         return login_session
@@ -245,8 +248,9 @@ def create_app(settings: Settings | None = None, collector_http: httpx.Client | 
             return _error(401, "invalid_credentials")
         withdrawal_still_pending(user)  # best effort; login never depends on AuthWho
         token = store.create_login_session(user)
-        # Not marked Secure: local development is plain HTTP on localhost (section 2).
-        response.set_cookie(COOKIE_NAME, token, httponly=True, samesite="lax", path="/")
+        # Secure only when configured: local development is plain HTTP on localhost (section 2).
+        response.set_cookie(COOKIE_NAME, token, httponly=True, samesite="lax", path="/",
+                            secure=settings.secure_cookies, max_age=int(settings.session_hours * 3600))
         return {"username": user.username, "needs_consent": user.consent is None}
 
     @app.post("/api/logout", status_code=204)
@@ -332,7 +336,7 @@ def create_app(settings: Settings | None = None, collector_http: httpx.Client | 
         except CollectorUnavailable:
             return _error(502, "authwho_unavailable")
         payload = {
-            "endpoint": settings.collector_url,
+            "endpoint": settings.public_collector_url or settings.collector_url,
             "session_id": session_id,
             "stream_id": stream["stream_id"],
             "stream_key": stream["stream_key"],

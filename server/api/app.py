@@ -24,6 +24,10 @@ from server.collector.repository import PostgresRepository
 from server.collector.router import ApiError, api_error_handler
 from server.collector.router import router as collector_router
 from server.common.config import Settings, load_settings
+from server.common.production import require_production_ready
+from server.api.admin import RedisTrustFeed
+from server.api.admin import router as admin_router
+from server.api.admin_repo import PgAdminRepository
 from server.policy.repository import PgPolicyRepository
 from server.session.control import SessionControl
 from server.session.router import router as session_router
@@ -38,11 +42,13 @@ async def validation_error_handler(_request: Request, exc: RequestValidationErro
 
 
 def create_app(settings: Settings | None = None, hot_store=None, repository=None,
-               research_dir: Path | None = None, session_control=None, policy_repo=None) -> FastAPI:
+               research_dir: Path | None = None, session_control=None, policy_repo=None,
+               admin_repo=None, trust_feed=None) -> FastAPI:
     settings = settings if settings is not None else load_settings()
 
     @asynccontextmanager
     async def lifespan(app: FastAPI):
+        require_production_ready()
         client = None
         if app.state.hot_store is None:
             client = redis.Redis.from_url(settings.require("redis_url"), decode_responses=True)
@@ -57,6 +63,10 @@ def create_app(settings: Settings | None = None, hot_store=None, repository=None
                 app.state.session_control = SessionControl(rc, app.state.repository)
         if app.state.policy_repo is None and settings.database_url:
             app.state.policy_repo = PgPolicyRepository(settings.database_url)
+        if app.state.admin_repo is None and settings.database_url:
+            app.state.admin_repo = PgAdminRepository(settings.database_url)
+        if app.state.trust_feed is None and settings.redis_url:
+            app.state.trust_feed = RedisTrustFeed(settings.redis_url)
         try:
             yield
         finally:
@@ -69,6 +79,8 @@ def create_app(settings: Settings | None = None, hot_store=None, repository=None
     app.state.repository = repository
     app.state.session_control = session_control
     app.state.policy_repo = policy_repo
+    app.state.admin_repo = admin_repo
+    app.state.trust_feed = trust_feed
     app.state.research_dir = Path(research_dir) if research_dir else DEFAULT_RESEARCH_DIR
     app.add_middleware(
         CORSMiddleware,
@@ -82,6 +94,7 @@ def create_app(settings: Settings | None = None, hot_store=None, repository=None
     app.add_exception_handler(RequestValidationError, validation_error_handler)
     app.include_router(collector_router)
     app.include_router(session_router)
+    app.include_router(admin_router)
 
     @app.get("/healthz")
     def healthz():

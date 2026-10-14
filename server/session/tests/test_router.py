@@ -113,14 +113,14 @@ def test_moderate_deviation_requires_step_up_for_high_risk_only(env):
 
 def test_pending_step_up_blocks_every_action_until_passed(env):
     client, control, repo, sid = env
-    trust(control, sid, trust=40, ks=0.1, pt=0.2)
+    trust(control, sid, trust=40, ks=0.05, pt=0.08)
     client.post(f"/v1/sessions/{sid}/actions", json={"action_code": "add_payee"}, headers=H)
     trust(control, sid, trust=95, ks=0.9, pt=0.9)
     r = client.post(f"/v1/sessions/{sid}/actions", json={"action_code": "view_report"}, headers=H).json()
     assert (r["outcome"], r["action_allowed"]) == ("step_up", False)
     ok = client.post(f"/v1/sessions/{sid}/step-up-result", json={"passed": True}, headers=H).json()
     assert (ok["outcome"], ok["status"]) == ("continue", "active")
-    trust(control, sid, trust=40, ks=0.1, pt=0.2)  # old evidence from before the check
+    trust(control, sid, trust=40, ks=0.05, pt=0.08)  # old evidence from before the check
     control.state[sid]["last_trust"]["at"] = "2000-01-01T00:00:00Z"
     after = client.post(f"/v1/sessions/{sid}/actions", json={"action_code": "add_payee"}, headers=H).json()
     assert after["action_allowed"] is True
@@ -128,7 +128,7 @@ def test_pending_step_up_blocks_every_action_until_passed(env):
 
 def test_failed_step_up_ends_the_session(env):
     client, control, repo, sid = env
-    trust(control, sid, trust=40, ks=0.1, pt=0.2)
+    trust(control, sid, trust=40, ks=0.05, pt=0.08)
     r = client.post(f"/v1/sessions/{sid}/step-up-result", json={"passed": False}, headers=H).json()
     assert (r["outcome"], r["status"]) == ("terminate", "terminated")
     assert repo.decisions[-1]["level"] == "critical" and repo.decisions[-1]["step_up_result"] == "failed"

@@ -1,0 +1,53 @@
+@import "tailwindcss";
+
+/*
+ * Tokens. Contrast on white: ink 15.9:1, muted 7.4:1, accent 8.1:1, danger 7.0:1,
+ * success 6.4:1; input borders (line-strong) 3.7:1; focus ring 5.0:1.
+ */
+@theme {
+  --color-ink: #17212b;
+  --color-muted: #4a5663;
+  --color-paper: #ffffff;
+  --color-canvas: #f3f5f7;
+  --color-line: #d5dbe1;
+  --color-line-strong: #7b8794;
+  --color-accent: #0b5563;
+  --color-accent-strong: #083f4a;
+  --color-accent-soft: #e3eff1;
+  --color-danger: #a1262b;
+  --color-danger-strong: #7a1c20;
+  --color-danger-soft: #fbeced;
+  --color-success: #1d6b3a;
+  --color-success-strong: #14502b;
+  --color-success-soft: #e8f4ec;
+  --color-focus: #b45309;
+  --font-sans: "Segoe UI", system-ui, -apple-system, "Helvetica Neue", Arial, sans-serif;
+}
+
+@layer base {
+  html {
+    font-family: var(--font-sans);
+    color: var(--color-ink);
+    background: var(--color-canvas);
+  }
+
+  /* One visible focus style for every interactive element. */
+  :focus-visible {
+    outline: 3px solid var(--color-focus);
+    outline-offset: 2px;
+  }
+
+  /* Headings and alerts that receive focus programmatically do not need a ring. */
+  [tabindex="-1"]:focus {
+    outline: none;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+      transition-duration: 0.01ms !important;
+      animation-duration: 0.01ms !important;
+    }
+  }
+}

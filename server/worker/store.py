@@ -20,6 +20,7 @@ from typing import Protocol
 
 import psycopg
 
+from server.common.db import Connector
 from server.common.crypto import decrypt, encrypt
 
 
@@ -67,9 +68,10 @@ def decrypt_features(blob: bytes, key: bytes, window_id: str) -> list[float]:
 class PgWindowStore:
     def __init__(self, conninfo: str) -> None:
         self.conninfo = conninfo
+        self._connector = Connector(conninfo)
 
-    def _connect(self) -> psycopg.Connection:
-        return psycopg.connect(self.conninfo)
+    def _connect(self):
+        return self._connector()
 
     def user_context(self, session_id: str) -> UserContext | None:
         with self._connect() as conn:

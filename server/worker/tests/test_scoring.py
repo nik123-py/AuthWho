@@ -214,3 +214,16 @@ def test_passed_step_up_restores_full_trust():
     clock.t += 5
     after = scorer.on_window(CTX, rec("u1", "s1"), genuine(1, len(KF1_NAMES), seed=99)[0].tolist())
     assert after["trust"] >= 90
+
+
+def test_recent_windows_are_loaded_once_then_cached():
+    store, pub, clock = FakeStore(), FakePublisher(), Clock()
+    calls = []
+    store.recent_windows = lambda user, channel, dkey, exclude, limit: calls.append(1) or []
+    scorer = TrustScorer(store, pub, enroll_windows=50, clock=clock)
+    X = genuine(5, len(KF1_NAMES))
+    for i, x in enumerate(X):
+        u = scorer.on_window(CTX, rec("u1", "s1", wid=f"00000000-0000-0000-0000-00000000000{i}"), x.tolist())
+    assert len(calls) == 1
+    replayed = scorer.on_window(CTX, rec("u1", "s1", wid="00000000-0000-0000-0000-000000000099"), X[2].tolist())
+    assert any(f["kind"] == "replay_match" for f in replayed["bot_flags"])

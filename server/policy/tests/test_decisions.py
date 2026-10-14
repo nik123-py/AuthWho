@@ -8,7 +8,7 @@ from server.policy.engine import DEFAULT_POLICY
 SESSION = {"session_id": str(uuid.uuid4()), "user_id": str(uuid.uuid4()), "app_id": "demo", "role": "analyst"}
 
 
-def update(trust=40.0, ks=0.1, pt=0.2):
+def update(trust=40.0, ks=0.05, pt=0.08):
     def ch(s, wid):
         return {"status": "scored", "score": s, "confidence": 0.9, "fresh": True, "window_id": wid,
                 "top_features": [{"name": "flight_median", "z": 3.2}]}

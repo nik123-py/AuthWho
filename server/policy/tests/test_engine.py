@@ -30,13 +30,13 @@ def test_high_confidence():
 
 def test_moderate_by_trust_band_or_one_low_channel():
     assert classify(update(trust=60), DEFAULT_POLICY) == "moderate_deviation"
-    assert classify(update(trust=90, ks=0.1), DEFAULT_POLICY) == "moderate_deviation"
+    assert classify(update(trust=90, ks=0.05), DEFAULT_POLICY) == "moderate_deviation"
     # one channel only, very low trust: still a single channel diverging
     assert classify(update(trust=30, ks=0.05, pt=None), DEFAULT_POLICY) == "moderate_deviation"
 
 
 def test_strong_when_several_channels_diverge_or_replay():
-    assert classify(update(trust=40, ks=0.1, pt=0.2), DEFAULT_POLICY) == "strong_deviation"
+    assert classify(update(trust=40, ks=0.05, pt=0.08), DEFAULT_POLICY) == "strong_deviation"
     replay = {"kind": "replay_match", "severity": "high", "evidence": "x"}
     assert classify(update(trust=95, flags=[replay]), DEFAULT_POLICY) == "strong_deviation"
     weak = {"kind": "replay_match", "severity": "low", "evidence": "x"}
@@ -46,7 +46,7 @@ def test_strong_when_several_channels_diverge_or_replay():
 def test_critical_on_confirmed_automation_or_failed_step_up():
     bot = {"kind": "timing_regularity", "severity": "high", "evidence": "x"}
     assert classify(update(trust=95, flags=[bot]), DEFAULT_POLICY) == "critical"
-    assert classify(update(trust=40, ks=0.1, pt=0.2), DEFAULT_POLICY, step_up_failed=True) == "critical"
+    assert classify(update(trust=40, ks=0.05, pt=0.08), DEFAULT_POLICY, step_up_failed=True) == "critical"
     assert classify(update(trust=90), DEFAULT_POLICY, step_up_failed=True) == "critical"
 
 
@@ -75,8 +75,8 @@ def test_explanations_are_one_plain_sentence():
     cases = {
         "insufficient_signal": update(state="insufficient_signal"),
         "high_confidence": update(),
-        "moderate_deviation": update(trust=90, ks=0.1, ks_top=top_k),
-        "strong_deviation": update(trust=40, ks=0.1, pt=0.2, ks_top=top_k, pt_top=top_p),
+        "moderate_deviation": update(trust=90, ks=0.05, ks_top=top_k),
+        "strong_deviation": update(trust=40, ks=0.05, pt=0.08, ks_top=top_k, pt_top=top_p),
         "critical": update(trust=95, flags=[{"kind": "timing_regularity", "severity": "high", "evidence": "x"}]),
     }
     texts = {level: explain(level, u) for level, u in cases.items()}
@@ -90,7 +90,7 @@ def test_explanations_are_one_plain_sentence():
 
 
 def test_failed_step_up_explanation_and_user_text_reveal_no_scores():
-    text = explain("critical", update(trust=40, ks=0.1, pt=0.2), step_up_failed=True)
+    text = explain("critical", update(trust=40, ks=0.05, pt=0.08), step_up_failed=True)
     assert "identity check failed" in text
     for outcome in ("continue", "monitor", "step_up", "terminate"):
         msg = explain_for_user(outcome)

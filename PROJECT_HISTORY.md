@@ -73,13 +73,19 @@ Earlier notes on the Aalto archive, kept for reference:
 - `tests/e2e/`: Playwright for Python against the whole stack on test ports; 5 scenarios pass in about 3 minutes. CI `e2e` job.
 - Verified: Python suite, 104 + 121 Vitest tests, frontend typecheck and build, 5 end-to-end tests.
 
+### 2026-10-14: P5, P6, synthetic cohort and production readiness
+- P5: `server/api/admin.py` and `admin_repo.py` (admin API, incident report, policy editor, live WebSocket from `aw:trust`); `dashboard/` (sessions, session detail with Chart.js timeline and data table, channel breakdown, explanations, live demo page, policies). E2E scenario 5. Takeover demo reliability 10 of 10 (`experiments/results/demo_reliability.md`).
+- Synthetic cohort: `ml/synthetic.py` (25 people, 6 sessions over 3 or more days, 15 mouse and 10 touchpad, parameters fitted to Aalto and SapiMouse), `experiments/synthetic_calibration.py`, `ml/load_synthetic.py` (replays it through the real API).
+- P6: `experiments/synthetic_evaluation.py` and `docs/evaluation_report.md`. The friction measurement exposed 8 step-ups per hour with the R13 constants; ruling R15 (TAU 0.1, PENALTY 10, interaction weight 0, `channel_low` 0.1, migration 0101) brings it to 0.06 per hour with 99.6% of takeovers below 75 (median 24 s).
+- Production: `deploy/python.Dockerfile`, `deploy/web.Dockerfile`, `deploy/nginx.conf`, `docker-compose.prod.yml`, `server/common/production.py` (start-up checks and secret generator), `server/common/db.py` (persistent connections; worker about 10 times faster), replay cache in the scorer, demo login expiry and Secure cookie, `docs/deployment.md`, `tests/e2e/test_production_stack.py`. Built and run locally on port 8088 with `.env.production` (gitignored); smoke test passes.
+- Verified: 555 Python, 233 Vitest, 6 end-to-end tests passing.
+
 ## Next steps
 
-1. P5: admin API and WebSocket (sessions, timeline, decisions, incident report, policy editor), React dashboard with live trust chart, channel breakdown and explanations, live demo mode and a 10-run reliability check, app containers in Compose, login token expiry and Secure cookie.
-2. P6: population-statistics synthetic attack generator (moved from P4-6), scoring latency measurement, `docs/evaluation_report.md` with every Section 13 metric and confidence intervals, final README and privacy review.
+1. Deploy to a host with HTTPS (`docs/deployment.md`) once the owner chooses one.
+2. Volunteer study: consent forms and any approval, then re-run `experiments/synthetic_evaluation.py`-style evaluation on real sessions and re-check the R15 constants.
+3. Stretch goals only with the owner's OK: deep models, Keycloak, Prometheus and Grafana, hash-chained audit log, population-likeness check, fuzzy replay detection.
 
 ## Open items carried forward
-- P0-5 follow-up for P5: login token expiry and Secure cookie.
-- P4-4: show a notice when `withdrawal_pending` is true.
 - Volunteer data collection (owner-run, needs consent forms and any ethics approval) gates the P2 touchpad row, the P3 criterion and the P6 headline numbers.
 - Worker window state is in memory: a restart loses partly filled windows (documented in `server/worker/pipeline.py`).

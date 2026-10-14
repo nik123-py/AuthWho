@@ -13,6 +13,8 @@ applies nothing. A file that changes after it was applied is refused. See
 
 from __future__ import annotations
 
+from server.common.production import require_production_ready
+
 import argparse
 import hashlib
 import os
@@ -110,6 +112,7 @@ def main(argv: list[str] | None = None) -> int:
     args = parser.parse_args(argv)
     if args.env_file:
         load_env_file(args.env_file)
+    require_production_ready()
     url = os.environ.get("AUTHWHO_DATABASE_URL")
     if not url:
         print("AUTHWHO_DATABASE_URL is not set", file=sys.stderr)

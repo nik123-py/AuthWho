@@ -9,6 +9,8 @@ Run from the repository root, with ``docker compose up -d`` first::
 3. A takeover lowers trust; a high-risk action then needs a step-up, which a
    genuine user passes and an impostor fails, ending the session.
 4. A session with scrolling only is judged with insufficient signal, not a low score.
+5. The dashboard shows each decision of a session with its plain-language explanation,
+   and the live demo page follows a session as trust updates arrive.
 """
 
 from __future__ import annotations
@@ -161,3 +163,29 @@ def test_scrolling_only_is_insufficient_signal(stack, page, db):
     row = db.execute("SELECT level, outcome, action_allowed, trust FROM decisions WHERE session_id = %s "
                      "AND trigger = 'action_request'", (sid,)).fetchone()
     assert row == ("insufficient_signal", "continue", True, None)
+
+
+def test_dashboard_shows_every_decision_with_its_explanation(stack, page, browser, db):
+    _user, sid = _enrol_then_take_over(stack, page, db)
+    _try_payee(page)
+    page.get_by_role("dialog", name="Confirm it is you").wait_for()
+
+    admin = browser.new_page()
+    admin.goto(stack["dash"] + "/")
+    admin.get_by_label("Admin token").fill(stack["admin_token"])
+    admin.get_by_role("button", name="Sign in").click()
+    admin.get_by_role("table", name="Sessions").wait_for()
+    admin.goto(f"{stack['dash']}/sessions/{sid}")
+    rows = db.execute("SELECT explanation FROM decisions WHERE session_id = %s", (sid,)).fetchall()
+    assert rows, "the takeover produced decisions"
+    for (text,) in rows:
+        admin.get_by_text(text, exact=True).first.wait_for()
+    channels = admin.get_by_role("region", name="Channel breakdown")
+    assert "Typing rhythm" in channels.inner_text()
+
+    admin.get_by_role("link", name="Live demo").click()  # the token is kept per tab
+    live = admin
+    live.get_by_role("heading", name="Live demo").wait_for()
+    page.get_by_role("dialog", name="Confirm it is you").get_by_label("Password").fill(PASSWORD)
+    page.get_by_role("dialog", name="Confirm it is you").get_by_role("button", name="Confirm").click()
+    live.get_by_text("The user passed the identity check, so the session continues.").wait_for(timeout=20000)
