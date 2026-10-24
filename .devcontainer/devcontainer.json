@@ -1,0 +1,19 @@
+{
+  "name": "AuthWho",
+  "image": "mcr.microsoft.com/devcontainers/python:3.12",
+  "features": {
+    "ghcr.io/devcontainers/features/docker-in-docker:2": {}
+  },
+  "hostRequirements": {
+    "cpus": 2,
+    "memory": "8gb"
+  },
+  "forwardPorts": [8088],
+  "portsAttributes": {
+    "8088": {
+      "label": "AuthWho",
+      "onAutoForward": "notify"
+    }
+  },
+  "postStartCommand": "bash deploy/codespaces/start.sh"
+}

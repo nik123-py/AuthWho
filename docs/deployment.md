@@ -2,6 +2,26 @@
 
 AuthWho runs as one Docker Compose stack on a single host. Everything is free and open source; any small Linux VM with Docker works (2 vCPU and 2 GB of RAM are enough for a class-sized deployment).
 
+## Free option: GitHub Codespaces
+
+A codespace runs the whole production stack and gives it a public HTTPS address, using the Codespaces hours in your GitHub plan (GitHub Pro includes 180 core-hours a month, about 90 hours on the 2-core machine this needs). It is good for demonstrations and reviews; it is not always on, because a codespace stops after a period of inactivity.
+
+1. On the repository page on GitHub, choose **Code**, then **Codespaces**, then **Create codespace on main**. Pick a machine with at least 2 cores and 8 GB of memory.
+2. Wait for the setup. On every start, `deploy/codespaces/start.sh` runs by itself: the first time it generates fresh secrets for this codespace's address in `.env.production` (never committed), then builds and starts the stack (about 10 minutes the first time, seconds afterwards) and prints:
+   - the demo app address, `https://<codespace-name>-8088.app.github.dev/`
+   - the dashboard address, the same with `/admin/`
+   - the admin token.
+3. If the **Ports** tab shows port 8088 as Private, right-click it and choose **Port Visibility**, then **Public**, so other people can open the links.
+4. Optional demo data, the 25 synthetic people (about 5 minutes):
+
+   ```bash
+   LOAD_SYNTHETIC=1 bash deploy/codespaces/start.sh
+   ```
+
+5. When you are done, stop the codespace from the Codespaces page so it stops using hours. Its data stays until you delete the codespace.
+
+For an always-on deployment, use a server as described below.
+
 ## What runs
 
 | Service | Role | Exposed |

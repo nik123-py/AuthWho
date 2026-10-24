@@ -108,7 +108,7 @@ The generator's parameters are fitted to the public Aalto and SapiMouse data (`e
 
 ## Production
 
-`docker-compose.prod.yml` runs the whole system behind nginx with one command, and every service refuses to start with placeholder secrets. See `docs/deployment.md`.
+`docker-compose.prod.yml` runs the whole system behind nginx with one command, and every service refuses to start with placeholder secrets. The quickest free way to run it is a GitHub Codespace: create one on `main` and it starts itself and prints a public HTTPS link. See `docs/deployment.md`.
 
 ## Running the tests
 
