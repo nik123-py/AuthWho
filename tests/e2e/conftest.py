@@ -102,7 +102,11 @@ def stack(tmp_path_factory):
                     subprocess.run(["taskkill", "/PID", str(proc.pid), "/T", "/F"], capture_output=True)
                 else:
                     proc.terminate()
-                proc.wait(timeout=20)
+                try:
+                    proc.wait(timeout=20)
+                except subprocess.TimeoutExpired:  # a stuck shutdown must not fail the run
+                    proc.kill()
+                    proc.wait(timeout=10)
 
 
 @pytest.fixture

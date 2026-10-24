@@ -124,3 +124,51 @@ def test_websocket_streams_trust_and_decisions_and_needs_the_token(client):
         first = json.loads(ws.receive_text())
         second = json.loads(ws.receive_text())
     assert (first["type"], second["type"]) == ("trust", "decision")
+
+
+class BlockingFeed:
+    """One message, then waits forever, like a quiet Redis channel."""
+
+    def __init__(self):
+        self.closed = False
+
+    async def subscribe(self):
+        try:
+            yield json.dumps({"type": "trust", "data": {"session_id": SID}})
+            await asyncio.sleep(3600)
+        finally:
+            self.closed = True
+
+
+def test_websocket_subscription_closes_when_the_browser_disconnects():
+    """Against a real uvicorn server: the test client cancels handlers itself, uvicorn does not."""
+    import socket
+    import threading
+    import time
+
+    import uvicorn
+    from websockets.sync.client import connect
+
+    feed = BlockingFeed()
+    app = create_app(Settings(admin_token=TOKEN, app_api_key="k"), hot_store=object(), repository=object(),
+                     session_control=object(), policy_repo=object(), admin_repo=FakeAdminRepo(), trust_feed=feed)
+    sock = socket.socket()
+    sock.bind(("127.0.0.1", 0))
+    port = sock.getsockname()[1]
+    sock.close()
+    server = uvicorn.Server(uvicorn.Config(app, host="127.0.0.1", port=port, log_level="warning", lifespan="on"))
+    thread = threading.Thread(target=server.run, daemon=True)
+    thread.start()
+    try:
+        deadline = time.time() + 10
+        while not server.started and time.time() < deadline:
+            time.sleep(0.05)
+        with connect(f"ws://127.0.0.1:{port}/v1/admin/ws?token={TOKEN}") as ws:
+            assert json.loads(ws.recv())["type"] == "trust"
+        deadline = time.time() + 3
+        while not feed.closed and time.time() < deadline:
+            time.sleep(0.05)
+        assert feed.closed, "the Redis subscription must be closed once the dashboard tab goes away"
+    finally:
+        server.should_exit = True
+        thread.join(timeout=10)

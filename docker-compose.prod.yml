@@ -51,7 +51,8 @@ services:
   api:
     <<: *python
     command: ["python", "-m", "uvicorn", "server.api.app:app", "--host", "0.0.0.0", "--port", "8000",
-              "--proxy-headers", "--forwarded-allow-ips", "*", "--no-access-log"]
+              "--proxy-headers", "--forwarded-allow-ips", "*", "--no-access-log",
+              "--timeout-graceful-shutdown", "5"]
     depends_on:
       migrate:
         condition: service_completed_successfully
@@ -83,7 +84,8 @@ services:
   demo:
     <<: *python
     command: ["python", "-m", "uvicorn", "demo_app.backend.app:app", "--host", "0.0.0.0", "--port", "8100",
-              "--proxy-headers", "--forwarded-allow-ips", "*", "--no-access-log"]
+              "--proxy-headers", "--forwarded-allow-ips", "*", "--no-access-log",
+              "--timeout-graceful-shutdown", "5"]
     volumes:
       - demodata:/data/demo
     depends_on:

@@ -17,7 +17,6 @@ from typing import Annotated
 from fastapi import APIRouter, Depends, Header, Request, WebSocket
 from fastapi.responses import JSONResponse
 from pydantic import BaseModel, ConfigDict, Field
-from starlette.websockets import WebSocketDisconnect
 
 from server.collector.router import ApiError
 
@@ -130,11 +129,23 @@ async def live(websocket: WebSocket):
         return
     await websocket.accept()
     feed = websocket.app.state.trust_feed
-    try:
+
+    async def forward() -> None:
         async for message in feed.subscribe():
             await websocket.send_text(message)
-    except (WebSocketDisconnect, asyncio.CancelledError, RuntimeError):
-        pass
+
+    async def until_disconnect() -> None:
+        # A quiet feed never sends, so only reading tells us the browser has gone.
+        while (await websocket.receive())["type"] != "websocket.disconnect":
+            pass
+
+    tasks = {asyncio.create_task(forward()), asyncio.create_task(until_disconnect())}
+    try:
+        await asyncio.wait(tasks, return_when=asyncio.FIRST_COMPLETED)
+    finally:
+        for task in tasks:
+            task.cancel()  # closes the feed's subscription when the browser leaves
+        await asyncio.gather(*tasks, return_exceptions=True)
 
 
 class RedisTrustFeed:
